@@ -64,7 +64,6 @@ class ButtonClass
 	
 	void RenderButton (Uint32 FaceC, const Uint32 Side1C,
 				    const Uint32 Side2C);
-	void StepGrad (Uint8 *r, Uint8 *g, Uint8 *b);
 
 	void (*_HndClick) ();
 	

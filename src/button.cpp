@@ -168,6 +168,16 @@ bool ButtonClass::Draw ()
 	return true;
 }
 
+inline void StepGrad (Uint8 &r, Uint8 &g, Uint8 &b)
+{
+	if ( ( r > 0 ) && ( g > 0 ) && ( b > 0 ) )
+	{
+		r--;
+		g--;
+		b--;
+	}
+}
+
 void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 						  const Uint32 Side2C)
 {
@@ -200,7 +210,7 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 		
 		SDL_FillRect (_Surface, &GradClip, FaceC);
 		
-		StepGrad (&FaceR, &FaceG, &FaceB);
+		StepGrad (FaceR, FaceG, FaceB);
 		FaceC = SDL_MapRGB (_Surface->format, FaceR, FaceG, FaceB);
 		
 		Grad.h = i;
@@ -241,17 +251,6 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 		SDL_FillRect (_Surface, &Side, Side1C);
 	}
 }
-
-void ButtonClass::StepGrad (Uint8 *r, Uint8 *g, Uint8 *b)
-{
-	if ( ( (*r) > 0 ) && ( (*g) > 0 ) && ( (*b) > 0 ) )
-	{
-		(*r)--;
-		(*g)--;
-		(*b)--;
-	}
-}
-
 
 void ButtonClass::MouseButtonEvent (const Uint8 Button, const Uint8 State,
 							 const Uint16 x, const Uint16 y)
