@@ -1,49 +1,77 @@
 #include <iostream>
 
-using namespace std;
-
 #include "SDL.h"
 
 extern SDL_Surface *Screen;
 
 #include "button.h"
 #include "rgbamask.h"
+#include "image.h"
 
+// Default constructor
 ButtonClass::ButtonClass ()
 {
 	Init ("", 0, 0, 0, 0, 0, false, Screen);
 }
 
-ButtonClass::ButtonClass (const char *Caption, const int x, const int y,
-					 SDL_Surface *ParentSurf)
+
+// Overloaded constructor
+ButtonClass::ButtonClass (const char* Caption, const int x, const int y,
+					 SDL_Surface* ParentSurf)
 {
 	Init (Caption, x, y, 0, 0, 0, true, ParentSurf);
 }
 
-ButtonClass::ButtonClass (const char *Caption, const int x, const int y,
-					 const int w, const int h, SDL_Surface *ParentSurf)
+
+// Overloaded constructor
+ButtonClass::ButtonClass (const char* Caption, const int x, const int y,
+					 const int w, const int h, SDL_Surface* ParentSurf)
 {
 	Init (Caption, x, y, w, h, 0, false, ParentSurf);
 }
 
-ButtonClass::ButtonClass (const char *Caption, const int x, const int y,
-					 const int TextSize, SDL_Surface *ParentSurf)
+
+// Overloaded constructor
+ButtonClass::ButtonClass (const char* Caption, const int x, const int y,
+					 const int TextSize, SDL_Surface* ParentSurf)
 {
 	Init (Caption, x, y, 0, 0, TextSize, true, ParentSurf);
 }
 
 
-ButtonClass::~ButtonClass ()
+// Copy ctor
+ButtonClass::ButtonClass(const ButtonClass& rhs)
 {
-	SDL_FreeSurface (_Surface);
+	*this = rhs;
 }
 
 
-void ButtonClass::Init (const char *Caption, const int x, const int y,
-				    const int w, const int h, const int TextSize,
-				    const bool resize, SDL_Surface *ParentSurf)
+// Assignment operator
+ButtonClass& ButtonClass::operator=(const ButtonClass& rhs)
 {
-	_Surface = 0;
+	if (this == &rhs)
+		return *this;
+
+	_HndClick   = rhs._HndClick;
+	_Caption    = rhs._Caption;
+	_Surface    = rhs._Surface;
+	_ParentSurf = rhs._ParentSurf;
+	_Rect       = rhs._Rect;
+	_State      = rhs._State;
+	return *this;
+}
+
+
+// Destructor
+ButtonClass::~ButtonClass ()
+{
+}
+
+
+void ButtonClass::Init (const char* Caption, const int x, const int y,
+				    const int w, const int h, const int TextSize,
+				    const bool resize, SDL_Surface* ParentSurf)
+{
 	_State = BUTTON_STATE_UP;
 
 	_HndClick = 0;
@@ -59,7 +87,7 @@ void ButtonClass::Init (const char *Caption, const int x, const int y,
 
 
 
-bool ButtonClass::ChCaption (const char *Caption, const bool resize)
+bool ButtonClass::ChCaption (const char* Caption, const bool resize)
 {
 	if ( !_Caption.ChCaption (Caption) ) return false;
 
@@ -81,20 +109,19 @@ bool ButtonClass::Resize (const int w, const int h)
 	_Rect.w = w;
 	_Rect.h = h;
 
-	if ( _Surface != 0 ) SDL_FreeSurface (_Surface);
-	_Surface = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA, w, h, 32,
-							   rmask, gmask, bmask, amask);
+	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
+			w, h, 32, rmask, gmask, bmask, amask);
 	
-	if ( _Surface == 0 )
+	if ( !tmp )
 	{
-		printf ("ButtonClass::Resize(): CreateRGBSurface() failed: %s\n",
-			   SDL_GetError ());
+		std::cout << "ButtonClass::Resize(): CreateRGBSurface() failed: "
+			<< SDL_GetError () << std::endl;
 		return false;
 	}
 
-	//_Surface = Screen;
+	_Surface = tmp;
 
-	_Caption.ChParentSurf (_Surface);
+	_Caption.ChParentSurf (_Surface.get());
 
 	return true;
 }
@@ -158,10 +185,10 @@ bool ButtonClass::Draw ()
 	_Caption.Move (TextLoc, TextLoc);
 	if ( !_Caption.Draw () ) return false;
 
-	if ( SDL_BlitSurface (_Surface, 0, _ParentSurf, &_Rect) < 0 )
+	if ( SDL_BlitSurface(_Surface.get(), 0, _ParentSurf, &_Rect) < 0 )
 	{
-		printf ("ButtonClass::Draw(): SDL_BlitSurface error: %s\n",
-			   SDL_GetError ());
+		std::cout <<  "ButtonClass::Draw(): SDL_BlitSurface error: \n"
+			<< SDL_GetError () << std::endl;
 		return false;
 	}
 
@@ -193,7 +220,7 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 	Black.w = BUTTON_SIDE_WIDTH; Black.h = 1;
 
 	// Most of this will be covered
-	SDL_FillRect (_Surface, 0, Side2C);
+	SDL_FillRect(_Surface.get(), 0, Side2C);
 
 	// Face
 	Uint8 FaceR, FaceG, FaceB;
@@ -208,7 +235,7 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 		GradClip.w = ( Grad.w > Face.w ) ? Face.w : Grad.w;
 		GradClip.h = ( Grad.h > Face.h ) ? Face.h : Grad.h;
 		
-		SDL_FillRect (_Surface, &GradClip, FaceC);
+		SDL_FillRect(_Surface.get(), &GradClip, FaceC);
 		
 		StepGrad (FaceR, FaceG, FaceB);
 		FaceC = SDL_MapRGB (_Surface->format, FaceR, FaceG, FaceB);
@@ -230,7 +257,7 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 			++Black.x; --Black.w;
 			Black.y = Side.y;
 			
-			SDL_FillRect (_Surface, &Black, BlackC);
+			SDL_FillRect(_Surface.get(), &Black, BlackC);
 		}
 
 		if ( Side.y == Face.h )
@@ -245,10 +272,10 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 			++Black.w;
 			Black.y = Side.y;
 
-			SDL_FillRect (_Surface, &Black, BlackC);
+			SDL_FillRect(_Surface.get(), &Black, BlackC);
 		}
 
-		SDL_FillRect (_Surface, &Side, Side1C);
+		SDL_FillRect(_Surface.get(), &Side, Side1C);
 	}
 }
 

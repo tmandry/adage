@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -6,54 +7,80 @@
 extern SDL_Surface *Screen;
 
 #include "text.h"
+#include "image.h"
+#include "font.h"
 
 TextClass::TextClass ()
 {
-	init ("", Screen, "Neuropol.ttf", 10, 0, 0);
+	Init ("", Screen, "Neuropol.ttf", 10, 0, 0);
 }
 
-TextClass::TextClass (const char *Caption, const int Size,
-				  SDL_Surface *ParentSurf)
+TextClass::TextClass (const std::string& Caption, const int Size,
+				  SDL_Surface* ParentSurf)
 {
-	init (Caption, ParentSurf, "Neuropol.ttf", Size, 0, 0);
+	Init (Caption, ParentSurf, "Neuropol.ttf", Size, 0, 0);
 }
 
-TextClass::TextClass (const char *Caption, const int x, const int y,
-				  SDL_Surface *ParentSurf)
+TextClass::TextClass (const std::string& Caption, const int x, const int y,
+				  SDL_Surface* ParentSurf)
 {
-	init (Caption, ParentSurf, "Neuropol.ttf", 10, x, y);
+	Init (Caption, ParentSurf, "Neuropol.ttf", 10, x, y);
 }
 
-TextClass::TextClass (const char *Caption, const int Size, const int x,
-				  const int y, SDL_Surface *ParentSurf)
+TextClass::TextClass (const std::string& Caption, const int Size, const int x,
+				  const int y, SDL_Surface* ParentSurf)
 {
-	init (Caption, ParentSurf, "Neuropol.ttf", Size, x, y);
+	Init (Caption, ParentSurf, "Neuropol.ttf", Size, x, y);
 }
 
-TextClass::TextClass (const char *Caption, const char *Font, const int Size,
-				  const int x, const int y, SDL_Surface *ParentSurf)
+TextClass::TextClass (const std::string& Caption, const std::string& Font, 
+		const int Size, const int x, const int y, SDL_Surface* ParentSurf)
 {
-	init (Caption, ParentSurf, Font, Size, x, y);
+	Init (Caption, ParentSurf, Font, Size, x, y);
 }
+
+
+// Copy constructor
+// FIXME: Write this in a better way =)
+TextClass::TextClass(const TextClass& rhs)
+{
+	*this = rhs;
+}
+
+
+// Assignment operator
+TextClass& TextClass::operator=(const TextClass& rhs)
+{
+	if (this == &rhs)
+		return *this;
+
+	_Caption    = rhs._Caption;
+	_FontFile   = rhs._FontFile;
+	_Font       = rhs._Font;
+	_Size       = rhs._Size;
+	_Style      = rhs._Style;
+	_Surface    = rhs._Surface;
+	_ParentSurf = rhs._ParentSurf;
+	_Rect       = rhs._Rect;
+	_TextColor  = rhs._TextColor;
+	_UseBg      = rhs._UseBg;
+	_BgColor    = rhs._BgColor;
+	return *this;
+};
 
 
 TextClass::~TextClass ()
 {
-	TTF_CloseFont (_Font);
-	delete [] _Caption;
 }
 
-void TextClass::init (const char *Caption, SDL_Surface *ParentSurf,
-				  const char *Font, const int Size, const int x,
+void TextClass::Init (const std::string& Caption, SDL_Surface* ParentSurf,
+				  const std::string& Font, const int Size, const int x,
 				  const int y)
 {
-	_Font = NULL;
-	_Caption = NULL;
 	_UseBg = false;
-	_Surface = NULL;
 	_ParentSurf = ParentSurf;
 
-	strcpy (_FontFile, Font);
+	_FontFile = Font;
 	Resize (Size);
 	ChCaption (Caption);
 	ChColor (0xff, 0xff, 0xff);
@@ -63,32 +90,23 @@ void TextClass::init (const char *Caption, SDL_Surface *ParentSurf,
 
 bool TextClass::Resize (const int Size)
 {
-	TTF_Font *Font;
-	Font = TTF_OpenFont (_FontFile, Size);
-	if ( Font == NULL )
+	Font TmpFont = TTF_OpenFont (_FontFile.c_str(), Size);
+	if ( !TmpFont )
 	{
-		printf ("TTF_OpenFont() error: %s\n", TTF_GetError ());
+		std::cout << "TTF_OpenFont() error: " << TTF_GetError ();
+		std::cout << std::endl;
 		return false;
 	}
 
 	_Size = Size;
-
-	if ( _Font != NULL ) TTF_CloseFont (_Font);
-	_Font = Font;
+	_Font = TmpFont;
 
 	return true;
 }
 
-bool TextClass::ChCaption (const char *Caption)
+bool TextClass::ChCaption (const std::string& Caption)
 {
-	if ( _Caption != NULL ) delete [] _Caption;
-	_Caption = new char [strlen (Caption) + 1];
-	if ( _Caption == NULL )
-	{
-		printf ("TextClass::ChCaption() error: Could not allocate memory\n");
-		return false;
-	}
-	strcpy (_Caption, Caption);
+	_Caption = Caption;
 	return true;
 }
 
@@ -165,21 +183,24 @@ int TextClass::ResetStyle ()
 
 bool TextClass::Draw ()
 {
-	TTF_SetFontStyle (_Font, _Style);
+	TTF_SetFontStyle (_Font.get(), _Style);
 	
-	if ( _Surface != NULL ) SDL_FreeSurface (_Surface);
-	_Surface = TTF_RenderText_Blended (_Font, _Caption, _TextColor);
-	if ( _Surface == NULL )
+	Image tmp = TTF_RenderText_Blended (_Font.get(), _Caption.c_str(), 
+			_TextColor);
+	
+	if ( !tmp )
 	{
-		printf ("TTF_RenderText_Blended() error: %s\n", TTF_GetError ());
+		std::cout << "TTF_RenderText_Blended() error: ";
+		std::cout << TTF_GetError () << std::endl;
 		return false;
 	}
+	_Surface = tmp;
 
 	_Rect.w = _Surface->w;
 	_Rect.h = _Surface->h;
 	
 	if ( _UseBg ) SDL_FillRect (_ParentSurf, &_Rect, _BgColor);
-	SDL_BlitSurface (_Surface, NULL, _ParentSurf, &_Rect);
+	SDL_BlitSurface(_Surface.get(), NULL, _ParentSurf, &_Rect);
 	return true;
 }
 
@@ -189,8 +210,8 @@ SDL_Rect TextClass::GetSize ()
 	SDL_Rect Size;
 	int w, h;
 	
-	TTF_SetFontStyle (_Font, _Style);
-	TTF_SizeText (_Font, _Caption, &w, &h);
+	TTF_SetFontStyle (_Font.get(), _Style);
+	TTF_SizeText (_Font.get(), _Caption.c_str(), &w, &h);
 	Size.w = w;
 	Size.h = h;
 	return Size;

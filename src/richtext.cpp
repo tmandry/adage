@@ -11,12 +11,7 @@ extern SDL_Surface *Screen;
 #include "text.h"
 #include "richtext.h"
 #include "rgbamask.h"
-
-using std::vector;
-using std::string;
-using std::stringstream;
-using std::hex;
-using std::cout;
+#include "image.h"
 
 RichTextClass::RichTextClass ()
 {
@@ -24,19 +19,19 @@ RichTextClass::RichTextClass ()
 }
 
 RichTextClass::RichTextClass (const int x, const int y, const int w,
-						const int h, SDL_Surface *ParentSurf)
+						const int h, SDL_Surface* ParentSurf)
 {
 	Init (x, y, w, h, "", ParentSurf);
 }
 
-RichTextClass::RichTextClass (const char *FmtText, SDL_Surface *ParentSurf)
+RichTextClass::RichTextClass (const std::string& FmtText, 
+		SDL_Surface *ParentSurf)
 {
 	Init (0, 0, FmtText, ParentSurf);
 }
 
 RichTextClass::RichTextClass (const int x, const int y, const int w,
-						const int h, const char *FmtText,
-						SDL_Surface *ParentSurf)
+	const int h, const std::string& FmtText, SDL_Surface *ParentSurf)
 {
 	Init (x, y, w, h, FmtText, ParentSurf);
 }
@@ -44,21 +39,14 @@ RichTextClass::RichTextClass (const int x, const int y, const int w,
 
 RichTextClass::~RichTextClass ()
 {
-	if ( _Surface != 0 )
-		SDL_FreeSurface (_Surface);
-	
-	if ( _FmtText != 0 )
-		delete [] _FmtText;
 }
 
 
 void RichTextClass::Init (const int x, const int y, const int w, const int h,
-					 const char *FmtText, SDL_Surface *ParentSurf)
+	 const std::string& FmtText, SDL_Surface* ParentSurf)
 {
-	_FmtText = 0;
-	_Surface = 0;
-
-	_Size = 20; _Style = TTF_STYLE_NORMAL;
+	_Size = 20; 
+	_Style = TTF_STYLE_NORMAL;
 	_Fr = _Fg = _Fb = 0xff;
 	_Br = _Bg = _Bb = 0x00;
 	_UseBg = true;
@@ -69,12 +57,9 @@ void RichTextClass::Init (const int x, const int y, const int w, const int h,
 	ChParentSurf (ParentSurf);
 }
 
-void RichTextClass::Init (const int x, const int y, const char *FmtText,
-					 SDL_Surface *ParentSurf)
+void RichTextClass::Init (const int x, const int y, const std::string& FmtText,
+					 SDL_Surface* ParentSurf)
 {
-	_FmtText = 0;
-	_Surface = 0;
-
 	Move (x, y);
 	ChCaption (FmtText);
 	SizeToText ();
@@ -85,7 +70,8 @@ void RichTextClass::Init (const int x, const int y, const char *FmtText,
 
 bool RichTextClass::Move (const int x, const int y)
 {
-	_Rect.x = x; _Rect.y = y;
+	_Rect.x = x; 
+	_Rect.y = y;
 	return true;
 }
 
@@ -93,39 +79,30 @@ bool RichTextClass::Resize (const int w, const int h)
 {
 	_Rect.w = w; _Rect.h = h;
 	
-	if ( _Surface != 0 ) SDL_FreeSurface (_Surface);
-	_Surface = SDL_CreateRGBSurface (SDL_SWSURFACE, w, h, 32, rmask, gmask,
-							   bmask, amask);
+	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE, w, h, 32,
+			rmask, gmask, bmask, amask);
 	
-	if ( _Surface == 0 )
+	if ( !tmp )
 	{
-		printf ("SDL_CreateRGBSurface() error: %s\n", SDL_GetError ());
+		std::cout << "SDL_CreateRGBSurface() error: " << SDL_GetError ();
+		std::cout << std::endl;
 		return false;
 	}
+
+	_Surface = tmp;
 	
 	return true;
 }
 
-bool RichTextClass::ChCaption (const char *FmtText)
+bool RichTextClass::ChCaption (const std::string& FmtText)
 {
-	if ( _FmtText != 0 )
-		delete [] _FmtText;
-	
-	_FmtText = new char [strlen (FmtText) + 1];
-	if ( _FmtText == 0 )
-	{
-		printf ("RichTextClass::ChCaption: Could not allocate _FmtText\n");
-		return false;
-	}
-
-	strcpy (_FmtText, FmtText);
-
+	_FmtText = FmtText;
 	_Text.clear ();
 
 	return Parse ();
 }
 
-bool RichTextClass::ChParentSurf (SDL_Surface *ParentSurf)
+bool RichTextClass::ChParentSurf (SDL_Surface* ParentSurf)
 {
 	_ParentSurf = ParentSurf;
 	return true;
@@ -135,7 +112,7 @@ bool RichTextClass::SizeToText ()
 {
 	int w = 0, h = 0;
 
-	vector<TextClass>::iterator i;
+	std::vector<TextClass>::iterator i;
 	for ( i = _Text.begin (); i < _Text.end (); i++ )
 	{
 		SDL_Rect Size;
@@ -153,12 +130,11 @@ bool RichTextClass::SizeToText ()
 
 bool RichTextClass::Parse ()
 {
-	char *Sandbox;
-	string Atom;
-	stringstream Convert;
+	std::string Sandbox;
+	std::string Atom;
+	std::stringstream Convert;
 
-	Sandbox = new char [strlen (_FmtText) + 1];
-	strcpy (Sandbox, _FmtText);
+	Sandbox = _FmtText;
 
 	int x = 0, y = 0;
 	int RowH = 0;
@@ -180,12 +156,14 @@ bool RichTextClass::Parse ()
 		};
 	} RawToRgb;
 
+	// FIXME: Review this!
+	// *******************
 	char CharToStr [2] = " ";
 
 
-	for ( unsigned int i = 0; i < strlen (_FmtText); i++ )
+	for ( unsigned int i = 0; i < _FmtText.size(); i++ )
 	{
-		cout << _FmtText[i];
+		std::cout << _FmtText[i];
 		if ( !( _FmtText[i] == '^' || _FmtText[i] == '\n' ) )
 		{
 			CharToStr[0] = _FmtText[i];
@@ -193,7 +171,8 @@ bool RichTextClass::Parse ()
 			continue;
 		}
 
-		if ( _FmtText[i] == '^' && i == strlen (_FmtText) - 1 )
+		// FIXME: Should there still be -1?
+		if ( _FmtText[i] == '^' && i == _FmtText.size() - 1 )
 		{
 			CharToStr[0] = '^';
 			Atom += CharToStr;
@@ -203,15 +182,16 @@ bool RichTextClass::Parse ()
 		if ( !Atom.empty () || _FmtText[i] == '\n' )
 		{
 			_Text.push_back (TextClass (Atom.c_str (), Size, x, y,
-								   _Surface));
+								   _Surface.get()));
 
-			vector<TextClass>::iterator PrevAtom;
+			std::vector<TextClass>::iterator PrevAtom;
 			PrevAtom = _Text.end () - 1;
 			
 			PrevAtom->SetStyle (Style);
 			
 			SDL_Rect AtomSize;
 			AtomSize = PrevAtom->GetSize ();
+			
 			// This is to keep track of the overall height of the row,
 			// so when there's a newline we know what to do
 			if ( AtomSize.h > RowH ) RowH = AtomSize.h;
@@ -255,8 +235,8 @@ bool RichTextClass::Parse ()
 			break;
 		case 'S':
 			// Size
-			Sandbox[i + 3] = 0;
-			Convert << Sandbox + i + 1;
+			/*Sandbox[i + 3] = 0;*/
+			Convert << Sandbox;
 			Convert >> Size;
 			i += 2;
 			break;
@@ -266,17 +246,17 @@ bool RichTextClass::Parse ()
 			break;
 		case 'C':
 			// Foreground color
-			Sandbox[i + 7] = 0;
-			Convert << Sandbox + i + 1;
-			Convert >> hex >> RawToRgb.Glob;
+			/*Sandbox[i + 7] = 0;*/
+			Convert << Sandbox;
+			Convert >> std::hex >> RawToRgb.Glob;
 			Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
 			i += 6;
 			break;
 		case 'G':
 			// Background color
-			Sandbox[i + 7] = 0;
-			Convert << Sandbox + i + 1;
-			Convert >> hex >> RawToRgb.Glob;
+			/*Sandbox[i + 7] = 0;*/
+			Convert << Sandbox;
+			Convert >> std::hex >> RawToRgb.Glob;
 			Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
 			UseBg = true;
 			i += 6;
@@ -305,17 +285,16 @@ bool RichTextClass::Parse ()
 		}
 	}
 
-	delete [] Sandbox;
 	return true;
 }
 
 bool RichTextClass::Draw ()
 {
-	vector<TextClass>::iterator i;
+	std::vector<TextClass>::iterator i;
 	for ( i = _Text.begin (); i < _Text.end (); i++ )
 		i->Draw ();
 	
-	SDL_BlitSurface (_Surface, 0, _ParentSurf, &_Rect);
+	SDL_BlitSurface(_Surface.get(), 0, _ParentSurf, &_Rect);
 	
 	return true;
 }

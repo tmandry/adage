@@ -1,7 +1,8 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 
 #include "SDL.h"
+#include "handle.h"
 
 SDL_Surface *Screen;
 
@@ -16,16 +17,16 @@ TextClass *Text2;
 
 Uint32 BlankColor;
 
-using namespace std;
-
 void Button_Click ();
 void BtnChColor_Click ();
 
 int main (int argc, char *argv[])
 {
+	using namespace std;
+	
 	if ( SDL_Init (SDL_INIT_VIDEO) < 0 )
 	{
-		printf ("SDL_Init() error: %s\n", SDL_GetError ());
+		cerr << "SDL_Init() error: " << SDL_GetError () << endl;
 		exit (1);
 	}
 
@@ -33,15 +34,15 @@ int main (int argc, char *argv[])
 
 	if ( TTF_Init () < 0 )
 	{
-		printf ("TTF_Init() error: %s\n", TTF_GetError ());
+		cerr << "TTF_Init() error: " << TTF_GetError () << endl;
 		exit (1);
 	}
 
 	Screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF |
 						 SDL_SRCALPHA);
-	if ( Screen == NULL )
+	if ( Screen )
 	{
-		printf ("SDL_SetVideoMode error: %s\n", SDL_GetError ());
+		cerr << "SDL_SetVideoMode error: " << SDL_GetError () << endl;
 		exit (1);
 	}
 
@@ -62,8 +63,8 @@ int main (int argc, char *argv[])
 	Text2->ChBgColor (0x55, 0x55, 0xaa);
 
 	RichTextClass RText (400, 200, 640, 200,
-					 "^Cff0000Hello! ^Bbold\n^U^S20underline^B^U^I^s italic\n^Tbye!^E",
-					 Screen);
+		 "^Cff0000Hello! ^Bbold\n^U^S20underline^B^U^I^s italic\n^Tbye!^E", 
+		 Screen);
 
 	/*InputClass Input (400, 200, 100);
 	Input.SetText ("HeRrO!");*/
