@@ -5,7 +5,7 @@
 
 # Variable definitions
 CC=g++
-CFLAGS=-Wall -g `sdl-config --cflags`
+CFLAGS=-Wall -g -pg `sdl-config --cflags`
 LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
 OUT=adage
 OBJECTS=main.o text.o button.o richtext.o
