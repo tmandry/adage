@@ -61,8 +61,8 @@ int main (int argc, char *argv[])
 	Text2->ChColor (0x00, 0x00, 0x00);
 	Text2->ChBgColor (0x55, 0x55, 0xaa);
 
-	RichTextClass RText (0, 0, 100, 100,
-					 "Hello! ^Bbold^Uunderline^B^U^Iitalic\n^Cff0000bye!",
+	RichTextClass RText (0, 0, 640, 200,
+					 "Hello! ^Bbold\n^Uunderline^B^U^Iitalic\n^Cff0000bye!",
 					 Screen);
 
 	/*InputClass Input (400, 200, 100);

@@ -58,10 +58,10 @@ void RichTextClass::Init (const int x, const int y, const int w, const int h,
 	_FmtText = NULL;
 	_Surface = NULL;
 
-	_Size = 12; _Style = TTF_STYLE_NORMAL;
+	_Size = 20; _Style = TTF_STYLE_NORMAL;
 	_Fr = _Fg = _Fb = 0xff;
 	_Br = _Bg = _Bb = 0x00;
-	_UseBg = false;
+	_UseBg = true;
 
 	Move (x, y);
 	Resize (w, h);

@@ -71,6 +71,8 @@ bool TextClass::Resize (const int Size)
 		return false;
 	}
 
+	_Size = Size;
+
 	if ( _Font != NULL ) TTF_CloseFont (_Font);
 	_Font = Font;
 
