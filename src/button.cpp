@@ -43,10 +43,10 @@ void ButtonClass::Init (const char *Caption, const int x, const int y,
 				    const int w, const int h, const int TextSize,
 				    const bool resize, SDL_Surface *ParentSurf)
 {
-	_Surface = NULL;
+	_Surface = 0;
 	_State = BUTTON_STATE_UP;
 
-	_HndClick = NULL;
+	_HndClick = 0;
 
 	_ParentSurf = ParentSurf;
 	Move (x, y);
@@ -81,11 +81,11 @@ bool ButtonClass::Resize (const int w, const int h)
 	_Rect.w = w;
 	_Rect.h = h;
 
-	if ( _Surface != NULL ) SDL_FreeSurface (_Surface);
+	if ( _Surface != 0 ) SDL_FreeSurface (_Surface);
 	_Surface = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA, w, h, 32,
 							   rmask, gmask, bmask, amask);
 	
-	if ( _Surface == NULL )
+	if ( _Surface == 0 )
 	{
 		printf ("ButtonClass::Resize(): CreateRGBSurface() failed: %s\n",
 			   SDL_GetError ());
@@ -146,7 +146,7 @@ bool ButtonClass::Draw ()
 	Side1C = SDL_MapRGB (_Surface->format, Side1R, Side1G, Side1B);
 	Side2C = SDL_MapRGB (_Surface->format, Side2R, Side2G, Side2B);
 	RenderButton (FaceC, Side1C, Side2C);
-	/*if ( SDL_FillRect (_Surface, NULL, Color) < 0 )
+	/*if ( SDL_FillRect (_Surface, 0, Color) < 0 )
 	{
 		printf ("ButtonClass::Draw(): SDL_FillRect() error: %s\n",
 			   SDL_GetError ());
@@ -158,7 +158,7 @@ bool ButtonClass::Draw ()
 	_Caption.Move (TextLoc, TextLoc);
 	if ( !_Caption.Draw () ) return false;
 
-	if ( SDL_BlitSurface (_Surface, NULL, _ParentSurf, &_Rect) < 0 )
+	if ( SDL_BlitSurface (_Surface, 0, _ParentSurf, &_Rect) < 0 )
 	{
 		printf ("ButtonClass::Draw(): SDL_BlitSurface error: %s\n",
 			   SDL_GetError ());
@@ -193,7 +193,7 @@ void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
 	Black.w = BUTTON_SIDE_WIDTH; Black.h = 1;
 
 	// Most of this will be covered
-	SDL_FillRect (_Surface, NULL, Side2C);
+	SDL_FillRect (_Surface, 0, Side2C);
 
 	// Face
 	Uint8 FaceR, FaceG, FaceB;
@@ -263,7 +263,7 @@ void ButtonClass::MouseButtonEvent (const Uint8 Button, const Uint8 State,
 		else
 		{
 			if ( _State == BUTTON_STATE_DOWN )
-				if ( _HndClick != NULL ) _HndClick ();
+				if ( _HndClick != 0 ) _HndClick ();
 
 			_State = BUTTON_STATE_HOVER;
 		}

@@ -44,10 +44,10 @@ RichTextClass::RichTextClass (const int x, const int y, const int w,
 
 RichTextClass::~RichTextClass ()
 {
-	if ( _Surface != NULL )
+	if ( _Surface != 0 )
 		SDL_FreeSurface (_Surface);
 	
-	if ( _FmtText != NULL )
+	if ( _FmtText != 0 )
 		delete [] _FmtText;
 }
 
@@ -55,8 +55,8 @@ RichTextClass::~RichTextClass ()
 void RichTextClass::Init (const int x, const int y, const int w, const int h,
 					 const char *FmtText, SDL_Surface *ParentSurf)
 {
-	_FmtText = NULL;
-	_Surface = NULL;
+	_FmtText = 0;
+	_Surface = 0;
 
 	_Size = 20; _Style = TTF_STYLE_NORMAL;
 	_Fr = _Fg = _Fb = 0xff;
@@ -72,8 +72,8 @@ void RichTextClass::Init (const int x, const int y, const int w, const int h,
 void RichTextClass::Init (const int x, const int y, const char *FmtText,
 					 SDL_Surface *ParentSurf)
 {
-	_FmtText = NULL;
-	_Surface = NULL;
+	_FmtText = 0;
+	_Surface = 0;
 
 	Move (x, y);
 	ChCaption (FmtText);
@@ -93,11 +93,11 @@ bool RichTextClass::Resize (const int w, const int h)
 {
 	_Rect.w = w; _Rect.h = h;
 	
-	if ( _Surface != NULL ) SDL_FreeSurface (_Surface);
+	if ( _Surface != 0 ) SDL_FreeSurface (_Surface);
 	_Surface = SDL_CreateRGBSurface (SDL_SWSURFACE, w, h, 32, rmask, gmask,
 							   bmask, amask);
 	
-	if ( _Surface == NULL )
+	if ( _Surface == 0 )
 	{
 		printf ("SDL_CreateRGBSurface() error: %s\n", SDL_GetError ());
 		return false;
@@ -108,11 +108,11 @@ bool RichTextClass::Resize (const int w, const int h)
 
 bool RichTextClass::ChCaption (const char *FmtText)
 {
-	if ( _FmtText != NULL )
+	if ( _FmtText != 0 )
 		delete [] _FmtText;
 	
 	_FmtText = new char [strlen (FmtText) + 1];
-	if ( _FmtText == NULL )
+	if ( _FmtText == 0 )
 	{
 		printf ("RichTextClass::ChCaption: Could not allocate _FmtText\n");
 		return false;
@@ -315,7 +315,7 @@ bool RichTextClass::Draw ()
 	for ( i = _Text.begin (); i < _Text.end (); i++ )
 		i->Draw ();
 	
-	SDL_BlitSurface (_Surface, NULL, _ParentSurf, &_Rect);
+	SDL_BlitSurface (_Surface, 0, _ParentSurf, &_Rect);
 	
 	return true;
 }

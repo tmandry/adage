@@ -34,7 +34,7 @@ InputClass::~InputClass ()
 void InputClass::Init (const int x, const int y, const int w, const int h,
 				   SDL_Surface *ParentSurf, const int TextSize)
 {
-	_Content = NULL;
+	_Content = 0;
 	_ParentSurf = ParentSurf;
 
 	Move (x, y);
@@ -52,7 +52,7 @@ void InputClass::Init (const int x, const int y, const int w, const int h,
 
 bool InputClass::SetText (const char *Text)
 {
-	if ( _Content != NULL ) delete [] _Content;
+	if ( _Content != 0 ) delete [] _Content;
 	_Content = new char [strlen (Text) + 1];
 	strcpy (_Content, Text);
 	
@@ -69,10 +69,11 @@ bool InputClass::Move (const int x, const int y)
 
 bool InputClass::Resize (const int w, const int h)
 {
+	if ( _Surface != 0 ) SDL_FreeSurface (_Surface);
 	_Surface = SDL_CreateRGBSurface (SDL_SWSURFACE, w, h, 32, rmask, gmask,
 							   bmask, amask);
 	
-	if ( _Surface == NULL )
+	if ( _Surface == 0 )
 	{
 		printf ("InputClass::Resize(): SDL_CreateRGBSurface() failed: %s\n",
 			   SDL_GetError ());
@@ -95,7 +96,7 @@ bool InputClass::ResizeText (const int TextSize)
 bool InputClass::Draw ()
 {
 	// Background
-	SDL_FillRect (_Surface, NULL, _BackColor);
+	SDL_FillRect (_Surface, 0, _BackColor);
 
 	// Draw frame
 	SDL_Rect Line;
@@ -115,7 +116,7 @@ bool InputClass::Draw ()
 	_Text.Draw ();
 
 	// Blit
-	SDL_BlitSurface (_Surface, NULL, _ParentSurf, &_Rect);
+	SDL_BlitSurface (_Surface, 0, _ParentSurf, &_Rect);
 
 	return true;
 }
