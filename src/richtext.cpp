@@ -152,10 +152,10 @@ bool RichTextClass::Parse ()
 		unsigned long int Glob;
 		struct
 		{
-			Uint16 zero;
-			Uint8 r;
-			Uint8 g;
+//			Uint16 zero;
 			Uint8 b;
+			Uint8 g;
+			Uint8 r;
 		};
 	} RawToRgb;
 
