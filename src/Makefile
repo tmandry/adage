@@ -10,6 +10,11 @@ LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
 OUT=adage
 OBJECTS=main.o text.o button.o richtext.o
 
+all: $(OUT)
+
+clean:
+	rm -rf $(OUT) $(OBJECTS)
+
 $(OUT): $(OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
 
