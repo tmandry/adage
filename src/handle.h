@@ -11,7 +11,7 @@ public:
 	
 	basic_handle(T* prep = 0, delete_function = 0);
 	basic_handle(const basic_handle&);
-	~basic_handle();
+	virtual ~basic_handle();
 
 	basic_handle& operator=(const basic_handle&);
 	basic_handle& operator=(T*);
@@ -163,6 +163,8 @@ void basic_handle<T>::decrease_count()
 {
 	if (--(*pcount) == 0) {
 //		std::cout << "Deleting object " << name << "\n";
+		
+		if (!rep) return;
 		
 		if (pdf) {
 			pdf(rep);

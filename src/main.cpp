@@ -40,7 +40,7 @@ int main (int argc, char *argv[])
 
 	Screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF |
 						 SDL_SRCALPHA);
-	if ( Screen )
+	if ( !Screen )
 	{
 		cerr << "SDL_SetVideoMode error: " << SDL_GetError () << endl;
 		exit (1);
@@ -63,7 +63,7 @@ int main (int argc, char *argv[])
 	Text2->ChBgColor (0x55, 0x55, 0xaa);
 
 	RichTextClass RText (400, 200, 640, 200,
-		 "^Cff0000Hello! ^Bbold\n^U^S20underline^B^U^I^s italic\n^Tbye!^E", 
+		 "^Cff00ffHello! ^Bbold\n^U^S20underline^B^U^I^s italic\n^Tbye!^E", 
 		 Screen);
 
 	/*InputClass Input (400, 200, 100);

@@ -13,6 +13,9 @@ extern SDL_Surface *Screen;
 #include "rgbamask.h"
 #include "image.h"
 
+using std::cout;
+using std::endl;
+
 RichTextClass::RichTextClass ()
 {
 	Init (0, 0, 0, 0, "", Screen);
@@ -146,7 +149,7 @@ bool RichTextClass::Parse ()
 
 	union
 	{
-		unsigned int Glob;
+		unsigned long int Glob;
 		struct
 		{
 			Uint16 zero;
@@ -247,15 +250,16 @@ bool RichTextClass::Parse ()
 		case 'C':
 			// Foreground color
 			/*Sandbox[i + 7] = 0;*/
-			Convert << Sandbox;
+			Convert << Sandbox.substr (i+1, 6);
 			Convert >> std::hex >> RawToRgb.Glob;
 			Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
+			cout << "Red: " << (int)Fr << " Green: " << (int)Fg << " Blue: " << (int)Fb << endl;
 			i += 6;
 			break;
 		case 'G':
 			// Background color
 			/*Sandbox[i + 7] = 0;*/
-			Convert << Sandbox;
+			Convert << Sandbox.substr (i+1, 6);
 			Convert >> std::hex >> RawToRgb.Glob;
 			Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
 			UseBg = true;
