@@ -188,6 +188,8 @@ SDL_Rect TextClass::GetSize ()
 {
 	SDL_Rect Size;
 	int w, h;
+	
+	TTF_SetFontStyle (_Font, _Style);
 	TTF_SizeText (_Font, _Caption, &w, &h);
 	Size.w = w;
 	Size.h = h;

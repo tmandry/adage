@@ -170,10 +170,10 @@ bool RichTextClass::Parse ()
 
 	union
 	{
-		long unsigned int Glob;
+		unsigned int Glob;
 		struct
 		{
-			Uint8 zero;
+			Uint16 zero;
 			Uint8 r;
 			Uint8 g;
 			Uint8 b;
@@ -208,6 +208,8 @@ bool RichTextClass::Parse ()
 			vector<TextClass>::iterator PrevAtom;
 			PrevAtom = _Text.end () - 1;
 			
+			PrevAtom->SetStyle (Style);
+			
 			SDL_Rect AtomSize;
 			AtomSize = PrevAtom->GetSize ();
 			// This is to keep track of the overall height of the row,
@@ -223,7 +225,6 @@ bool RichTextClass::Parse ()
 			else
 				x += AtomSize.w;
 
-			PrevAtom->SetStyle (Style);
 			PrevAtom->ChColor (Fr, Fg, Fb);
 			if ( UseBg ) PrevAtom->ChBgColor (Br, Bg, Bb);
 
@@ -255,7 +256,7 @@ bool RichTextClass::Parse ()
 		case 'S':
 			// Size
 			Sandbox[i + 3] = 0;
-			Convert << Sandbox + (++i);
+			Convert << Sandbox + i + 1;
 			Convert >> Size;
 			i += 2;
 			break;
@@ -266,17 +267,19 @@ bool RichTextClass::Parse ()
 		case 'C':
 			// Foreground color
 			Sandbox[i + 7] = 0;
-			Convert << Sandbox + (++i);
+			Convert << Sandbox + i + 1;
 			Convert >> hex >> RawToRgb.Glob;
 			Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
+			i += 6;
 			break;
 		case 'G':
 			// Background color
 			Sandbox[i + 7] = 0;
-			Convert << Sandbox + (++i);
+			Convert << Sandbox + i + 1;
 			Convert >> hex >> RawToRgb.Glob;
 			Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
 			UseBg = true;
+			i += 6;
 			break;
 		case 'c':
 			// Reset foreground color

@@ -24,7 +24,7 @@ class TextClass
 			 const int x, const int y, SDL_Surface *ParentSurf = Screen);
 	
 	// copy constructor
-	TextClass::TextClass (const TextClass &Old)
+	TextClass (const TextClass &Old)
 	{
 		_Surface = NULL;
 		_Caption = NULL;
