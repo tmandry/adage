@@ -135,7 +135,6 @@ bool RichTextClass::Parse ()
 {
 	std::string Sandbox;
 	std::string Atom;
-	std::stringstream Convert;
 
 	Sandbox = _FmtText;
 
@@ -159,26 +158,18 @@ bool RichTextClass::Parse ()
 		};
 	} RawToRgb;
 
-	// FIXME: Review this!
-	// *******************
-	char CharToStr [2] = " ";
-
-
 	for ( unsigned int i = 0; i < _FmtText.size(); i++ )
 	{
 		std::cout << _FmtText[i];
 		if ( !( _FmtText[i] == '^' || _FmtText[i] == '\n' ) )
 		{
-			CharToStr[0] = _FmtText[i];
-			Atom += CharToStr;
+			Atom += _FmtText[i];
 			continue;
 		}
 
-		// FIXME: Should there still be -1?
-		if ( _FmtText[i] == '^' && i == _FmtText.size() - 1 )
+		if ( _FmtText[i] == '^' && i == _FmtText.size() - 1)
 		{
-			CharToStr[0] = '^';
-			Atom += CharToStr;
+			Atom += _FmtText[i];
 			continue;
 		}
 
@@ -191,6 +182,7 @@ bool RichTextClass::Parse ()
 			PrevAtom = _Text.end () - 1;
 			
 			PrevAtom->SetStyle (Style);
+			PrevAtom->Resize (Size);
 			
 			SDL_Rect AtomSize;
 			AtomSize = PrevAtom->GetSize ();
@@ -218,77 +210,73 @@ bool RichTextClass::Parse ()
 		
 		i++;
 
-		switch ( _FmtText[i] )
-		{
-		case 'B':
-			// Bold
-			Style ^= TTF_STYLE_BOLD;
+		switch (_FmtText[i]) {
+			case 'B': // Bold
+				Style ^= TTF_STYLE_BOLD;
 			break;
-		case 'U':
-			// Underline
-			Style ^= TTF_STYLE_UNDERLINE;
+
+			case 'U': // Underline
+				Style ^= TTF_STYLE_UNDERLINE;
 			break;
-		case 'I':
-			// Italic
-			Style ^= TTF_STYLE_ITALIC;
+
+			case 'I': // Italic
+				Style ^= TTF_STYLE_ITALIC;
 			break;
-		case 'T':
-			// Reset style
-			Style = _Style;
+
+			case 'T': // Reset style
+				Style = _Style;
 			break;
-		case 'S':
-			// Size
-			/*Sandbox[i + 3] = 0;*/
-			Convert << Sandbox;
-			Convert >> Size;
-			i += 2;
+
+			case 'S': { // Size
+				std::stringstream Convert;
+				Convert << Sandbox.substr(i+1, 2);
+				Convert >> Size;
+				i += 2;
+			} break;
+
+			case 's': // Reset size
+				Size = _Size;
 			break;
-		case 's':
-			// Reset size
-			Size = _Size;
+
+			case 'C': { // Foreground color
+				std::stringstream Convert;
+				Convert << Sandbox.substr (i+1, 6);
+				Convert >> std::hex >> RawToRgb.Glob;
+				Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
+				i += 6;
+			} break;
+
+			case 'G': { // Background color
+				std::stringstream Convert;
+				Convert << Sandbox.substr (i+1, 6);
+				Convert >> std::hex >> RawToRgb.Glob;
+				Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
+				UseBg = true;
+				i += 6;
+			} break;
+
+			case 'c': // Reset foreground color
+				Fr = _Fr; Fg = _Fg; Fb = _Fb;
 			break;
-		case 'C':
-			// Foreground color
-			/*Sandbox[i + 7] = 0;*/
-			Convert << Sandbox.substr (i+1, 6);
-			Convert >> std::hex >> RawToRgb.Glob;
-			Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
-			cout << "Red: " << (int)Fr << " Green: " << (int)Fg << " Blue: " << (int)Fb << endl;
-			i += 6;
+
+			case 'g': // Reset background color
+				Br = _Br; Bg = _Bg; Bb = _Bb;
+				UseBg = _UseBg;
 			break;
-		case 'G':
-			// Background color
-			/*Sandbox[i + 7] = 0;*/
-			Convert << Sandbox.substr (i+1, 6);
-			Convert >> std::hex >> RawToRgb.Glob;
-			Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
-			UseBg = true;
-			i += 6;
+
+			case 'b': // Clear background color
+				UseBg = false;
 			break;
-		case 'c':
-			// Reset foreground color
-			Fr = _Fr; Fg = _Fg; Fb = _Fb;
-			break;
-		case 'g':
-			// Reset background color
-			Br = _Br; Bg = _Bg; Bb = _Bb;
-			UseBg = _UseBg;
-			break;
-		case 'b':
-			// Clear background color
-			UseBg = false;
-			break;
-		case 'R':
-			// Reset EVERYTHING
-			Style = _Style;
-			Size = _Size;
-			Fr = _Fr; Fg = _Fg; Fb = _Fb;
-			Br = _Br; Bg = _Bg; Bb = _Bb;
-			UseBg = _UseBg;
+
+			case 'R': // Reset EVERYTHING
+				Style = _Style;
+				Size = _Size;
+				Fr = _Fr; Fg = _Fg; Fb = _Fb;
+				Br = _Br; Bg = _Bg; Bb = _Bb;
+				UseBg = _UseBg;
 			break;
 		}
 	}
-
 	return true;
 }
 
