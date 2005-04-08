@@ -13,8 +13,8 @@ extern SDL_Surface *Screen;
 #include "rgbamask.h"
 #include "image.h"
 
-using std::cout;
-using std::endl;
+//using std::cout;
+//using std::endl;
 
 RichTextClass::RichTextClass ()
 {
@@ -63,6 +63,11 @@ void RichTextClass::Init (const int x, const int y, const int w, const int h,
 void RichTextClass::Init (const int x, const int y, const std::string& FmtText,
 					 SDL_Surface* ParentSurf)
 {
+	_Style = TTF_STYLE_NORMAL;
+	_Fr = _Fg = _Fb = 0xff;
+	_Br = _Bg = _Bb = 0x00;
+	_UseBg = true;
+
 	Move (x, y);
 	ChCaption (FmtText);
 	SizeToText ();
@@ -133,10 +138,7 @@ bool RichTextClass::SizeToText ()
 
 bool RichTextClass::Parse ()
 {
-	std::string Sandbox;
 	std::string Atom;
-
-	Sandbox = _FmtText;
 
 	int x = 0, y = 0;
 	int RowH = 0;
@@ -151,7 +153,6 @@ bool RichTextClass::Parse ()
 		unsigned long int Glob;
 		struct
 		{
-//			Uint16 zero;
 			Uint8 b;
 			Uint8 g;
 			Uint8 r;
@@ -160,7 +161,6 @@ bool RichTextClass::Parse ()
 
 	for ( unsigned int i = 0; i < _FmtText.size(); i++ )
 	{
-		std::cout << _FmtText[i];
 		if ( !( _FmtText[i] == '^' || _FmtText[i] == '\n' ) )
 		{
 			Atom += _FmtText[i];
@@ -229,7 +229,7 @@ bool RichTextClass::Parse ()
 
 			case 'S': { // Size
 				std::stringstream Convert;
-				Convert << Sandbox.substr(i+1, 2);
+				Convert << _FmtText.substr(i+1, 2);
 				Convert >> Size;
 				i += 2;
 			} break;
@@ -240,7 +240,7 @@ bool RichTextClass::Parse ()
 
 			case 'C': { // Foreground color
 				std::stringstream Convert;
-				Convert << Sandbox.substr (i+1, 6);
+				Convert << _FmtText.substr (i+1, 6);
 				Convert >> std::hex >> RawToRgb.Glob;
 				Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
 				i += 6;
@@ -248,7 +248,7 @@ bool RichTextClass::Parse ()
 
 			case 'G': { // Background color
 				std::stringstream Convert;
-				Convert << Sandbox.substr (i+1, 6);
+				Convert << _FmtText.substr (i+1, 6);
 				Convert >> std::hex >> RawToRgb.Glob;
 				Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
 				UseBg = true;
@@ -274,6 +274,10 @@ bool RichTextClass::Parse ()
 				Fr = _Fr; Fg = _Fg; Fb = _Fb;
 				Br = _Br; Bg = _Bg; Bb = _Bb;
 				UseBg = _UseBg;
+			break;
+			
+			case '^': // Literal ^ (caret)
+				Atom += '^';
 			break;
 		}
 	}
