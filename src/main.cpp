@@ -11,9 +11,9 @@ SDL_Surface *Screen;
 #include "richtext.h"
 //#include "input.h"
 
-ButtonClass *Button;
-ButtonClass *BtnChColor;
-TextClass *Text2;
+ButtonClass* Button;
+ButtonClass* BtnChColor;
+TextClass* Text2;
 
 Uint32 BlankColor;
 
@@ -47,6 +47,7 @@ int main (int argc, char *argv[])
 	}
 
 	SDL_WM_SetCaption ("Adage Widget Set Preview", NULL);
+	// TODO: Set an icon?
 
 	Uint8 Done = 0;
 	SDL_Event Event;

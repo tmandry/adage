@@ -2,331 +2,341 @@
 
 #include "SDL.h"
 
-extern SDL_Surface *Screen;
+extern SDL_Surface *screen;
 
 #include "button.h"
 #include "rgbamask.h"
 #include "image.h"
 
 // Default constructor
-ButtonClass::ButtonClass ()
+Button::Button()
 {
-	Init ("", 0, 0, 0, 0, 0, false, Screen);
+	init("", 0, 0, 0, 0, 0, false, screen);
 }
 
 
 // Overloaded constructor
-ButtonClass::ButtonClass (const char* Caption, const int x, const int y,
-					 SDL_Surface* ParentSurf)
+Button::Button(const char* caption, const int x, const int y,
+					 SDL_Surface* parent_surf)
 {
-	Init (Caption, x, y, 0, 0, 0, true, ParentSurf);
+	init(caption, x, y, 0, 0, 0, true, parent_surf);
 }
 
 
 // Overloaded constructor
-ButtonClass::ButtonClass (const char* Caption, const int x, const int y,
-					 const int w, const int h, SDL_Surface* ParentSurf)
+Button::Button(const char* caption, const int x, const int y,
+					 const int w, const int h, SDL_Surface* parent_surf)
 {
-	Init (Caption, x, y, w, h, 0, false, ParentSurf);
+	init(caption, x, y, w, h, 0, false, parent_surf);
 }
 
 
 // Overloaded constructor
-ButtonClass::ButtonClass (const char* Caption, const int x, const int y,
-					 const int TextSize, SDL_Surface* ParentSurf)
+Button::Button(const char* caption, const int x, const int y,
+					 const int text_size, SDL_Surface* parent_surf)
 {
-	Init (Caption, x, y, 0, 0, TextSize, true, ParentSurf);
+	init(caption, x, y, 0, 0, text_size, true, parent_surf);
 }
 
 
 // Copy ctor
-ButtonClass::ButtonClass(const ButtonClass& rhs)
+Button::Button(const Button& rhs)
 {
 	*this = rhs;
 }
 
 
 // Assignment operator
-ButtonClass& ButtonClass::operator=(const ButtonClass& rhs)
+Button& Button::operator=(const Button& rhs)
 {
 	if (this == &rhs)
 		return *this;
 
-	_HndClick   = rhs._HndClick;
-	_Caption    = rhs._Caption;
-	_Surface    = rhs._Surface;
-	_ParentSurf = rhs._ParentSurf;
-	_Rect       = rhs._Rect;
-	_State      = rhs._State;
+	m_hnd_click   = rhs.m_hnd_click;
+	m_caption     = rhs.m_caption;
+	m_surface     = rhs.m_surface;
+	m_parent_surf = rhs.m_parent_surf;
+	m_area        = rhs.m_area;
+	m_state       = rhs.m_state;
 	return *this;
 }
 
 
 // Destructor
-ButtonClass::~ButtonClass ()
+Button::~Button()
 {
 }
 
 
-void ButtonClass::Init (const char* Caption, const int x, const int y,
-				    const int w, const int h, const int TextSize,
-				    const bool resize, SDL_Surface* ParentSurf)
+void Button::init(const char* caption, const int x, const int y, 
+	const int w, const int h, const int text_size, 
+	const bool resize, SDL_Surface* parent_surf)
 {
-	_State = BUTTON_STATE_UP;
+	m_state = BUTTON_STATE_UP;
 
-	_HndClick = 0;
+	m_hnd_click = 0;
 
-	_ParentSurf = ParentSurf;
-	Move (x, y);
-	Resize (w, h);
-	if ( TextSize ) ResizeText (TextSize);
-	ChCaption (Caption);
-	if ( resize ) SizeToText ();
-	_Caption.Move (BUTTON_SIDE_WIDTH, BUTTON_SIDE_WIDTH);
+	m_parent_surf = parent_surf;
+	
+	move(x, y);
+	resize(w, h);
+	
+	if (text_size) 
+		resize_text(text_size);
+	change_caption(caption);
+	if (resize)
+		size_to_text();
+	m_caption.move(BUTTON_SIDE_WIDTH, BUTTON_SIDE_WIDTH);
 }
 
 
 
-bool ButtonClass::ChCaption (const char* Caption, const bool resize)
+bool Button::change_caption(const char* caption, const bool resize)
 {
-	if ( !_Caption.ChCaption (Caption) ) return false;
+	if (!m_caption.change_caption(caption)) 
+		return false;
 
-	if ( resize ) SizeToText ();
+	if (resize) 
+		size_to_text();
 
 	return true;
 }
 
-bool ButtonClass::Move (const int x, const int y)
+bool Button::move(const int x, const int y)
 {
-	_Rect.x = x;
-	_Rect.y = y;
+	m_area.x = x;
+	m_area.y = y;
 
 	return true;
 }
 
-bool ButtonClass::Resize (const int w, const int h)
+bool Button::resize(const int w, const int h)
 {
-	_Rect.w = w;
-	_Rect.h = h;
+	m_area.w = w;
+	m_area.h = h;
 
 	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
 			w, h, 32, rmask, gmask, bmask, amask);
 	
-	if ( !tmp )
-	{
-		std::cout << "ButtonClass::Resize(): CreateRGBSurface() failed: "
-			<< SDL_GetError () << std::endl;
+	if (!tmp) {
+		std::cout << "Button::Resize(): CreateRGBSurface() failed: "
+			<< SDL_GetError() << std::endl;
 		return false;
 	}
 
-	_Surface = tmp;
-
-	_Caption.ChParentSurf (_Surface.get());
-
-	return true;
-}
-
-bool ButtonClass::ResizeText (int size, bool resize)
-{
-	if ( !_Caption.Resize (size) ) return false;
-
-	if ( resize ) return SizeToText ();
+	m_surface = tmp;
+	m_caption.change_parent_surf(m_surface.get());
 
 	return true;
 }
 
-bool ButtonClass::SizeToText ()
+bool Button::resize_text(int size, bool resize)
 {
-	SDL_Rect Size;
-	Size = _Caption.GetSize ();
-	return Resize (Size.w + BUTTON_SIDE_WIDTH,
-				Size.h + BUTTON_SIDE_WIDTH);
+	if (!m_caption.resize(size)) 
+		return false;
+
+	if (resize) 
+		return size_to_text();
+
+	return true;
 }
 
-bool ButtonClass::Draw ()
+bool Button::size_to_text ()
 {
-	Uint8 FaceR, FaceG, FaceB;
-	Uint8 Side1R, Side1G, Side1B;
-	Uint8 Side2R, Side2G, Side2B;
-	Uint32 FaceC, Side1C, Side2C;
+	SDL_Rect size;
+	size = m_caption.get_size();
+	
+	return resize(size.w + BUTTON_SIDE_WIDTH,
+				size.h + BUTTON_SIDE_WIDTH);
+}
 
-	switch ( _State )
-	{
-		case BUTTON_STATE_UP:
-			FaceR = FaceG = 0x55; FaceB = 0xee;
-			Side1R = Side1G = 0x33; Side1B = 0xcc;
-			Side2R = Side2G = 0x22; Side2B = 0xbb;
-			break;
-		case BUTTON_STATE_DOWN:
-		case BUTTON_STATE_FAKEDOWN:
-			FaceR = FaceG = 0x33; FaceB = 0xcc;
-			Side1R = Side1G = 0x33; Side1B = 0xcc;
-			Side2R = Side2G = 0x22; Side2B = 0xbb;
-			break;
-		case BUTTON_STATE_HOVER:
-			FaceR = FaceG = 0x66; FaceB = 0xff;
-			Side1R = Side1G = 0x33; Side1B = 0xcc;
-			Side2R = Side2G = 0x22; Side2B = 0xbb;
+bool Button::draw()
+{
+	Uint8 face_r, face_g, face_b;
+	Uint8 side1_r, side1_g, side1_b;
+	Uint8 side2_r, side2_g, side2_b;
+	Uint32 face_color, side1_color, side2_color;
+
+	switch (m_state) {
+	case BUTTON_STATE_UP:
+		face_r  = face_g  = 0x55; face_b  = 0xee;
+		side1_r = side1_g = 0x33; side1_b = 0xcc;
+		side2_r = side2_g = 0x22; side2_b = 0xbb;
+		break;
+	case BUTTON_STATE_DOWN:
+	case BUTTON_STATE_FAKEDOWN:
+		face_r  = face_g  = 0x33; face_b  = 0xcc;
+		side1_r = side1_g = 0x33; side1_b = 0xcc;
+		side2_r = side2_g = 0x22; side2_b = 0xbb;
+		break;
+	case BUTTON_STATE_HOVER:
+		face_r  = face_g  = 0x66; face_b  = 0xff;
+		side1_r = side1_g = 0x33; side1_b = 0xcc;
+		side2_r = side2_g = 0x22; side2_b = 0xbb;
 	}
 
-	FaceC = SDL_MapRGB (_Surface->format, FaceR, FaceG, FaceB);
-	Side1C = SDL_MapRGB (_Surface->format, Side1R, Side1G, Side1B);
-	Side2C = SDL_MapRGB (_Surface->format, Side2R, Side2G, Side2B);
-	RenderButton (FaceC, Side1C, Side2C);
-	/*if ( SDL_FillRect (_Surface, 0, Color) < 0 )
+	face_color  = SDL_MapRGB(m_surface->format, face_r, face_g, face_b);
+	side1_color = SDL_MapRGB(m_surface->format, side1_r, side1_g, side1_b);
+	side2_color = SDL_MapRGB(m_surface->format, side2_r, side2_g, side2_b);
+	RenderButton(face_color, side1_color, side2_color);
+	/*if ( SDL_FillRect (m_surface, 0, Color) < 0 )
 	{
-		printf ("ButtonClass::Draw(): SDL_FillRect() error: %s\n",
+		printf ("Button::Draw(): SDL_FillRect() error: %s\n",
 			   SDL_GetError ());
 		return false;
 	}*/
 
-	int TextLoc;
-	TextLoc = BUTTONDOWN ? 3 : 0;
-	_Caption.Move (TextLoc, TextLoc);
-	if ( !_Caption.Draw () ) return false;
+	int text_loc;
+	text_loc = BUTTONDOWN ? 3 : 0;
+	m_caption.move(text_loc, text_loc);
+	if (!m_caption.draw()) 
+		return false;
 
-	if ( SDL_BlitSurface(_Surface.get(), 0, _ParentSurf, &_Rect) < 0 )
-	{
-		std::cout <<  "ButtonClass::Draw(): SDL_BlitSurface error: \n"
-			<< SDL_GetError () << std::endl;
+	if (SDL_BlitSurface(m_surface.get(), 0, m_parent_surf, &m_area) < 0) {
+		std::cout <<  "Button::Draw(): SDL_BlitSurface error: \n"
+			<< SDL_GetError() << std::endl;
 		return false;
 	}
 
 	return true;
 }
 
-inline void StepGrad (Uint8 &r, Uint8 &g, Uint8 &b)
+inline void step_grad(Uint8 &r, Uint8 &g, Uint8 &b)
 {
-	if ( ( r > 0 ) && ( g > 0 ) && ( b > 0 ) )
-	{
+	if ((r > 0) && (g > 0) && (b > 0))	{
 		r--;
 		g--;
 		b--;
 	}
 }
 
-void ButtonClass::RenderButton (Uint32 FaceC, const Uint32 Side1C,
-						  const Uint32 Side2C)
+void Button::render_button(Uint32 face_color, const Uint32 side1_color,
+	const Uint32 side2_color)
 {
-	SDL_Rect Face, Side, Black;
+	// FIXME: Comments!
+	SDL_Rect face, side, black;
 
-	Face.x = BUTTONDOWN ? BUTTON_SIDE_WIDTH : 0;
-	Face.y = BUTTONDOWN ? BUTTON_SIDE_WIDTH : 0;
-	Face.w = _Rect.w - BUTTON_SIDE_WIDTH;
-	Face.h = _Rect.h - BUTTON_SIDE_WIDTH;
-	Side.x = BUTTONDOWN ? 0 : Face.w;
-	Side.w = 0; Side.h = 1;
-	Black.x = Face.w; Black.y = 0;
-	Black.w = BUTTON_SIDE_WIDTH; Black.h = 1;
+	face.x = BUTTONDOWN ? BUTTON_SIDE_WIDTH : 0;
+	face.y = BUTTONDOWN ? BUTTON_SIDE_WIDTH : 0;
+	face.w = m_area.w - BUTTON_SIDE_WIDTH;
+	face.h = m_area.h - BUTTON_SIDE_WIDTH;
+	side.x = BUTTONDOWN ? 0 : face.w;
+	side.w = 0; side.h = 1;
+	black.x = face.w; black.y = 0;
+	black.w = BUTTON_SIDE_WIDTH; black.h = 1;
 
 	// Most of this will be covered
-	SDL_FillRect(_Surface.get(), 0, Side2C);
+	SDL_FillRect(m_surface.get(), 0, side2_color);
 
 	// Face
-	Uint8 FaceR, FaceG, FaceB;
-	SDL_GetRGB (FaceC, _Surface->format, &FaceR, &FaceG, &FaceB);
+	Uint8 face_r, face_g, face_b;
+	SDL_GetRGB(face_color, m_surface->format, &face_r, &face_g, &face_b);
 	
-	int i = ( Face.w > Face.h ) ? Face.w : Face.h;
-	SDL_Rect Grad;
-	SDL_Rect GradClip;
-	for ( GradClip.x = GradClip.y = Grad.x = Grad.y = Face.x,
-		 Grad.w = Grad.h = i; i >= 0; i -= 1 )
-	{
-		GradClip.w = ( Grad.w > Face.w ) ? Face.w : Grad.w;
-		GradClip.h = ( Grad.h > Face.h ) ? Face.h : Grad.h;
+	int i = (face.w > face.h) ? face.w : face.h;
+	SDL_Rect grad;
+	SDL_Rect grad_clip;
+
+	// FIXME: Clean this up...
+	for (grad_clip.x = grad_clip.y = grad.x = grad.y = face.x,
+		 grad.w = grad.h = i; i >= 0; i -= 1) {
+		grad_clip.w = (grad.w > face.w) ? face.w : grad.w;
+		grad_clip.h = (grad.h > face.h) ? face.h : grad.h;
 		
-		SDL_FillRect(_Surface.get(), &GradClip, FaceC);
+		SDL_FillRect(m_surface.get(), &grad_clip, face_color);
 		
-		StepGrad (FaceR, FaceG, FaceB);
-		FaceC = SDL_MapRGB (_Surface->format, FaceR, FaceG, FaceB);
+		step_grad(face_r, face_g, face_b);
+		face_color = SDL_MapRGB(m_surface->format, face_r, face_g, face_b);
 		
-		Grad.h = i;
-		Grad.w -= 1;
-		Grad.x += 1;
+		grad.h  = i;
+		grad.w -= 1;
+		grad.x += 1;
 	}
 
-	Uint32 BlackC;
-	BlackC = SDL_MapRGBA (_Surface->format, 0x00, 0x00, 0x00, 0x00);
+	Uint32 black_color;
+	black_color = SDL_MapRGBA (m_surface->format, 0x00, 0x00, 0x00, 0x00);
 
 	// Other side
-	for ( Side.y = 0; Side.y < _Rect.h; ++Side.y )
-	{
-		if ( Side.y < BUTTON_SIDE_WIDTH )
-		{
-			++Side.w;
-			++Black.x; --Black.w;
-			Black.y = Side.y;
+	// FIXME: Comments! What is going on here?
+	for (side.y = 0; side.y < m_area.h; ++side.y) {
+		if (side.y < BUTTON_SIDE_WIDTH) {
+			++side.w;
+			++black.x; 
+			--black.w;
+			black.y = side.y;
 			
-			SDL_FillRect(_Surface.get(), &Black, BlackC);
+			SDL_FillRect(m_surface.get(), &black, black_color);
 		}
 
-		if ( Side.y == Face.h )
-		{
-			Black.x = 0;
-			Black.w = 0;
+		if (side.y == face.h) {
+			black.x = 0;
+			black.w = 0;
 		}
 			
-		if ( Side.y > Face.h )
-		{
-			++Side.x; --Side.w;
-			++Black.w;
-			Black.y = Side.y;
+		if (side.y > face.h) {
+			++side.x; 
+			--side.w;
+			++black.w;
+			black.y = side.y;
 
-			SDL_FillRect(_Surface.get(), &Black, BlackC);
+			SDL_FillRect(m_surface.get(), &black, black_color);
 		}
 
-		SDL_FillRect(_Surface.get(), &Side, Side1C);
+		SDL_FillRect(m_surface.get(), &side, side1_color);
 	}
 }
 
-void ButtonClass::MouseButtonEvent (const Uint8 Button, const Uint8 State,
-							 const Uint16 x, const Uint16 y)
+void Button::mouse_button_event(const Uint8 button, const Uint8 state,
+	const Uint16 x, const Uint16 y)
 {
-	if ( x >= _Rect.x && x <= ( _Rect.x + _Rect.w ) &&
-		y >= _Rect.y && y <= ( _Rect.y + _Rect.h ) )
-	{
-		if ( State == SDL_PRESSED )
-			_State = BUTTON_STATE_DOWN;
-		else
-		{
-			if ( _State == BUTTON_STATE_DOWN )
-				if ( _HndClick != 0 ) _HndClick ();
+	// Is the mouse pointer over the button?
+	if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
+		y >= m_area.y && y <= (m_area.y + m_area.h)) {
 
-			_State = BUTTON_STATE_HOVER;
+		// Is it already clicked?
+		if (state == SDL_PRESSED) {
+			m_state = BUTTON_STATE_DOWN;
+		} else {
+			// If not, perform the callback
+			if (m_state == BUTTON_STATE_DOWN && m_hnd_click) {
+				m_hnd_click();
+			}
+
+			m_state = BUTTON_STATE_HOVER;
 		}
+	} else {
+		if (state == SDL_RELEASED)
+			m_state = BUTTON_STATE_UP;
 	}
-	else
-		if ( State == SDL_RELEASED )
-			_State = BUTTON_STATE_UP;
 }
 
-void ButtonClass::MouseMotionEvent (const Uint8 State, const Uint16 x,
-							 const Uint16 y)
+void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
+	const Uint16 y)
 {
-	if ( x >= _Rect.x && x <= ( _Rect.x + _Rect.w ) &&
-		y >= _Rect.y && y <= ( _Rect.y + _Rect.h ) )
-	{
-		if ( _State != BUTTON_STATE_DOWN )
-		{
-			if ( State & SDL_BUTTON (SDL_BUTTON_LEFT) )
-				_State = BUTTON_STATE_FAKEDOWN;
-		else
-				_State = BUTTON_STATE_HOVER;
+	// Is the mouse pointer over the button?
+	if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
+		y >= m_area.y && y <= (m_area.y + m_area.h)) {
+
+		if (m_state != BUTTON_STATE_DOWN) {
+			if (State & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+				m_state = BUTTON_STATE_FAKEDOWN;
+			} else {
+				m_state = BUTTON_STATE_HOVER;
+			}
+		}
+	} else {
+		if (!(m_state == BUTTON_STATE_DOWN &&
+			State & SDL_BUTTON (SDL_BUTTON_LEFT))) {
+			m_state = BUTTON_STATE_UP;
 		}
 	}
-	else
-		if ( !( _State == BUTTON_STATE_DOWN &&
-			State & SDL_BUTTON (SDL_BUTTON_LEFT) ) )
-			_State = BUTTON_STATE_UP;
 }
 
 
-bool ButtonClass::SetEventHandler (const Uint8 Event, void (*Handler) ())
+bool Button::set_event_handler(const Uint8 event, void (*handler)())
 {
-	switch ( Event )
-	{
+	switch (event) {
 	case BUTTON_EVENT_CLICK:
-		_HndClick = Handler;
+		m_hnd_click = handler;
 		break;
 	default:
 		return false;

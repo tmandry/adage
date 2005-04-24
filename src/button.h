@@ -4,64 +4,66 @@
 #include "text.h"
 #include "image.h"
 
-const int  BUTTON_STATE_UP		 =	0;
-const int  BUTTON_STATE_DOWN	 =	1;
-const int  BUTTON_STATE_FAKEDOWN =	2;
-const int  BUTTON_STATE_HOVER	 =	3;
-const int  BUTTON_EVENT_CLICK	 =	0;
-const int  BUTTON_SIDE_WIDTH	 =	3;
 
 // TODO: Implement this as bool IsDown();
 #define BUTTONDOWN (_State==BUTTON_STATE_DOWN||_State==BUTTON_STATE_FAKEDOWN)
 
-class ButtonClass
-{
+class Button {
 public:
+	
+	const int  BUTTON_STATE_UP		 =	0;
+	const int  BUTTON_STATE_DOWN	 =	1;
+	const int  BUTTON_STATE_FAKEDOWN =	2;
+	const int  BUTTON_STATE_HOVER	 =	3;
+	const int  BUTTON_EVENT_CLICK	 =	0;
+	const int  BUTTON_SIDE_WIDTH	 =	3;
+	
 	// Constructors
-	ButtonClass ();
-	ButtonClass (const char* Caption, const int x, const int y,
-			   SDL_Surface* ParentSurf = Screen);
-	ButtonClass (const char* Caption, const int x, const int y, const int w,
-			   const int h, SDL_Surface* ParentSurf = Screen);
-	ButtonClass (const char* Caption, const int x, const int y,
-			   const int TextSize, SDL_Surface* ParentSurf = Screen);
+	Button();
+	Button(const char* caption, const int x, const int y,
+			   SDL_Surface* ParentSurf = screen);
+	Button(const char* caption, const int x, const int y, const int w,
+			   const int h, SDL_Surface* parent_surf = screen);
+	Button(const char* caption, const int x, const int y,
+			   const int text_size, SDL_Surface* parent_surf = screen);
 	
 	// Copying and assignment
-	ButtonClass (const ButtonClass& rhs);
-	ButtonClass& operator= (const ButtonClass& rhs);
+	Button(const Button& rhs);
+	Button& operator=(const Button& rhs);
 
-	~ButtonClass ();
+	~Button();
 
-	bool ChCaption (const char* Caption, const bool resize = false);
-	bool Move (const int x, const int y);
-	bool Resize (const int w, const int h);
-	bool ResizeText (const int size, const bool resize = false);
-	bool SizeToText ();
-	bool Draw ();
+	bool change_caption(const char* caption, const bool resize = false);
+	bool move(const int x, const int y);
+	bool resize(const int w, const int h);
+	bool resize_text(const int size, const bool resize = false);
+	bool size_to_text();
+	bool draw();
 
-	void MouseButtonEvent (const Uint8 Button, const Uint8 State,
+	void mouse_button_event(const Uint8 button, const Uint8 state,
 					   const Uint16 x, const Uint16 y);
-	void MouseMotionEvent (const Uint8 State, const Uint16 x, const Uint16 y);
+	void mouse_motion_event(const Uint8 state, const Uint16 x, const Uint16 y);
 
-	bool SetEventHandler (const Uint8 Event, void (*Handler) ());
+	bool set_event_handler(const Uint8 event, void (*Handler)());
 
 private:
-	void Init (const char* Caption, const int x, const int y, const int w,
-			 const int h, const int TextSize, const bool resize,
+	void init(const char* caption, const int x, const int y, const int w,
+			 const int h, const int text_size, const bool resize, 
 			 SDL_Surface* ParentSurf);
 	
-	void RenderButton (Uint32 FaceC, const Uint32 Side1C,
-				    const Uint32 Side2C);
+	void render_button(Uint32 face_color, const Uint32 side1_color,
+				    const Uint32 side2_color);
 
-	void (*_HndClick) ();
+	// FIXME: Make this name more descriptive...
+	void (*m_hnd_click)();
 	
-	TextClass _Caption;
+	Text m_caption;
+	Image m_surface;
+	
+	SDL_Surface* m_parent_surf;
+	SDL_Rect m_area;
 
-	Image _Surface;
-	SDL_Surface* _ParentSurf;
-	SDL_Rect _Rect;
-
-	Uint8 _State;
+	Uint8 m_state;
 };
 
 #endif // BUTTON_H
