@@ -4,145 +4,134 @@
 #include "SDL.h"
 #include "handle.h"
 
-SDL_Surface *Screen;
+SDL_Surface *screen;
 
 #include "text.h"
 #include "button.h"
 #include "richtext.h"
 //#include "input.h"
 
-ButtonClass* Button;
-ButtonClass* BtnChColor;
-TextClass* Text2;
+// FIXME: Globals are bad...
+Button* button;
+Button* change_color;
+Text* text2;
 
-Uint32 BlankColor;
+Uint32 blank_color;
 
-void Button_Click ();
-void BtnChColor_Click ();
+void button_click();
+void button_change_color();
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	using namespace std;
 	
-	if ( SDL_Init (SDL_INIT_VIDEO) < 0 )
-	{
-		cerr << "SDL_Init() error: " << SDL_GetError () << endl;
+	if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+		cerr << "SDL_Init() error: " << SDL_GetError() << endl;
 		exit (1);
 	}
 
 	atexit (SDL_Quit);
 
-	if ( TTF_Init () < 0 )
-	{
-		cerr << "TTF_Init() error: " << TTF_GetError () << endl;
+	if (TTF_Init() < 0)	{
+		cerr << "TTF_Init() error: " << TTF_GetError() << endl;
 		exit (1);
 	}
 
-	Screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF |
-						 SDL_SRCALPHA);
-	if ( !Screen )
-	{
-		cerr << "SDL_SetVideoMode error: " << SDL_GetError () << endl;
+	screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF |
+		SDL_SRCALPHA);
+	
+	if (!screen) {
+		cerr << "SDL_SetVideoMode error: " << SDL_GetError() << endl;
 		exit (1);
 	}
 
-	SDL_WM_SetCaption ("Adage Widget Set Preview", NULL);
+	SDL_WM_SetCaption("Adage Widget Set Preview", NULL);
 	// TODO: Set an icon?
 
-	Uint8 Done = 0;
-	SDL_Event Event;
-	TextClass Text ("HELLO!", 30, 100, 100);
+	Uint8 done = 0;
+	SDL_Event event;
+	Text text("HELLO!", 30, 100, 100);
 	
-	Button = new ButtonClass (" Ping? ", 100, 150, 20);
-	Button->SetEventHandler (BUTTON_EVENT_CLICK, Button_Click);
+	button = new Button(" Ping? ", 100, 150, 20);
+	button->set_event_handler(BUTTON_EVENT_CLICK, button_click);
 
-	BtnChColor = new ButtonClass ("Thou shalt not poketh me!", 200, 400, 10);
-	BtnChColor->SetEventHandler (BUTTON_EVENT_CLICK, BtnChColor_Click);
+	change_color = new Button ("Thou shalt not poketh me!", 200, 400, 10);
+	change_color->set_event_handler(BUTTON_EVENT_CLICK, button_change_color);
 
-	Text2 = new TextClass (" Pong!", 48, 300, 300);
-	Text2->ChColor (0x00, 0x00, 0x00);
-	Text2->ChBgColor (0x55, 0x55, 0xaa);
+	text2 = new Text(" Pong!", 48, 300, 300);
+	text2->change_color(0x00, 0x00, 0x00);
+	text2->change_background_color(0x55, 0x55, 0xaa);
 
-	RichTextClass RText (400, 200, 640, 200,
+	RichText rtext(400, 200, 640, 200,
 		 "^Gffffff^Cff0000Hello! ^Bbold\n^U^S12underline^g^B^U^I^s italic\n"
 		 "^T^^caret!!^^ ^S22bye!^R :P", 
-		 Screen);
+		 screen);
 
 	/*InputClass Input (400, 200, 100);
 	Input.SetText ("HeRrO!");*/
 
-	BlankColor = SDL_MapRGB (Screen->format, 0x00, 0x00, 0x00);
-	while ( !Done )
-	{
-		while ( SDL_PollEvent (&Event) )
-		{
-			switch ( Event.type )
-			{
+	blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
+	while (!done) {
+		while (SDL_Pollevent(&event)) {
+			switch (event.type) {
 			case SDL_QUIT:
-				Done = 1;
+				done = 1;
 				break;
 			case SDL_KEYDOWN:
-				if ( Event.key.keysym.sym == SDLK_ESCAPE )
-					Done = 1;
+				if (event.key.keysym.sym == SDLK_ESCAPE)
+					done = 1;
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
-				Button->MouseButtonEvent (Event.button.button,
-									 Event.button.state,
-									 Event.button.x, Event.button.y);
-				BtnChColor->MouseButtonEvent (Event.button.button,
-										Event.button.state,
-										Event.button.x,
-										Event.button.y);
+				button->mouse_button_event(event.button.button,
+					event.button.state, event.button.x, event.button.y);
+				change_color->mouse_button_event(event.button.button,
+					event.button.state,	event.button.x,	event.button.y);
 				break;
 			case SDL_MOUSEMOTION:
-				Button->MouseMotionEvent (Event.motion.state,
-									 Event.motion.x, Event.motion.y);
-				BtnChColor->MouseMotionEvent (Event.motion.state,
-										Event.motion.x,
-										Event.motion.y);
+				button->mouse_motion_event(event.motion.state,
+					event.motion.x, event.motion.y);
+				change_color->mouse_motion_event(event.motion.state,
+					event.motion.x,	event.motion.y);
 				break;
 			}
 		}
 		
-		SDL_FillRect (Screen, NULL, BlankColor);
+		SDL_FillRect(screen, NULL, blank_color);
 
-		Text.Draw ();
-		Button->Draw ();
-		BtnChColor->Draw ();
-		Text2->Draw ();
-		RText.Draw ();
-		//Input.Draw ();
-		SDL_Flip (Screen);
+		text.draw();
+		button->draw();
+		change_color->draw();
+		text2->draw();
+		rtext.draw();
+		//Input.draw ();
+		SDL_Flip(screen);
 	}
 
 	return 0;
 }
 
-void Button_Click ()
+void button_click()
 {
 	static Uint8 status = 0;
 	status ^= 1;
 
-	if ( status )
-	{
-		Button->ChCaption (" Pong! ");
-		Text2->ChCaption (" Ping? ");
-	}
-	else
-	{
-		Button->ChCaption (" Ping? ");
-		Text2->ChCaption (" Pong! ");
+	if (status) {
+		button->change_caption(" Pong! ");
+		text2->change_caption(" Ping? ");
+	} else {
+		button->change_caption(" Ping? ");
+		text2->change_caption(" Pong! ");
 	}
 }
 
-void BtnChColor_Click ()
+void button_change_color()
 {
 	static Uint8 status = 0;
 	status ^= 1;
 
-	if ( status )
-		BlankColor = SDL_MapRGB (Screen->format, 0x33, 0xdd, 0x33);
+	if (status)
+		BlankColor = SDL_MapRGB(screen->format, 0x33, 0xdd, 0x33);
 	else
-		BlankColor = SDL_MapRGB (Screen->format, 0x00, 0x00, 0x00);
+		BlankColor = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
 }

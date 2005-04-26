@@ -6,7 +6,7 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-extern SDL_Surface *Screen;
+extern SDL_Surface *screen;
 
 #include "text.h"
 #include "richtext.h"
@@ -16,281 +16,272 @@ extern SDL_Surface *Screen;
 //using std::cout;
 //using std::endl;
 
-RichTextClass::RichTextClass ()
+RichText::RichText()
 {
-	Init (0, 0, 0, 0, "", Screen);
+	init(0, 0, 0, 0, "", screen);
 }
 
-RichTextClass::RichTextClass (const int x, const int y, const int w,
-						const int h, SDL_Surface* ParentSurf)
+RichText::RichText(const int x, const int y, const int w,
+	const int h, SDL_Surface* parent_surf)
 {
-	Init (x, y, w, h, "", ParentSurf);
+	init(x, y, w, h, "", parent_surf);
 }
 
-RichTextClass::RichTextClass (const std::string& FmtText, 
-		SDL_Surface *ParentSurf)
+RichText::RichText(const std::string& format_text, 
+	SDL_Surface* parent_surf)
 {
-	Init (0, 0, FmtText, ParentSurf);
+	init(0, 0, format_text, parent_surf);
 }
 
-RichTextClass::RichTextClass (const int x, const int y, const int w,
-	const int h, const std::string& FmtText, SDL_Surface *ParentSurf)
+RichText::RichText(const int x, const int y, const int w,
+	const int h, const std::string& format_text, SDL_Surface* parent_surf)
 {
-	Init (x, y, w, h, FmtText, ParentSurf);
+	init(x, y, w, h, format_text, parent_surf);
 }
 
-
-RichTextClass::~RichTextClass ()
+RichText::~RichText()
 {
-}
-
-
-void RichTextClass::Init (const int x, const int y, const int w, const int h,
-	 const std::string& FmtText, SDL_Surface* ParentSurf)
-{
-	_Size = 20; 
-	_Style = TTF_STYLE_NORMAL;
-	_Fr = _Fg = _Fb = 0xff;
-	_Br = _Bg = _Bb = 0x00;
-	_UseBg = true;
-
-	Move (x, y);
-	Resize (w, h);
-	ChCaption (FmtText);
-	ChParentSurf (ParentSurf);
-}
-
-void RichTextClass::Init (const int x, const int y, const std::string& FmtText,
-					 SDL_Surface* ParentSurf)
-{
-	_Style = TTF_STYLE_NORMAL;
-	_Fr = _Fg = _Fb = 0xff;
-	_Br = _Bg = _Bb = 0x00;
-	_UseBg = true;
-
-	Move (x, y);
-	ChCaption (FmtText);
-	SizeToText ();
-	ChParentSurf (ParentSurf);
 }
 
 
-
-bool RichTextClass::Move (const int x, const int y)
+void RichText::init(const int x, const int y, const int w, const int h,
+	const std::string& format_text, SDL_Surface* parent_surf)
 {
-	_Rect.x = x; 
-	_Rect.y = y;
+	m_size = 20; 
+	m_style = TTF_STYLE_NORMAL;
+	m_fr = m_fg = m_fb = 0xff;
+	m_fr = m_fg = m_fb = 0x00;
+	m_use_background = true;
+
+	move(x, y);
+	resize(w, h);
+	change_caption(format_text);
+	change_parent_surf(parent_surf);
+}
+
+void RichText::init(const int x, const int y, const std::string& format_text,
+	SDL_Surface* parent_surf)
+{
+	m_style = TTF_STYLE_NORMAL;
+	m_fr = m_fg = m_fb = 0xff;
+	m_fr = m_fg = m_fb = 0x00;
+	m_use_background = true;
+
+	move(x, y);
+	change_caption(format_text);
+	size_to_text();
+	change_parent_surf(parent_surf);
+}
+
+bool RichText::move(const int x, const int y)
+{
+	m_area.x = x; 
+	m_area.y = y;
 	return true;
 }
 
-bool RichTextClass::Resize (const int w, const int h)
+bool RichText::resize(const int w, const int h)
 {
-	_Rect.w = w; _Rect.h = h;
+	m_area.w = w; m_area.h = h;
 	
-	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE, w, h, 32,
-			rmask, gmask, bmask, amask);
+	Image tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32,
+		rmask, gmask, bmask, amask);
 	
-	if ( !tmp )
-	{
-		std::cout << "SDL_CreateRGBSurface() error: " << SDL_GetError ();
+	if (!tmp) {
+		std::cout << "SDL_CreateRGBSurface() error: " << SDL_GetError();
 		std::cout << std::endl;
 		return false;
 	}
 
-	_Surface = tmp;
+	m_surface = tmp;
 	
 	return true;
 }
 
-bool RichTextClass::ChCaption (const std::string& FmtText)
+bool RichText::change_caption(const std::string& format_text)
 {
-	_FmtText = FmtText;
-	_Text.clear ();
+	m_format_text = format_text;
+	m_text.clear();
 
-	return Parse ();
+	return parse();
 }
 
-bool RichTextClass::ChParentSurf (SDL_Surface* ParentSurf)
+bool RichText::change_parent_surf(SDL_Surface* parent_surf)
 {
-	_ParentSurf = ParentSurf;
+	m_parent_surf = parent_surf;
 	return true;
 }
 
-bool RichTextClass::SizeToText ()
+bool RichText::size_to_text()
 {
 	int w = 0, h = 0;
 
-	std::vector<TextClass>::iterator i;
-	for ( i = _Text.begin (); i < _Text.end (); i++ )
-	{
-		SDL_Rect Size;
-		Size = i->GetSize ();
+	std::vector<Text>::iterator i;
+	for (i = m_text.begin(); i < m_text.end(); ++i)	{
+		SDL_Rect size;
+		size = i->get_size();
 
-		int right = Size.x + Size.w;
-		int bottom = Size.y + Size.h;
-		if ( right > w ) w = right;
-		if ( bottom > h ) h = bottom;
+		int right = size.x + size.w;
+		int bottom = size.y + size.h;
+		if (right > w) 
+			w = right;
+		if (bottom > h) 
+			h = bottom;
 	}
 
-	return Resize (w, h);
+	return resize(w, h);
 }
 
 
-bool RichTextClass::Parse ()
+bool RichText::parse()
 {
-	std::string Atom;
+	std::string atom;
 
 	int x = 0, y = 0;
-	int RowH = 0;
-	int Size = _Size;
-	int Style = _Style;
-	Uint8 Fr = _Fr, Fg = _Fg, Fb = _Fb;
-	Uint8 Br = _Br, Bg = _Bg, Bb = _Bb;
-	bool UseBg = _UseBg;
+	int row_height = 0;
+	int size = m_size;
+	int style = m_style;
+	Uint8 fr = m_fr, fg = m_fg, fb = m_fb;
+	Uint8 br = m_fr, bg = m_fg, bb = m_fb;
+	bool use_background = m_use_background;
 
-	union
-	{
+	union {
 		unsigned long int Glob;
-		struct
-		{
+		struct {
 			Uint8 b;
 			Uint8 g;
 			Uint8 r;
 		};
-	} RawToRgb;
+	} raw_to_rgb;
 
-	for ( unsigned int i = 0; i < _FmtText.size(); i++ )
-	{
-		if ( !( _FmtText[i] == '^' || _FmtText[i] == '\n' ) )
-		{
-			Atom += _FmtText[i];
+	for (unsigned int i = 0; i < m_format_text.size(); ++i) {
+		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n'))	{
+			atom += m_format_text[i];
 			continue;
 		}
 
-		if ( _FmtText[i] == '^' && i == _FmtText.size() - 1)
-		{
-			Atom += _FmtText[i];
+		if (m_format_text[i] == '^' && i == m_format_text.size() - 1) {
+			atom += m_format_text[i];
 			continue;
 		}
 
-		if ( !Atom.empty () || _FmtText[i] == '\n' )
-		{
-			_Text.push_back (TextClass (Atom.c_str (), Size, x, y,
-								   _Surface.get()));
+		if (!atom.empty() || m_format_text[i] == '\n') {
+			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface.get()));
 
-			std::vector<TextClass>::iterator PrevAtom;
-			PrevAtom = _Text.end () - 1;
+			std::vector<Text>::iterator prev_atom;
+			prev_atom = m_text.end() - 1;
 			
-			PrevAtom->SetStyle (Style);
-			PrevAtom->Resize (Size);
+			prev_atom->set_style(style);
+			prev_atom->resize(size);
 			
-			SDL_Rect AtomSize;
-			AtomSize = PrevAtom->GetSize ();
+			SDL_Rect atom_size;
+			atom_size = prev_atom->get_size();
 			
 			// This is to keep track of the overall height of the row,
 			// so when there's a newline we know what to do
-			if ( AtomSize.h > RowH ) RowH = AtomSize.h;
+			if (atom_size.h > row_height) 
+				row_height = atom_size.h;
 			
-			if ( _FmtText[i] == '\n' )
-			{
+			if (m_format_text[i] == '\n') {
 				x = 0;
-				y += RowH;
-				RowH = 0;
-			}
-			else
-				x += AtomSize.w;
+				y += row_height;
+				row_height = 0;
+			} else
+				x += atom_size.w;
 
-			PrevAtom->ChColor (Fr, Fg, Fb);
-			if ( UseBg ) PrevAtom->ChBgColor (Br, Bg, Bb);
+			prev_atom->change_color(fr, fg, fb);
+			if (use_background) 
+				prev_atom->ChbgColor (br, bg, bb);
 
-			Atom.clear ();
+			atom.clear();
 		}
 
-		if ( _FmtText[i] == '\n' ) continue;
+		if (m_format_text[i] == '\n') 
+			continue;
 		
-		i++;
+		++i;
 
-		switch (_FmtText[i]) {
-			case 'B': // Bold
-				Style ^= TTF_STYLE_BOLD;
+		switch (m_format_text[i]) {
+		case 'B': // Bold
+			style ^= TTF_STYLE_BOLD;
 			break;
 
-			case 'U': // Underline
-				Style ^= TTF_STYLE_UNDERLINE;
+		case 'U': // Underline
+			style ^= TTF_STYLE_UNDERLINE;
 			break;
 
-			case 'I': // Italic
-				Style ^= TTF_STYLE_ITALIC;
+		case 'I': // Italic
+			style ^= TTF_STYLE_ITALIC;
 			break;
 
-			case 'T': // Reset style
-				Style = _Style;
+		case 'T': // Reset style
+			style = m_style;
 			break;
 
-			case 'S': { // Size
-				std::stringstream Convert;
-				Convert << _FmtText.substr(i+1, 2);
-				Convert >> Size;
-				i += 2;
-			} break;
-
-			case 's': // Reset size
-				Size = _Size;
+		case 'S': { // size
+			std::stringstream convert;
+			convert << m_format_text.substr(i+1, 2);
+			convert >> size;
+			i += 2;
 			break;
 
-			case 'C': { // Foreground color
-				std::stringstream Convert;
-				Convert << _FmtText.substr (i+1, 6);
-				Convert >> std::hex >> RawToRgb.Glob;
-				Fr = RawToRgb.r; Fg = RawToRgb.g; Fb = RawToRgb.b;
-				i += 6;
-			} break;
-
-			case 'G': { // Background color
-				std::stringstream Convert;
-				Convert << _FmtText.substr (i+1, 6);
-				Convert >> std::hex >> RawToRgb.Glob;
-				Br = RawToRgb.r; Bg = RawToRgb.g; Bb = RawToRgb.b;
-				UseBg = true;
-				i += 6;
-			} break;
-
-			case 'c': // Reset foreground color
-				Fr = _Fr; Fg = _Fg; Fb = _Fb;
+		case 's': // Reset size
+			size = m_size;
 			break;
 
-			case 'g': // Reset background color
-				Br = _Br; Bg = _Bg; Bb = _Bb;
-				UseBg = _UseBg;
+		case 'C': { // Foreground color
+			std::stringstream convert;
+			convert << m_format_text.substr (i + 1, 6);
+			convert >> std::hex >> g.Glob;
+			fr = g.r; fg = raw_to_rgb.g; fb = raw_to_rgb.b;
+			i += 6;
 			break;
 
-			case 'b': // Clear background color
-				UseBg = false;
+		case 'G': { // Background color
+			std::stringstream convert;
+			convert << m_format_text.substr (i+1, 6);
+			convert >> std::hex >> g.Glob;
+			br = g.r; bg = raw_to_rgb.g; bb = raw_to_rgb.b;
+			use_background = true;
+			i += 6;
 			break;
 
-			case 'R': // Reset EVERYTHING
-				Style = _Style;
-				Size = _Size;
-				Fr = _Fr; Fg = _Fg; Fb = _Fb;
-				Br = _Br; Bg = _Bg; Bb = _Bb;
-				UseBg = _UseBg;
+		case 'c': // Reset foreground color
+			fr = m_fr; fg = m_fg; fb = m_fb;
 			break;
-			
-			case '^': // Literal ^ (caret)
-				Atom += '^';
+
+		case 'g': // Reset background color
+			br = m_fr; bg = m_fg; bb = m_fb;
+			use_background = m_use_background;
+			break;
+
+		case 'b': // Clear background color
+			use_background = false;
+			break;
+
+		case 'R': // Reset EVERYTHING
+			style = m_style;
+			size = m_size;
+			fr = m_fr; fg = m_fg; fb = m_fb;
+			br = m_fr; bg = m_fg; bb = m_fb;
+			use_background = m_use_background;
+			break;
+		
+		case '^': // Literal ^ (caret)
+			atom += '^';
 			break;
 		}
 	}
 	return true;
 }
 
-bool RichTextClass::Draw ()
+bool RichText::draw()
 {
-	std::vector<TextClass>::iterator i;
-	for ( i = _Text.begin (); i < _Text.end (); i++ )
-		i->Draw ();
+	std::vector<Text>::iterator i;
+	for (i = m_text.begin(); i < m_text.end(); ++i)	
+		i->draw();
 	
-	SDL_BlitSurface(_Surface.get(), 0, _ParentSurf, &_Rect);
+	SDL_BlitSurface(m_surface.get(), 0, m_parent_surf, &m_area);
 	
 	return true;
 }

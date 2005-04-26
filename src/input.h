@@ -1,67 +1,52 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "SDL.h"
-
 #include "text.h"
 #include "image.h"
 
-class InputClass
-{
+#include <string>
+
+#include "SDL.h"
+
+class Input {
 public:
-	InputClass ();
-	InputClass (const int x, const int y, const int w,
-			  SDL_Surface* ParentSurf = Screen, const int TextSize = 12);
-	InputClass (const int x, const int y, const int w, const int h,
-			  SDL_Surface* ParentSurf = Screen, const int TextSize = 12);
+	Input();
+	Input(const int x, const int y, const int w,
+		SDL_Surface* parent_surf = screen, const int text_size = 12);
+	Input(const int x, const int y, const int w, const int h,
+		SDL_Surface* parent_surf = creen, const int text_size = 12);
 	
 	// copy constructor
-	InputClass::InputClass (const InputClass& rhs)
-	{	
-		_Content = 0;
-		_Surface = 0;
-		*this = Old;
-	}
-
-	void InputClass::operator= (const InputClass &Old)
-	{
-		delete [] _Content;
-		memcpy (this, &Old, sizeof (InputClass));
-
-		char* Content = new char [strlen (_Content) + 1];
-		_Content = Content;
-
-		_Text = Old._Text;
-	}
+	Input(const Input& rhs);
+	void operator=(const Input &Old);
 	
-	~InputClass ();
+	~Input();
 
-	bool SetText (const std::string& Text);
-	bool Move (const int x, const int y);
-	bool Resize (const int w, const int h);
-	bool ResizeText (const int TextSize = 12);
-	bool Draw ();
+	bool set_text(const std::string& text);
+	bool move(const int x, const int y);
+	bool resize(const int w, const int h);
+	bool resize_text(const int text_size = 12);
+	bool draw();
 	
-	char* GetText ();
+	char* get_text();
 
-	bool SetEventHandler (const Uint8 Event, const void (*Handler) (Uint32));
-	void 
+	bool set_event_handler(const Uint8 event, const void (*handler) (Uint32));
 
 private:
-	void Init (const int x, const int y, const int w, const int h,
-			 SDL_Surface* ParentSurf, const int TextSize);
+	void Init(const int x, const int y, const int w, const int h,
+			 SDL_Surface* parent_surf, const int text_size);
 
-	SDL_Rect _Rect;
-	TextClass _Text;
+	SDL_Rect m_area;
+	TextClass m_text;
 	
-	std::string _Content;
-	int _TextSize;
+	std::string m_content;
+	int m_text_size;
 
-	Uint32 _BackColor;
-	Uint32 _FrameColor;
+	Uint32 m_back_color;
+	Uint32 m_frame_color;
 
-	Image _Surface;
-	SDL_Surface* _ParentSurf;
+	Image m_surface;
+	SDL_Surface* m_parent_surf;
 };
 
 #endif // INPUT_H

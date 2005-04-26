@@ -9,53 +9,55 @@
 #include "image.h"
 
 
-class RichTextClass
-{
+class RichText {
 public:
 
-	RichTextClass ();
-	RichTextClass (const int x, const int y, const int w, const int h,
-				SDL_Surface* ParentSurf = Screen);
-	RichTextClass (const std::string& FmtText, 
-			SDL_Surface* ParentSurf = Screen);
-	RichTextClass (const int x, const int y, const int w, const int h,
-				const std::string& FmtText, SDL_Surface *ParentSurf = Screen);
+	RichText();
+	RichText(const int x, const int y, const int w, const int h,
+		SDL_Surface* parent_surf = screen);
+	RichText(const std::string& FmtText, 
+		SDL_Surface* parent_surf = screen);
+	RichText(const int x, const int y, const int w, const int h,
+		const std::string& FmtText, SDL_Surface* parent_surf = screen);
 	
 	// copying and assignmening and assignmentt 
-	RichTextClass::RichTextClass (const RichTextClass& rhs);
-	RichTextClass& operator= (const RichTextClass& rhs);
+	RichText::RichText(const RichText& rhs);
+	RichText& operator=(const RichText& rhs);
 
-	~RichTextClass ();
+	~RichText();
 
 
-	bool Move (const int x, const int y);
-	bool Resize (const int w, const int h);
-	bool ChCaption (const std::string& FmtText);
-	bool ChParentSurf (SDL_Surface *ParentSurf);
-	bool SizeToText ();
+	bool move(const int x, const int y);
+	bool resize(const int w, const int h);
+	bool change_caption(const std::string& format_text);
+	bool change_parent_surf(SDL_Surface* parent_surf);
+	bool size_to_text();
 
-	bool Draw ();
+	bool draw();
 	
 private:
-	Image _Surface;
-	SDL_Rect _Rect;
-	SDL_Surface* _ParentSurf;
+	Image m_surface;
+	SDL_Rect m_rect;
+	SDL_Surface* m_parent_surf;
 
-	std::string _FmtText;
+	std::string m_format_text;
 
-	int _Size;
-	int _Style;
-	Uint8 _Fr, _Fg, _Fb;
-	Uint8 _Br, _Bg, _Bb;
-	bool _UseBg;
-
-	void Init (const int x, const int y, const int w, const int h,
-			 const std::string& FmtText, SDL_Surface* ParentSurf);
-	void Init (const int x, const int y, const std::string& FmtText,
-			 SDL_Surface* ParentSurf);
+	int m_size;
+	int m_style;
+	// Foreground red, green, blue
+	Uint8 m_fr, m_fg, m_fb;
+	// Background red, green, blue
+	Uint8 m_br, m_bg, m_bb;
 	
-	bool Parse ();
-	std::vector<TextClass> _Text;	
+	bool m_use_background;
+
+	void init(const int x, const int y, const int w, const int h,
+			 const std::string& format_text, SDL_Surface* parent_surf);
+	void init(const int x, const int y, const std::string& format_text,
+			 SDL_Surface* parent_surf);
+	
+	bool parse();
+	std::vector<Text> m_text;	
 };
 
 #endif // RICHTEXT_H
