@@ -15,33 +15,34 @@ Text::Text()
 	init("", screen, "Neuropol.ttf", 10, 0, 0);
 }
 
-Text::Text(const std::string& Caption, const int Size,
-				  SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const int size,
+	SDL_Surface* parent_surf)
 {
-	init(Caption, parent_surf, "Neuropol.ttf", Size, 0, 0);
+	init(caption, parent_surf, "Neuropol.ttf", size, 0, 0);
 }
 
-Text::Text(const std::string& Caption, const int x, const int y,
-				  SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const int x, const int y,
+	SDL_Surface* parent_surf)
 {
-	init(Caption, parent_surf, "Neuropol.ttf", 10, x, y);
+	init(caption, parent_surf, "Neuropol.ttf", 10, x, y);
 }
 
-Text::Text(const std::string& Caption, const int Size, const int x,
-				  const int y, SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const int size, const int x,
+	const int y, SDL_Surface* parent_surf)
 {
-	init (Caption, parent_surf, "Neuropol.ttf", Size, x, y);
+	init (caption, parent_surf, "Neuropol.ttf", size, x, y);
 }
 
-Text::Text(const std::string& Caption, const std::string& Font, 
-		const int Size, const int x, const int y, SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const std::string& Font, 
+	const int size, const int x, const int y, SDL_Surface* parent_surf)
 {
-	init (Caption, parent_surf, Font, Size, x, y);
+	init (caption, parent_surf, Font, size, x, y);
 }
 
 
 // Copy constructor
-// FIXME: Write this in a better way =)
+// FIXME: If we get any dynamically allocated memory,
+// this will need to be rewritten
 Text::Text(const Text& rhs)
 {
 	*this = rhs;
@@ -54,165 +55,167 @@ Text& Text::operator=(const Text& rhs)
 	if (this == &rhs)
 		return *this;
 
-	_Caption    = rhs._Caption;
-	_FontFile   = rhs._FontFile;
-	_Font       = rhs._Font;
-	_Size       = rhs._Size;
-	_Style      = rhs._Style;
-	_Surface    = rhs._Surface;
-	_parent_surf = rhs._parent_surf;
-	_Rect       = rhs._Rect;
-	_TextColor  = rhs._TextColor;
-	_UseBg      = rhs._UseBg;
-	_BgColor    = rhs._BgColor;
+	m_caption        = rhs.m_caption;
+	m_font_file      = rhs.m_font_file;
+	m_font           = rhs.m_font;
+	m_size           = rhs.m_size;
+	m_style          = rhs.m_style;
+	m_surface        = rhs.m_surface;
+	m_parent_surf    = rhs.m_parent_surf;
+	m_area           = rhs.m_area;
+	m_text_color     = rhs.m_text_color;
+	m_use_background = rhs.m_use_background;
+	m_bg_color       = rhs.m_bg_color;
 	return *this;
 };
 
 
-Text::~Text ()
+Text::~Text()
 {
 }
 
-void Text::Init (const std::string& Caption, SDL_Surface* parent_surf,
-				  const std::string& Font, const int Size, const int x,
-				  const int y)
+void Text::init(const std::string& caption, SDL_Surface* parent_surf,
+	const std::string& font, const int size, const int x, const int y)
 {
-	_UseBg = false;
-	_parent_surf = parent_surf;
+	m_use_background = false;
+	m_parent_surf = parent_surf;
 
-	_FontFile = Font;
-	Resize (Size);
-	ChCaption (Caption);
-	ChColor (0xff, 0xff, 0xff);
-	Move (x, y);
-	ResetStyle ();
+	m_font_file = font;
+	resize(size);
+	change_caption(caption);
+	change_color(0xff, 0xff, 0xff);
+	move(x, y);
+	reset_style();
 }
 
-bool Text::Resize (const int Size)
+bool Text::resize(const int size)
 {
-	Font TmpFont = TTF_OpenFont (_FontFile.c_str(), Size);
-	if ( !TmpFont )
-	{
-		std::cout << "TTF_OpenFont() error: " << TTF_GetError ();
+	Font tmp_font = TTF_OpenFont(m_font_file.c_str(), size);
+	if (!tmp_font) {
+		std::cout << "TTF_OpenFont() error: " << TTF_GetError();
 		std::cout << std::endl;
 		return false;
 	}
 
-	_Size = Size;
-	_Font = TmpFont;
+	m_size = size;
+	m_font = tmp_font;
 
 	return true;
 }
 
-bool Text::ChCaption (const std::string& Caption)
+bool Text::change_caption(const std::string& caption)
 {
-	_Caption = Caption;
+	m_caption = caption;
 	return true;
 }
 
-bool Text::Move (const int x, const int y)
+bool Text::move(const int x, const int y)
 {
-	_Rect.x = x;
-	_Rect.y = y;
+	m_area.x = x;
+	m_area.y = y;
 	return true;
 }
 
-bool Text::ChColor (const Uint8 r, const Uint8 g, const Uint8 b)
+bool Text::change_color(const Uint8 r, const Uint8 g, const Uint8 b)
 {
-	_TextColor.r = r;
-	_TextColor.g = g;
-	_TextColor.b = b;
+	m_text_color.r = r;
+	m_text_color.g = g;
+	m_text_color.b = b;
 	return true;
 }
 
-bool Text::ChBgColor (const Uint8 r, const Uint8 g, const Uint8 b)
+bool Text::change_background_color(const Uint8 r, const Uint8 g, const Uint8 b)
 {
-	_BgColor = SDL_MapRGB (_parent_surf->format, r, g, b);
-	_UseBg = true;
-	return true;
-}
-
-bool Text::ChBgColor ()
-{
-	_UseBg = false;
-	return true;
-}
-
-bool Text::Chparent_surf (SDL_Surface *parent_surf)
-{
-	_parent_surf = parent_surf;
+	m_bg_color = SDL_MapRGB(m_parent_surf->format, r, g, b);
+	m_use_background = true;
 	return true;
 }
 
 
-bool Text::Bold ()
+// FIXME: This method has a misleading name. Change it to
+// 'disable_background()' or something
+bool Text::change_background_color()
 {
-	_Style ^= TTF_STYLE_BOLD;
-	return ( _Style & TTF_STYLE_BOLD ) ? true : false;
+	m_use_background = false;
+	return true;
 }
 
-bool Text::Underline ()
+bool Text::change_parent_surf(SDL_Surface* parent_surf)
 {
-	_Style ^= TTF_STYLE_UNDERLINE;
-	return ( _Style & TTF_STYLE_UNDERLINE ) ? true : false;
-}
-
-bool Text::Italic ()
-{
-	_Style ^= TTF_STYLE_ITALIC;
-	return ( _Style & TTF_STYLE_ITALIC ) ? true : false;
-}
-
-int Text::GetStyle ()
-{
-	return _Style;
-}
-
-int Text::SetStyle (int Style)
-{
-	_Style = Style;
-	return _Style;
-}
-
-int Text::ResetStyle ()
-{
-	_Style = TTF_STYLE_NORMAL;
-	return _Style;
+	m_parent_surf = parent_surf;
+	return true;
 }
 
 
-bool Text::Draw ()
+bool Text::bold()
 {
-	TTF_SetFontStyle (_Font.get(), _Style);
+	m_style ^= TTF_STYLE_BOLD;
+	return (m_style & TTF_STYLE_BOLD) ? true : false;
+}
+
+bool Text::underline()
+{
+	m_style ^= TTF_STYLE_UNDERLINE;
+	return (m_style & TTF_STYLE_UNDERLINE)  ? true : false;
+}
+
+bool Text::italic()
+{
+	m_style ^= TTF_STYLE_ITALIC;
+	return (m_style & TTF_STYLE_ITALIC) ? true : false;
+}
+
+int Text::get_style()
+{
+	return m_style;
+}
+
+int Text::set_style(int style)
+{
+	m_style = style;
+	return m_style;
+}
+
+int Text::reset_style()
+{
+	m_style = TTF_STYLE_NORMAL;
+	return m_style;
+}
+
+
+bool Text::draw()
+{
+	TTF_SetFontStyle(m_font.get(), m_style);
 	
-	Image tmp = TTF_RenderText_Blended (_Font.get(), _Caption.c_str(), 
-			_TextColor);
+	Image tmp = TTF_RenderText_Blended(m_font.get(), m_caption.c_str(), 
+		m_text_color);
 	
-	if ( !tmp )
-	{
+	if (!tmp) {
 		std::cout << "TTF_RenderText_Blended() error: ";
-		std::cout << TTF_GetError () << std::endl;
+		std::cout << TTF_GetError() << std::endl;
 		return false;
 	}
-	_Surface = tmp;
-
-	_Rect.w = _Surface->w;
-	_Rect.h = _Surface->h;
 	
-	if ( _UseBg ) SDL_FillRect (_parent_surf, &_Rect, _BgColor);
-	SDL_BlitSurface(_Surface.get(), NULL, _parent_surf, &_Rect);
+	m_surface = tmp;
+
+	m_area.w = m_surface->w;
+	m_area.h = m_surface->h;
+	
+	if (m_use_background) 
+		SDL_FillRect(m_parent_surf, &m_area, m_bg_color);
+	SDL_BlitSurface(m_surface.get(), NULL, m_parent_surf, &m_area);
 	return true;
 }
 
 
-SDL_Rect Text::GetSize ()
+SDL_Rect Text::get_size()
 {
-	SDL_Rect Size;
+	SDL_Rect size;
 	int w, h;
 	
-	TTF_SetFontStyle (_Font.get(), _Style);
-	TTF_SizeText (_Font.get(), _Caption.c_str(), &w, &h);
-	Size.w = w;
-	Size.h = h;
-	return Size;
+	TTF_SetFontStyle(m_font.get(), m_style);
+	TTF_SizeText(m_font.get(), m_caption.c_str(), &w, &h);
+	size.w = w;
+	size.h = h;
+	return size;
 }

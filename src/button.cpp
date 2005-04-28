@@ -70,7 +70,7 @@ Button::~Button()
 
 void Button::init(const char* caption, const int x, const int y, 
 	const int w, const int h, const int text_size, 
-	const bool resize, SDL_Surface* parent_surf)
+	const bool do_resize, SDL_Surface* parent_surf)
 {
 	m_state = BUTTON_STATE_UP;
 
@@ -84,7 +84,7 @@ void Button::init(const char* caption, const int x, const int y,
 	if (text_size) 
 		resize_text(text_size);
 	change_caption(caption);
-	if (resize)
+	if (do_resize)
 		size_to_text();
 	m_caption.move(BUTTON_SIDE_WIDTH, BUTTON_SIDE_WIDTH);
 }
@@ -141,13 +141,13 @@ bool Button::resize_text(int size, bool resize)
 	return true;
 }
 
-bool Button::size_to_text ()
+bool Button::size_to_text()
 {
 	SDL_Rect size;
 	size = m_caption.get_size();
 	
 	return resize(size.w + BUTTON_SIDE_WIDTH,
-				size.h + BUTTON_SIDE_WIDTH);
+		size.h + BUTTON_SIDE_WIDTH);
 }
 
 bool Button::draw()
@@ -178,7 +178,7 @@ bool Button::draw()
 	face_color  = SDL_MapRGB(m_surface->format, face_r, face_g, face_b);
 	side1_color = SDL_MapRGB(m_surface->format, side1_r, side1_g, side1_b);
 	side2_color = SDL_MapRGB(m_surface->format, side2_r, side2_g, side2_b);
-	RenderButton(face_color, side1_color, side2_color);
+	render_button(face_color, side1_color, side2_color);
 	/*if ( SDL_FillRect (m_surface, 0, Color) < 0 )
 	{
 		printf ("Button::Draw(): SDL_FillRect() error: %s\n",
@@ -317,7 +317,7 @@ void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
 		y >= m_area.y && y <= (m_area.y + m_area.h)) {
 
 		if (m_state != BUTTON_STATE_DOWN) {
-			if (State & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+			if (m_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 				m_state = BUTTON_STATE_FAKEDOWN;
 			} else {
 				m_state = BUTTON_STATE_HOVER;
@@ -325,7 +325,7 @@ void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
 		}
 	} else {
 		if (!(m_state == BUTTON_STATE_DOWN &&
-			State & SDL_BUTTON (SDL_BUTTON_LEFT))) {
+			m_state & SDL_BUTTON (SDL_BUTTON_LEFT))) {
 			m_state = BUTTON_STATE_UP;
 		}
 	}

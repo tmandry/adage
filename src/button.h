@@ -6,17 +6,18 @@
 
 
 // TODO: Implement this as bool IsDown();
-#define BUTTONDOWN (_State==BUTTON_STATE_DOWN||_State==BUTTON_STATE_FAKEDOWN)
+#define BUTTONDOWN (m_state==BUTTON_STATE_DOWN||m_state==BUTTON_STATE_FAKEDOWN)
+
+// TODO: Move this inside Button
+const int  BUTTON_STATE_UP		 =	0;
+const int  BUTTON_STATE_DOWN	 =	1;
+const int  BUTTON_STATE_FAKEDOWN =	2;
+const int  BUTTON_STATE_HOVER	 =	3;
+const int  BUTTON_EVENT_CLICK	 =	0;
+const int  BUTTON_SIDE_WIDTH	 =	3;
 
 class Button {
 public:
-	
-	const int  BUTTON_STATE_UP		 =	0;
-	const int  BUTTON_STATE_DOWN	 =	1;
-	const int  BUTTON_STATE_FAKEDOWN =	2;
-	const int  BUTTON_STATE_HOVER	 =	3;
-	const int  BUTTON_EVENT_CLICK	 =	0;
-	const int  BUTTON_SIDE_WIDTH	 =	3;
 	
 	// Constructors
 	Button();

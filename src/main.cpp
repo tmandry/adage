@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
 	blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
 	while (!done) {
-		while (SDL_Pollevent(&event)) {
+		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 			case SDL_QUIT:
 				done = 1;
@@ -131,7 +131,7 @@ void button_change_color()
 	status ^= 1;
 
 	if (status)
-		BlankColor = SDL_MapRGB(screen->format, 0x33, 0xdd, 0x33);
+		blank_color = SDL_MapRGB(screen->format, 0x33, 0xdd, 0x33);
 	else
-		BlankColor = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
+		blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
 }

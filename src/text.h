@@ -9,62 +9,61 @@
 #include "image.h"
 #include "font.h"
 
-class TextClass
-{
+class Text {
 public:
-	TextClass ();
-	TextClass (const std::string& Caption, const int Size,
-			 SDL_Surface* ParentSurf = Screen);
-	TextClass (const std::string& Caption, const int x, const int y,
-			 SDL_Surface* ParentSurf = Screen);
-	TextClass (const std::string& Caption, const int Size, const int x,
-			 const int y, SDL_Surface* ParentSurf = Screen);
-	TextClass (const std::string& Caption, const std::string& Font, 
-			const int Size, const int x, const int y, 
-			SDL_Surface* ParentSurf = Screen);
+	Text();
+	Text(const std::string& caption, const int size,
+		SDL_Surface* parent_surf = screen);
+	Text(const std::string& caption, const int x, const int y,
+		SDL_Surface* parent_surf = screen);
+	Text(const std::string& caption, const int size, const int x,
+		const int y, SDL_Surface* parent_surf = screen);
+	Text(const std::string& caption, const std::string& font, 
+		const int size, const int x, const int y, 
+		SDL_Surface* parent_surf = screen);
 	
 	// copy and assignment
-	TextClass (const TextClass& rhs);
-	TextClass& operator= (const TextClass& rhs);
+	Text(const Text& rhs);
+	Text& operator=(const Text& rhs);
 
-	~TextClass ();
+	~Text();
 
-	bool Resize (const int Size);
-	bool ChCaption (const std::string& Caption);
-	bool Move (const int x, const int y);
-	bool ChColor (const Uint8 r, const Uint8 g, const Uint8 b);
-	bool ChBgColor (const Uint8 r, const Uint8 g, const Uint8 b);
-	bool ChBgColor ();
-	bool ChParentSurf (SDL_Surface* ParentSurf);
+	bool resize(const int size);
+	bool change_caption(const std::string& caption);
+	bool move(const int x, const int y);
+	bool change_color(const Uint8 r, const Uint8 g, const Uint8 b);
+	bool change_background_color(const Uint8 r, const Uint8 g, const Uint8 b);
+	bool change_background_color();
+	bool change_parent_surf(SDL_Surface* parent_surf);
 
-	bool Bold ();
-	bool Underline ();
-	bool Italic ();
-	int GetStyle ();
-	int SetStyle (int Style);
-	int ResetStyle ();
+	bool bold();
+	bool underline();
+	bool italic();
+	int get_style();
+	int set_style(int style);
+	int reset_style();
 	
-	bool Draw ();
+	bool draw();
 
-	SDL_Rect GetSize ();
+	SDL_Rect get_size();
 
 private:
-	void Init (const std::string& Caption, SDL_Surface* ParentSurf, 
-		const std::string& Font, const int Size, const int x, const int y);
+	void init(const std::string& caption, SDL_Surface* parent_surf, 
+		const std::string& font, const int size, const int x, const int y);
 	
-	std::string _Caption;
-	std::string _FontFile;
-	Font _Font;
-	int _Size;
-	int _Style;
+	std::string m_caption;
+	std::string m_font_file;
+	Font m_font;
+	int m_size;
+	int m_style;
 	
-	Image _Surface;
-	SDL_Surface* _ParentSurf;
-	SDL_Rect _Rect;
+	Image m_surface;
+	SDL_Surface* m_parent_surf;
+	SDL_Rect m_area;
 	
-	SDL_Color _TextColor;
-	bool _UseBg;
-	Uint32 _BgColor;
+	SDL_Color m_text_color;
+	bool m_use_background;
+	Uint32 m_bg_color;
 };
 
 #endif // TEXT_H
