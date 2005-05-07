@@ -15,10 +15,10 @@ public:
 	RichText();
 	RichText(const int x, const int y, const int w, const int h,
 		SDL_Surface* parent_surf = screen);
-	RichText(const std::string& FmtText, 
+	RichText(const std::string& format_text, 
 		SDL_Surface* parent_surf = screen);
 	RichText(const int x, const int y, const int w, const int h,
-		const std::string& FmtText, SDL_Surface* parent_surf = screen);
+		const std::string& format_text, SDL_Surface* parent_surf = screen);
 	
 	// copying and assignmening and assignmentt 
 	RichText::RichText(const RichText& rhs);
@@ -37,7 +37,7 @@ public:
 	
 private:
 	Image m_surface;
-	SDL_Rect m_rect;
+	SDL_Rect m_area;
 	SDL_Surface* m_parent_surf;
 
 	std::string m_format_text;

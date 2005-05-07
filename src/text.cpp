@@ -131,10 +131,7 @@ bool Text::change_background_color(const Uint8 r, const Uint8 g, const Uint8 b)
 	return true;
 }
 
-
-// FIXME: This method has a misleading name. Change it to
-// 'disable_background()' or something
-bool Text::change_background_color()
+bool Text::disable_background()
 {
 	m_use_background = false;
 	return true;

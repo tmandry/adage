@@ -53,10 +53,11 @@ int main(int argc, char *argv[])
 	Text text("HELLO!", 30, 100, 100);
 	
 	button = new Button(" Ping? ", 100, 150, 20);
-	button->set_event_handler(BUTTON_EVENT_CLICK, button_click);
+	button->set_event_handler(Button::button_event_click, button_click);
 
 	change_color = new Button ("Thou shalt not poketh me!", 200, 400, 10);
-	change_color->set_event_handler(BUTTON_EVENT_CLICK, button_change_color);
+	change_color->set_event_handler(Button::button_event_click,
+		button_change_color);
 
 	text2 = new Text(" Pong!", 48, 300, 300);
 	text2->change_color(0x00, 0x00, 0x00);
@@ -92,7 +93,7 @@ int main(int argc, char *argv[])
 				button->mouse_motion_event(event.motion.state,
 					event.motion.x, event.motion.y);
 				change_color->mouse_motion_event(event.motion.state,
-					event.motion.x,	event.motion.y);
+					event.motion.x, event.motion.y);
 				break;
 			}
 		}

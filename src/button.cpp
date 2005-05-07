@@ -52,7 +52,7 @@ Button& Button::operator=(const Button& rhs)
 	if (this == &rhs)
 		return *this;
 
-	m_hnd_click   = rhs.m_hnd_click;
+	m_handle_click   = rhs.m_handle_click;
 	m_caption     = rhs.m_caption;
 	m_surface     = rhs.m_surface;
 	m_parent_surf = rhs.m_parent_surf;
@@ -72,9 +72,9 @@ void Button::init(const char* caption, const int x, const int y,
 	const int w, const int h, const int text_size, 
 	const bool do_resize, SDL_Surface* parent_surf)
 {
-	m_state = BUTTON_STATE_UP;
+	m_state = button_state_up;
 
-	m_hnd_click = 0;
+	m_handle_click = 0;
 
 	m_parent_surf = parent_surf;
 	
@@ -86,7 +86,7 @@ void Button::init(const char* caption, const int x, const int y,
 	change_caption(caption);
 	if (do_resize)
 		size_to_text();
-	m_caption.move(BUTTON_SIDE_WIDTH, BUTTON_SIDE_WIDTH);
+	m_caption.move(side_width, side_width);
 }
 
 
@@ -146,8 +146,8 @@ bool Button::size_to_text()
 	SDL_Rect size;
 	size = m_caption.get_size();
 	
-	return resize(size.w + BUTTON_SIDE_WIDTH,
-		size.h + BUTTON_SIDE_WIDTH);
+	return resize(size.w + side_width,
+		size.h + side_width);
 }
 
 bool Button::draw()
@@ -158,18 +158,18 @@ bool Button::draw()
 	Uint32 face_color, side1_color, side2_color;
 
 	switch (m_state) {
-	case BUTTON_STATE_UP:
+	case button_state_up:
 		face_r  = face_g  = 0x55; face_b  = 0xee;
 		side1_r = side1_g = 0x33; side1_b = 0xcc;
 		side2_r = side2_g = 0x22; side2_b = 0xbb;
 		break;
-	case BUTTON_STATE_DOWN:
-	case BUTTON_STATE_FAKEDOWN:
+	case button_state_down:
+	case button_state_fakedown:
 		face_r  = face_g  = 0x33; face_b  = 0xcc;
 		side1_r = side1_g = 0x33; side1_b = 0xcc;
 		side2_r = side2_g = 0x22; side2_b = 0xbb;
 		break;
-	case BUTTON_STATE_HOVER:
+	case button_state_hover:
 		face_r  = face_g  = 0x66; face_b  = 0xff;
 		side1_r = side1_g = 0x33; side1_b = 0xcc;
 		side2_r = side2_g = 0x22; side2_b = 0xbb;
@@ -187,7 +187,7 @@ bool Button::draw()
 	}*/
 
 	int text_loc;
-	text_loc = BUTTONDOWN ? 3 : 0;
+	text_loc = is_down() ? 3 : 0;
 	m_caption.move(text_loc, text_loc);
 	if (!m_caption.draw()) 
 		return false;
@@ -216,14 +216,14 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	// FIXME: Comments!
 	SDL_Rect face, side, black;
 
-	face.x = BUTTONDOWN ? BUTTON_SIDE_WIDTH : 0;
-	face.y = BUTTONDOWN ? BUTTON_SIDE_WIDTH : 0;
-	face.w = m_area.w - BUTTON_SIDE_WIDTH;
-	face.h = m_area.h - BUTTON_SIDE_WIDTH;
-	side.x = BUTTONDOWN ? 0 : face.w;
+	face.x = is_down() ? side_width : 0;
+	face.y = is_down() ? side_width : 0;
+	face.w = m_area.w - side_width;
+	face.h = m_area.h - side_width;
+	side.x = is_down() ? 0 : face.w;
 	side.w = 0; side.h = 1;
 	black.x = face.w; black.y = 0;
-	black.w = BUTTON_SIDE_WIDTH; black.h = 1;
+	black.w = side_width; black.h = 1;
 
 	// Most of this will be covered
 	SDL_FillRect(m_surface.get(), 0, side2_color);
@@ -258,7 +258,7 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	// Other side
 	// FIXME: Comments! What is going on here?
 	for (side.y = 0; side.y < m_area.h; ++side.y) {
-		if (side.y < BUTTON_SIDE_WIDTH) {
+		if (side.y < side_width) {
 			++side.w;
 			++black.x; 
 			--black.w;
@@ -294,18 +294,18 @@ void Button::mouse_button_event(const Uint8 button, const Uint8 state,
 
 		// Is it already clicked?
 		if (state == SDL_PRESSED) {
-			m_state = BUTTON_STATE_DOWN;
+			m_state = button_state_down;
 		} else {
 			// If not, perform the callback
-			if (m_state == BUTTON_STATE_DOWN && m_hnd_click) {
-				m_hnd_click();
+			if (m_state == button_state_down && m_handle_click) {
+				m_handle_click();
 			}
 
-			m_state = BUTTON_STATE_HOVER;
+			m_state = button_state_hover;
 		}
 	} else {
 		if (state == SDL_RELEASED)
-			m_state = BUTTON_STATE_UP;
+			m_state = button_state_up;
 	}
 }
 
@@ -316,17 +316,13 @@ void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
 	if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
 		y >= m_area.y && y <= (m_area.y + m_area.h)) {
 
-		if (m_state != BUTTON_STATE_DOWN) {
-			if (m_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-				m_state = BUTTON_STATE_FAKEDOWN;
-			} else {
-				m_state = BUTTON_STATE_HOVER;
-			}
+		if (m_state != button_state_down) {
+			m_state = button_state_hover;
 		}
 	} else {
-		if (!(m_state == BUTTON_STATE_DOWN &&
+		if (!(m_state == button_state_down &&
 			m_state & SDL_BUTTON (SDL_BUTTON_LEFT))) {
-			m_state = BUTTON_STATE_UP;
+			m_state = button_state_up;
 		}
 	}
 }
@@ -335,12 +331,17 @@ void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
 bool Button::set_event_handler(const Uint8 event, void (*handler)())
 {
 	switch (event) {
-	case BUTTON_EVENT_CLICK:
-		m_hnd_click = handler;
+	case button_event_click:
+		m_handle_click = handler;
 		break;
 	default:
 		return false;
 	}
 
 	return true;
+}
+
+bool Button::is_down()
+{
+	return (m_state == button_state_down || m_state == button_state_fakedown);
 }

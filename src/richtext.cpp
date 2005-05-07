@@ -191,7 +191,7 @@ bool RichText::parse()
 
 			prev_atom->change_color(fr, fg, fb);
 			if (use_background) 
-				prev_atom->ChbgColor (br, bg, bb);
+				prev_atom->change_background_color (br, bg, bb);
 
 			atom.clear();
 		}
@@ -224,6 +224,7 @@ bool RichText::parse()
 			convert >> size;
 			i += 2;
 			break;
+		}
 
 		case 's': // Reset size
 			size = m_size;
@@ -232,20 +233,22 @@ bool RichText::parse()
 		case 'C': { // Foreground color
 			std::stringstream convert;
 			convert << m_format_text.substr (i + 1, 6);
-			convert >> std::hex >> g.Glob;
-			fr = g.r; fg = raw_to_rgb.g; fb = raw_to_rgb.b;
+			convert >> std::hex >> raw_to_rgb.Glob;
+			fr = raw_to_rgb.r; fg = raw_to_rgb.g; fb = raw_to_rgb.b;
 			i += 6;
 			break;
-
+		}
+		
 		case 'G': { // Background color
 			std::stringstream convert;
 			convert << m_format_text.substr (i+1, 6);
-			convert >> std::hex >> g.Glob;
-			br = g.r; bg = raw_to_rgb.g; bb = raw_to_rgb.b;
+			convert >> std::hex >> raw_to_rgb.Glob;
+			br = raw_to_rgb.r; bg = raw_to_rgb.g; bb = raw_to_rgb.b;
 			use_background = true;
 			i += 6;
 			break;
-
+		}
+		
 		case 'c': // Reset foreground color
 			fr = m_fr; fg = m_fg; fb = m_fb;
 			break;

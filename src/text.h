@@ -33,7 +33,7 @@ public:
 	bool move(const int x, const int y);
 	bool change_color(const Uint8 r, const Uint8 g, const Uint8 b);
 	bool change_background_color(const Uint8 r, const Uint8 g, const Uint8 b);
-	bool change_background_color();
+	bool disable_background();
 	bool change_parent_surf(SDL_Surface* parent_surf);
 
 	bool bold();

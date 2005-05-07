@@ -28,9 +28,9 @@ public:
 //	void set_name(const std::string& new_name) { name = new_name; }
 	
 protected:
-	T* rep;
-	int* pcount;
-	delete_function pdf; // Pointer to Delete Function
+	T* m_rep;
+	int* m_pcount;
+	delete_function m_pdf; // Pointer to Delete Function
 	
 	void decrease_count();
 
@@ -41,7 +41,7 @@ protected:
 // Constructor
 template <class T>
 basic_handle<T>::basic_handle(T* prep, delete_function del_func)
-	: rep(prep), pcount(new int(1)), pdf(del_func)
+	: m_rep(prep), m_pcount(new int(1)), m_pdf(del_func)
 {
 }
 
@@ -49,9 +49,9 @@ basic_handle<T>::basic_handle(T* prep, delete_function del_func)
 // Copy-constructor
 template <class T>
 basic_handle<T>::basic_handle(const basic_handle& rhs)
-	: rep(rhs.rep), pcount(rhs.pcount), pdf(rhs.pdf)
+	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount), m_pdf(rhs.m_pdf)
 {
-	(*pcount)++;
+	(*m_pcount)++;
 }
 
 
@@ -69,17 +69,17 @@ template <class T>
 basic_handle<T>& basic_handle<T>::operator=(const basic_handle<T>& rhs)
 {
 //	std::cout << "Assigning from " << rhs.name << " to " << name << "\n";
-	if (rep == rhs.rep)
+	if (m_rep == rhs.m_rep)
 		return *this;
 	
 	// Delete data if we're overwriting the last handle
 	decrease_count();
 	
-	rep = rhs.rep;
-	pcount = rhs.pcount;
-	pdf = rhs.pdf;
+	m_rep = rhs.m_rep;
+	m_pcount = rhs.m_pcount;
+	m_pdf = rhs.m_pdf;
 	
-	(*pcount)++;
+	(*m_pcount)++;
  return *this;
 }
 
@@ -89,13 +89,13 @@ template <class T>
 basic_handle<T>& basic_handle<T>::operator=(T* rhs)
 {
 //	std::cout << "Assigning from raw ptr to " << name << "\n";
-	if (rep == rhs)
+	if (m_rep == rhs)
 		return *this;
 
 	decrease_count();
 
-	rep = rhs;
-	pcount = new int(1);
+	m_rep = rhs;
+	m_pcount = new int(1);
  return *this;
 }
 
@@ -104,7 +104,7 @@ basic_handle<T>& basic_handle<T>::operator=(T* rhs)
 template <class T>
 T* basic_handle<T>::get() const
 {
-	return rep;
+	return m_rep;
 }
 
 
@@ -112,7 +112,7 @@ T* basic_handle<T>::get() const
 template <class T>
 T* basic_handle<T>::operator->() const
 {
-	return rep;
+	return m_rep;
 }
 
 
@@ -120,20 +120,20 @@ T* basic_handle<T>::operator->() const
 template <class T>
 T& basic_handle<T>::operator*() const
 {
-	return *rep;
+	return *m_rep;
 }
 
 // Operator==
 template <class T>
 bool basic_handle<T>::operator==(const T* rhs) const
 {
-     return rep == rhs;
+     return m_rep == rhs;
 }
 
 template <class T>
 bool basic_handle<T>::operator==(const basic_handle<T>& rhs) const
 {
-     return rhs == rep;
+     return rhs == m_rep;
 }     
 
 
@@ -141,7 +141,7 @@ bool basic_handle<T>::operator==(const basic_handle<T>& rhs) const
 template <class T>
 basic_handle<T>::operator bool() const
 {
-	if (rep) {
+	if (m_rep) {
 		return true;
 	} else {
 		return false;
@@ -153,7 +153,7 @@ basic_handle<T>::operator bool() const
 template <class T>
 void basic_handle<T>::set_deleter(delete_function del_func)
 {
-	pdf = del_func;
+	m_pdf = del_func;
 }
 
 
@@ -161,20 +161,20 @@ void basic_handle<T>::set_deleter(delete_function del_func)
 template <class T>
 void basic_handle<T>::decrease_count()
 {
-	if (--(*pcount) == 0) {
+	if (--(*m_pcount) == 0) {
 //		std::cout << "Deleting object " << name << "\n";
 		
-		if (!rep) return;
+		if (!m_rep) return;
 		
-		if (pdf) {
-			pdf(rep);
+		if (m_pdf) {
+			m_pdf(m_rep);
 		} else {
-			delete rep; 
-			rep = 0;
+			delete m_rep; 
+			m_rep = 0;
 		}
 		
-		delete pcount; 
-		pcount = 0;
+		delete m_pcount; 
+		m_pcount = 0;
 	}
 }
 
