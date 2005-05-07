@@ -11,15 +11,14 @@ SDL_Surface *screen;
 #include "richtext.h"
 //#include "input.h"
 
-// FIXME: Globals are bad...
-Button* button;
-Button* change_color;
+// Globals like this won't happen outside the preview, everything will be owned
+// by a class
 Text* text2;
 
 Uint32 blank_color;
 
-void button_click();
-void button_change_color();
+void button_click(Button&);
+void button_change_color(Button&);
 
 int main(int argc, char *argv[])
 {
@@ -52,11 +51,11 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	Text text("HELLO!", 30, 100, 100);
 	
-	button = new Button(" Ping? ", 100, 150, 20);
-	button->set_event_handler(Button::button_event_click, button_click);
+	Button button(" Ping? ", 100, 150, 20);
+	button.set_event_handler(Button::button_event_click, button_click);
 
-	change_color = new Button ("Thou shalt not poketh me!", 200, 400, 10);
-	change_color->set_event_handler(Button::button_event_click,
+	Button change_color("Thou shalt not poketh me!", 200, 400, 10);
+	change_color.set_event_handler(Button::button_event_click,
 		button_change_color);
 
 	text2 = new Text(" Pong!", 48, 300, 300);
@@ -84,15 +83,15 @@ int main(int argc, char *argv[])
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
-				button->mouse_button_event(event.button.button,
+				button.mouse_button_event(event.button.button,
 					event.button.state, event.button.x, event.button.y);
-				change_color->mouse_button_event(event.button.button,
+				change_color.mouse_button_event(event.button.button,
 					event.button.state,	event.button.x,	event.button.y);
 				break;
 			case SDL_MOUSEMOTION:
-				button->mouse_motion_event(event.motion.state,
+				button.mouse_motion_event(event.motion.state,
 					event.motion.x, event.motion.y);
-				change_color->mouse_motion_event(event.motion.state,
+				change_color.mouse_motion_event(event.motion.state,
 					event.motion.x, event.motion.y);
 				break;
 			}
@@ -101,8 +100,8 @@ int main(int argc, char *argv[])
 		SDL_FillRect(screen, NULL, blank_color);
 
 		text.draw();
-		button->draw();
-		change_color->draw();
+		button.draw();
+		change_color.draw();
 		text2->draw();
 		rtext.draw();
 		//Input.draw ();
@@ -112,21 +111,21 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void button_click()
+void button_click(Button& button)
 {
 	static Uint8 status = 0;
 	status ^= 1;
 
 	if (status) {
-		button->change_caption(" Pong! ");
+		button.change_caption(" Pong! ");
 		text2->change_caption(" Ping? ");
 	} else {
-		button->change_caption(" Ping? ");
+		button.change_caption(" Ping? ");
 		text2->change_caption(" Pong! ");
 	}
 }
 
-void button_change_color()
+void button_change_color(Button& change_color)
 {
 	static Uint8 status = 0;
 	status ^= 1;

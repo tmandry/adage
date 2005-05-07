@@ -6,6 +6,8 @@
 
 class Button {
 public:
+	typedef void (*handler_function)(Button&);
+	
 	enum {button_event_click};
 	
 	// Constructors
@@ -34,7 +36,7 @@ public:
 		const Uint16 x, const Uint16 y);
 	void mouse_motion_event(const Uint8 state, const Uint16 x, const Uint16 y);
 
-	bool set_event_handler(const Uint8 event, void (*handler)());
+	bool set_event_handler(const Uint8 event, handler_function handler);
 	
 	inline bool is_down();
 
@@ -46,7 +48,7 @@ private:
 	void render_button(Uint32 face_color, const Uint32 side1_color,
 		const Uint32 side2_color);
 
-	void (*m_handle_click)();
+	handler_function m_handle_click;
 	
 
 	Text m_caption;

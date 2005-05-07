@@ -210,10 +210,13 @@ inline void step_grad(Uint8 &r, Uint8 &g, Uint8 &b)
 	}
 }
 
+// The good, the bad, the very ugly button renderer function
 void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	const Uint32 side2_color)
 {
-	// FIXME: Comments!
+	// face is the main color of the button, side is the brighter-colored side,
+	// and black is the rectangle that covers up the side where it shouldn't be
+	// (on the corners)
 	SDL_Rect face, side, black;
 
 	face.x = is_down() ? side_width : 0;
@@ -222,23 +225,21 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	face.h = m_area.h - side_width;
 	side.x = is_down() ? 0 : face.w;
 	side.w = 0; side.h = 1;
-	black.x = face.w; black.y = 0;
-	black.w = side_width; black.h = 1;
 
-	// Most of this will be covered
+	// Side - most of this will be covered
 	SDL_FillRect(m_surface.get(), 0, side2_color);
 
 	// Face
 	Uint8 face_r, face_g, face_b;
 	SDL_GetRGB(face_color, m_surface->format, &face_r, &face_g, &face_b);
 	
+	// Paint the gradient
 	int i = (face.w > face.h) ? face.w : face.h;
 	SDL_Rect grad;
 	SDL_Rect grad_clip;
 
-	// FIXME: Clean this up...
-	for (grad_clip.x = grad_clip.y = grad.x = grad.y = face.x,
-		 grad.w = grad.h = i; i >= 0; i -= 1) {
+	grad_clip.x = grad_clip.y = grad.x = grad.y = face.x, grad.w = grad.h = i;
+	for (; i >= 0; i -= 1) {
 		grad_clip.w = (grad.w > face.w) ? face.w : grad.w;
 		grad_clip.h = (grad.h > face.h) ? face.h : grad.h;
 		
@@ -252,13 +253,18 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 		grad.x += 1;
 	}
 
+	black.x = face.w; black.y = 0;
+	black.w = side_width; black.h = 1;
+	
 	Uint32 black_color;
 	black_color = SDL_MapRGBA (m_surface->format, 0x00, 0x00, 0x00, 0x00);
 
-	// Other side
-	// FIXME: Comments! What is going on here?
+	// Create the side on the short side of the button
 	for (side.y = 0; side.y < m_area.h; ++side.y) {
 		if (side.y < side_width) {
+			// First step:
+			// Increase the side width while moving the black over one,
+			// making an angle at the corner
 			++side.w;
 			++black.x; 
 			--black.w;
@@ -267,12 +273,18 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 			SDL_FillRect(m_surface.get(), &black, black_color);
 		}
 
+		// Transition to second step
 		if (side.y == face.h) {
 			black.x = 0;
 			black.w = 0;
 		}
-			
+
 		if (side.y > face.h) {
+			// Second step:
+			// We're doing two things at once here. The black is covering up
+			// the long side and making the angle at the other corner, while
+			// the short side is getting smaller and making an angle where it
+			// meets the long one.
 			++side.x; 
 			--side.w;
 			++black.w;
@@ -298,7 +310,7 @@ void Button::mouse_button_event(const Uint8 button, const Uint8 state,
 		} else {
 			// If not, perform the callback
 			if (m_state == button_state_down && m_handle_click) {
-				m_handle_click();
+				m_handle_click(*this);
 			}
 
 			m_state = button_state_hover;
@@ -328,7 +340,7 @@ void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
 }
 
 
-bool Button::set_event_handler(const Uint8 event, void (*handler)())
+bool Button::set_event_handler(const Uint8 event, handler_function handler)
 {
 	switch (event) {
 	case button_event_click:
