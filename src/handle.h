@@ -80,7 +80,7 @@ basic_handle<T>& basic_handle<T>::operator=(const basic_handle<T>& rhs)
 	m_pdf = rhs.m_pdf;
 	
 	(*m_pcount)++;
- return *this;
+	return *this;
 }
 
 
@@ -96,7 +96,7 @@ basic_handle<T>& basic_handle<T>::operator=(T* rhs)
 
 	m_rep = rhs;
 	m_pcount = new int(1);
- return *this;
+	return *this;
 }
 
 
@@ -169,7 +169,7 @@ void basic_handle<T>::decrease_count()
 		if (m_pdf) {
 			m_pdf(m_rep);
 		} else {
-			delete m_rep; 
+			delete m_rep;
 			m_rep = 0;
 		}
 		

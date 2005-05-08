@@ -4,8 +4,6 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-extern SDL_Surface *screen;
-
 #include "text.h"
 #include "image.h"
 #include "font.h"
@@ -15,26 +13,25 @@ Text::Text()
 	init("", screen, "Neuropol.ttf", 10, 0, 0);
 }
 
-Text::Text(const std::string& caption, const int size,
-	SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const int size, Image parent_surf)
 {
 	init(caption, parent_surf, "Neuropol.ttf", size, 0, 0);
 }
 
 Text::Text(const std::string& caption, const int x, const int y,
-	SDL_Surface* parent_surf)
+	Image parent_surf)
 {
 	init(caption, parent_surf, "Neuropol.ttf", 10, x, y);
 }
 
-Text::Text(const std::string& caption, const int size, const int x,
-	const int y, SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const int size, const int x, const int y,
+	Image parent_surf)
 {
 	init (caption, parent_surf, "Neuropol.ttf", size, x, y);
 }
 
-Text::Text(const std::string& caption, const std::string& Font, 
-	const int size, const int x, const int y, SDL_Surface* parent_surf)
+Text::Text(const std::string& caption, const std::string& Font, 	const int size,
+	const int x, const int y, Image parent_surf)
 {
 	init (caption, parent_surf, Font, size, x, y);
 }
@@ -61,7 +58,7 @@ Text& Text::operator=(const Text& rhs)
 	m_size           = rhs.m_size;
 	m_style          = rhs.m_style;
 	m_surface        = rhs.m_surface;
-	m_parent_surf    = rhs.m_parent_surf;
+	set_parent        (rhs.get_parent());
 	m_area           = rhs.m_area;
 	m_text_color     = rhs.m_text_color;
 	m_use_background = rhs.m_use_background;
@@ -74,11 +71,12 @@ Text::~Text()
 {
 }
 
-void Text::init(const std::string& caption, SDL_Surface* parent_surf,
+
+void Text::init(const std::string& caption, Image parent_surf,
 	const std::string& font, const int size, const int x, const int y)
 {
 	m_use_background = false;
-	m_parent_surf = parent_surf;
+	set_parent(parent_surf);
 
 	m_font_file = font;
 	resize(size);
@@ -86,6 +84,13 @@ void Text::init(const std::string& caption, SDL_Surface* parent_surf,
 	change_color(0xff, 0xff, 0xff);
 	move(x, y);
 	reset_style();
+}
+
+
+bool Text::resize(const int w, const int h)
+{
+	// Should be resized with text size!
+	return false;
 }
 
 bool Text::resize(const int size)
@@ -126,7 +131,7 @@ bool Text::change_color(const Uint8 r, const Uint8 g, const Uint8 b)
 
 bool Text::change_background_color(const Uint8 r, const Uint8 g, const Uint8 b)
 {
-	m_bg_color = SDL_MapRGB(m_parent_surf->format, r, g, b);
+	m_bg_color = SDL_MapRGB(get_parent()->format, r, g, b);
 	m_use_background = true;
 	return true;
 }
@@ -134,12 +139,6 @@ bool Text::change_background_color(const Uint8 r, const Uint8 g, const Uint8 b)
 bool Text::disable_background()
 {
 	m_use_background = false;
-	return true;
-}
-
-bool Text::change_parent_surf(SDL_Surface* parent_surf)
-{
-	m_parent_surf = parent_surf;
 	return true;
 }
 
@@ -198,9 +197,21 @@ bool Text::draw()
 	m_area.w = m_surface->w;
 	m_area.h = m_surface->h;
 	
-	if (m_use_background) 
-		SDL_FillRect(m_parent_surf, &m_area, m_bg_color);
-	SDL_BlitSurface(m_surface.get(), NULL, m_parent_surf, &m_area);
+
+	return true;
+}
+
+bool Text::blit()
+{
+	if (m_use_background)
+		SDL_FillRect(get_parent().get(), &m_area, m_bg_color);
+
+	if (SDL_BlitSurface(m_surface.get(), 0, get_parent().get(), &m_area) < 0) {
+		std::cout <<  "Widget::blit(): SDL_BlitSurface error: \n"
+			<< SDL_GetError() << std::endl;
+		return false;
+	}
+
 	return true;
 }
 

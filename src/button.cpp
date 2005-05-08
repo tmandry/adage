@@ -2,8 +2,6 @@
 
 #include "SDL.h"
 
-extern SDL_Surface *screen;
-
 #include "button.h"
 #include "rgbamask.h"
 #include "image.h"
@@ -16,16 +14,15 @@ Button::Button()
 
 
 // Overloaded constructor
-Button::Button(const char* caption, const int x, const int y,
-					 SDL_Surface* parent_surf)
+Button::Button(const char* caption, const int x, const int y, Image parent_surf)
 {
 	init(caption, x, y, 0, 0, 0, true, parent_surf);
 }
 
 
 // Overloaded constructor
-Button::Button(const char* caption, const int x, const int y,
-					 const int w, const int h, SDL_Surface* parent_surf)
+Button::Button(const char* caption, const int x, const int y, const int w,
+	const int h, Image parent_surf)
 {
 	init(caption, x, y, w, h, 0, false, parent_surf);
 }
@@ -33,7 +30,7 @@ Button::Button(const char* caption, const int x, const int y,
 
 // Overloaded constructor
 Button::Button(const char* caption, const int x, const int y,
-					 const int text_size, SDL_Surface* parent_surf)
+	const int text_size, Image parent_surf)
 {
 	init(caption, x, y, 0, 0, text_size, true, parent_surf);
 }
@@ -52,10 +49,10 @@ Button& Button::operator=(const Button& rhs)
 	if (this == &rhs)
 		return *this;
 
-	m_handle_click   = rhs.m_handle_click;
+	m_handle_click= rhs.m_handle_click;
 	m_caption     = rhs.m_caption;
 	m_surface     = rhs.m_surface;
-	m_parent_surf = rhs.m_parent_surf;
+	set_parent     (rhs.get_parent());
 	m_area        = rhs.m_area;
 	m_state       = rhs.m_state;
 	return *this;
@@ -70,13 +67,13 @@ Button::~Button()
 
 void Button::init(const char* caption, const int x, const int y, 
 	const int w, const int h, const int text_size, 
-	const bool do_resize, SDL_Surface* parent_surf)
+	const bool do_resize, Image parent_surf)
 {
 	m_state = button_state_up;
 
 	m_handle_click = 0;
 
-	m_parent_surf = parent_surf;
+	set_parent(parent_surf);
 	
 	move(x, y);
 	resize(w, h);
@@ -102,14 +99,6 @@ bool Button::change_caption(const char* caption, const bool resize)
 	return true;
 }
 
-bool Button::move(const int x, const int y)
-{
-	m_area.x = x;
-	m_area.y = y;
-
-	return true;
-}
-
 bool Button::resize(const int w, const int h)
 {
 	m_area.w = w;
@@ -125,7 +114,7 @@ bool Button::resize(const int w, const int h)
 	}
 
 	m_surface = tmp;
-	m_caption.change_parent_surf(m_surface.get());
+	m_caption.set_parent(m_surface.get());
 
 	return true;
 }
@@ -189,14 +178,6 @@ bool Button::draw()
 	int text_loc;
 	text_loc = is_down() ? 3 : 0;
 	m_caption.move(text_loc, text_loc);
-	if (!m_caption.draw()) 
-		return false;
-
-	if (SDL_BlitSurface(m_surface.get(), 0, m_parent_surf, &m_area) < 0) {
-		std::cout <<  "Button::Draw(): SDL_BlitSurface error: \n"
-			<< SDL_GetError() << std::endl;
-		return false;
-	}
 
 	return true;
 }
@@ -297,48 +278,58 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	}
 }
 
-void Button::mouse_button_event(const Uint8 button, const Uint8 state,
-	const Uint16 x, const Uint16 y)
-{
-	// Is the mouse pointer over the button?
-	if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
-		y >= m_area.y && y <= (m_area.y + m_area.h)) {
 
-		// Is it already clicked?
-		if (state == SDL_PRESSED) {
-			m_state = button_state_down;
-		} else {
-			// If not, perform the callback
-			if (m_state == button_state_down && m_handle_click) {
-				m_handle_click(*this);
+bool Button::handle_event(const SDL_Event& event)
+{
+	Uint8 button, state;
+	Uint16 x, y;
+	
+	// These will only be used if it's a mouse event
+	button = event.button.button; state = event.button.state;
+	x = event.button.x; y = event.button.y;
+	
+	switch (event.type) {
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		// Is the mouse pointer over the button?
+		if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
+			y >= m_area.y && y <= (m_area.y + m_area.h)) {
+
+			// Is it already clicked?
+			if (state == SDL_PRESSED) {
+				m_state = button_state_down;
+			} else {
+				// If not, perform the callback
+				if (m_state == button_state_down && m_handle_click) {
+					m_handle_click(*this);
+				}
+
+				m_state = button_state_hover;
 			}
-
-			m_state = button_state_hover;
+		} else {
+			if (state == SDL_RELEASED)
+				m_state = button_state_up;
 		}
-	} else {
-		if (state == SDL_RELEASED)
-			m_state = button_state_up;
+	case SDL_MOUSEMOTION:
+		// Is the mouse pointer over the button?
+		if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
+			y >= m_area.y && y <= (m_area.y + m_area.h)) {
+
+			if (m_state != button_state_down) {
+				m_state = button_state_hover;
+			}
+		} else {
+			if (!(m_state == button_state_down &&
+				m_state & SDL_BUTTON (SDL_BUTTON_LEFT))) {
+				m_state = button_state_up;
+			}
+		}
+	default:
+		return false;
 	}
+	
+	return true;
 }
-
-void Button::mouse_motion_event(const Uint8 state, const Uint16 x,
-	const Uint16 y)
-{
-	// Is the mouse pointer over the button?
-	if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
-		y >= m_area.y && y <= (m_area.y + m_area.h)) {
-
-		if (m_state != button_state_down) {
-			m_state = button_state_hover;
-		}
-	} else {
-		if (!(m_state == button_state_down &&
-			m_state & SDL_BUTTON (SDL_BUTTON_LEFT))) {
-			m_state = button_state_up;
-		}
-	}
-}
-
 
 bool Button::set_event_handler(const Uint8 event, handler_function handler)
 {
@@ -352,6 +343,7 @@ bool Button::set_event_handler(const Uint8 event, handler_function handler)
 
 	return true;
 }
+
 
 bool Button::is_down()
 {

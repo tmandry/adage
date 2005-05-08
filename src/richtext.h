@@ -5,41 +5,35 @@
 
 #include "SDL.h"
 
+#include "widget.h"
 #include "text.h"
 #include "image.h"
 
+extern Image screen;
 
-class RichText {
+class RichText : public Widget {
 public:
 
 	RichText();
 	RichText(const int x, const int y, const int w, const int h,
-		SDL_Surface* parent_surf = screen);
-	RichText(const std::string& format_text, 
-		SDL_Surface* parent_surf = screen);
+		Image parent_surf = screen);
+	RichText(const std::string& format_text, Image parent_surf = screen);
 	RichText(const int x, const int y, const int w, const int h,
-		const std::string& format_text, SDL_Surface* parent_surf = screen);
+		const std::string& format_text, Image parent_surf = screen);
 	
-	// copying and assignmening and assignmentt 
+	// Copying and assignment
 	RichText::RichText(const RichText& rhs);
 	RichText& operator=(const RichText& rhs);
 
 	~RichText();
 
-
-	bool move(const int x, const int y);
 	bool resize(const int w, const int h);
 	bool change_caption(const std::string& format_text);
-	bool change_parent_surf(SDL_Surface* parent_surf);
 	bool size_to_text();
 
 	bool draw();
 	
 private:
-	Image m_surface;
-	SDL_Rect m_area;
-	SDL_Surface* m_parent_surf;
-
 	std::string m_format_text;
 
 	int m_size;
@@ -52,9 +46,9 @@ private:
 	bool m_use_background;
 
 	void init(const int x, const int y, const int w, const int h,
-			 const std::string& format_text, SDL_Surface* parent_surf);
+			 const std::string& format_text, Image parent_surf);
 	void init(const int x, const int y, const std::string& format_text,
-			 SDL_Surface* parent_surf);
+			 Image parent_surf);
 	
 	bool parse();
 	std::vector<Text> m_text;	

@@ -1,10 +1,13 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include "widget.h"
 #include "text.h"
 #include "image.h"
 
-class Button {
+extern Image screen;
+
+class Button : public Widget {
 public:
 	typedef void (*handler_function)(Button&);
 	
@@ -13,11 +16,11 @@ public:
 	// Constructors
 	Button();
 	Button(const char* caption, const int x, const int y,
-		SDL_Surface* parent_surf = screen);
+		Image parent_surf = screen);
 	Button(const char* caption, const int x, const int y, const int w,
-		const int h, SDL_Surface* parent_surf = screen);
+		const int h, Image parent_surf = screen);
 	Button(const char* caption, const int x, const int y,
-		const int text_size, SDL_Surface* parent_surf = screen);
+		const int text_size, Image parent_surf = screen);
 	
 	// Copying and assignment
 	Button(const Button& rhs);
@@ -26,16 +29,12 @@ public:
 	~Button();
 
 	bool change_caption(const char* caption, const bool resize = false);
-	bool move(const int x, const int y);
 	bool resize(const int w, const int h);
 	bool resize_text(const int size, const bool resize = false);
 	bool size_to_text();
 	bool draw();
 
-	void mouse_button_event(const Uint8 button, const Uint8 state,
-		const Uint16 x, const Uint16 y);
-	void mouse_motion_event(const Uint8 state, const Uint16 x, const Uint16 y);
-
+	bool handle_event(const SDL_Event& event);
 	bool set_event_handler(const Uint8 event, handler_function handler);
 	
 	inline bool is_down();
@@ -43,19 +42,14 @@ public:
 private:
 	void init(const char* caption, const int x, const int y, const int w,
 		const int h, const int text_size, const bool resize, 
-		SDL_Surface* parent_surf);
+		Image parent_surf);
 	
 	void render_button(Uint32 face_color, const Uint32 side1_color,
 		const Uint32 side2_color);
 
 	handler_function m_handle_click;
 	
-
 	Text m_caption;
-	Image m_surface;
-	
-	SDL_Surface* m_parent_surf;
-	SDL_Rect m_area;
 
 	Uint8 m_state;
 	

@@ -1,5 +1,4 @@
-- Implement exceptions (?)
-- Change parent surfaces from SDL_Surface* to Image
 - Change const char*s to std::strings -- Use const std::string& in function parameters
-- Propagate SDL_BlitSurfaces into an own function, in order to handle errors more elegantly (?)
 - Add comments! Both before each function (use doxygen), and in the code itself
+- Implement exceptions (?)
+- Change cout to cerr for errors

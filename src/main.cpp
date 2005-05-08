@@ -2,16 +2,18 @@
 #include <iostream>
 
 #include "SDL.h"
+
 #include "handle.h"
-
-SDL_Surface *screen;
-
 #include "text.h"
 #include "button.h"
 #include "richtext.h"
-//#include "input.h"
+#include "image.h"
+#include "manager.h"
+/*#include "input.h"*/
 
-// Globals like this won't happen outside the preview, everything will be owned
+Image screen;
+
+// Globals like this won't happen outside the preview; everything will be owned
 // by a class
 Text* text2;
 
@@ -48,7 +50,6 @@ int main(int argc, char *argv[])
 	// TODO: Set an icon?
 
 	Uint8 done = 0;
-	SDL_Event event;
 	Text text("HELLO!", 30, 100, 100);
 	
 	Button button(" Ping? ", 100, 150, 20);
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
 	change_color.set_event_handler(Button::button_event_click,
 		button_change_color);
 
-	text2 = new Text(" Pong!", 48, 300, 300);
+	text2 = new Text(" Pong! ", 48, 300, 300);
 	text2->change_color(0x00, 0x00, 0x00);
 	text2->change_background_color(0x55, 0x55, 0xaa);
 
@@ -66,12 +67,13 @@ int main(int argc, char *argv[])
 		 "^Gffffff^Cff0000Hello! ^Bbold\n^U^S12underline^g^B^U^I^s italic\n"
 		 "^T^^caret!!^^ ^S22bye!^R :P", 
 		 screen);
-
-	/*InputClass Input (400, 200, 100);
-	Input.SetText ("HeRrO!");*/
-
+	
+	SDL_Event event;
+	WidgetManager* widget_manager = WidgetManager::get_ptr();
 	blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
+	
 	while (!done) {
+		widget_manager->handle_event(event);
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 			case SDL_QUIT:
@@ -81,23 +83,10 @@ int main(int argc, char *argv[])
 				if (event.key.keysym.sym == SDLK_ESCAPE)
 					done = 1;
 				break;
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-				button.mouse_button_event(event.button.button,
-					event.button.state, event.button.x, event.button.y);
-				change_color.mouse_button_event(event.button.button,
-					event.button.state,	event.button.x,	event.button.y);
-				break;
-			case SDL_MOUSEMOTION:
-				button.mouse_motion_event(event.motion.state,
-					event.motion.x, event.motion.y);
-				change_color.mouse_motion_event(event.motion.state,
-					event.motion.x, event.motion.y);
-				break;
 			}
 		}
 		
-		SDL_FillRect(screen, NULL, blank_color);
+		SDL_FillRect(screen.get(), NULL, blank_color);
 
 		text.draw();
 		button.draw();
@@ -105,7 +94,7 @@ int main(int argc, char *argv[])
 		text2->draw();
 		rtext.draw();
 		//Input.draw ();
-		SDL_Flip(screen);
+		SDL_Flip(screen.get());
 	}
 
 	return 0;

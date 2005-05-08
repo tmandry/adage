@@ -6,35 +6,29 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-extern SDL_Surface *screen;
-
 #include "text.h"
 #include "richtext.h"
 #include "rgbamask.h"
 #include "image.h"
-
-//using std::cout;
-//using std::endl;
 
 RichText::RichText()
 {
 	init(0, 0, 0, 0, "", screen);
 }
 
-RichText::RichText(const int x, const int y, const int w,
-	const int h, SDL_Surface* parent_surf)
+RichText::RichText(const int x, const int y, const int w, const int h,
+	Image parent_surf)
 {
 	init(x, y, w, h, "", parent_surf);
 }
 
-RichText::RichText(const std::string& format_text, 
-	SDL_Surface* parent_surf)
+RichText::RichText(const std::string& format_text, Image parent_surf)
 {
 	init(0, 0, format_text, parent_surf);
 }
 
 RichText::RichText(const int x, const int y, const int w,
-	const int h, const std::string& format_text, SDL_Surface* parent_surf)
+	const int h, const std::string& format_text, Image parent_surf)
 {
 	init(x, y, w, h, format_text, parent_surf);
 }
@@ -45,7 +39,7 @@ RichText::~RichText()
 
 
 void RichText::init(const int x, const int y, const int w, const int h,
-	const std::string& format_text, SDL_Surface* parent_surf)
+	const std::string& format_text, Image parent_surf)
 {
 	m_size = 20; 
 	m_style = TTF_STYLE_NORMAL;
@@ -56,11 +50,11 @@ void RichText::init(const int x, const int y, const int w, const int h,
 	move(x, y);
 	resize(w, h);
 	change_caption(format_text);
-	change_parent_surf(parent_surf);
+	set_parent(parent_surf);
 }
 
 void RichText::init(const int x, const int y, const std::string& format_text,
-	SDL_Surface* parent_surf)
+	Image parent_surf)
 {
 	m_style = TTF_STYLE_NORMAL;
 	m_fr = m_fg = m_fb = 0xff;
@@ -70,15 +64,9 @@ void RichText::init(const int x, const int y, const std::string& format_text,
 	move(x, y);
 	change_caption(format_text);
 	size_to_text();
-	change_parent_surf(parent_surf);
+	set_parent(parent_surf);
 }
 
-bool RichText::move(const int x, const int y)
-{
-	m_area.x = x; 
-	m_area.y = y;
-	return true;
-}
 
 bool RichText::resize(const int w, const int h)
 {
@@ -95,6 +83,10 @@ bool RichText::resize(const int w, const int h)
 
 	m_surface = tmp;
 	
+	std::vector<Text>::iterator i;
+	for (i = m_text.begin(); i < m_text.end(); ++i)
+		i->set_parent(m_surface);
+	
 	return true;
 }
 
@@ -106,18 +98,12 @@ bool RichText::change_caption(const std::string& format_text)
 	return parse();
 }
 
-bool RichText::change_parent_surf(SDL_Surface* parent_surf)
-{
-	m_parent_surf = parent_surf;
-	return true;
-}
-
 bool RichText::size_to_text()
 {
 	int w = 0, h = 0;
 
 	std::vector<Text>::iterator i;
-	for (i = m_text.begin(); i < m_text.end(); ++i)	{
+	for (i = m_text.begin(); i < m_text.end(); ++i) {
 		SDL_Rect size;
 		size = i->get_size();
 
@@ -280,11 +266,7 @@ bool RichText::parse()
 
 bool RichText::draw()
 {
-	std::vector<Text>::iterator i;
-	for (i = m_text.begin(); i < m_text.end(); ++i)	
-		i->draw();
-	
-	SDL_BlitSurface(m_surface.get(), 0, m_parent_surf, &m_area);
-	
+	// Don't need to do anything; child widgets are the only thing that need to
+	// be drawn, and WidgetManager takes care of that
 	return true;
 }
