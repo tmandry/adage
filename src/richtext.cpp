@@ -152,7 +152,7 @@ bool RichText::parse()
 		}
 
 		if (!atom.empty() || m_format_text[i] == '\n') {
-			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface.get()));
+			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface));
 
 			std::vector<Text>::iterator prev_atom;
 			prev_atom = m_text.end() - 1;

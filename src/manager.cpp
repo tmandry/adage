@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 #include "SDL.h"
 
@@ -29,8 +30,12 @@ void WidgetManager::unregister_widget(Widget* ptr)
 {
 	// Search for the pointer in the vector and erase it
 	std::list<Widget*>::iterator i;
+
 	for (i = m_widgets.begin(); i != m_widgets.end(); i++)
-		if (*i == ptr) m_widgets.erase (i);
+		if (*i == ptr) {
+			m_widgets.erase (i);
+			break;
+		}
 }
 
 bool WidgetManager::draw()

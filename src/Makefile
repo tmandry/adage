@@ -5,11 +5,11 @@
 
 # Variable definitions
 CC=g++
-CFLAGS=-Wall -g -pg `sdl-config --cflags`
+CFLAGS=-Wall -ggdb -pg -O0 `sdl-config --cflags`
 LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
 OUT=adage
 TEST=test
-OBJECTS=main.o text.o button.o richtext.o 
+OBJECTS=main.o text.o button.o richtext.o widget.o manager.o
 
 all: $(OUT) $(TEST)
 

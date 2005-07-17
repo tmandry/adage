@@ -114,7 +114,7 @@ bool Button::resize(const int w, const int h)
 	}
 
 	m_surface = tmp;
-	m_caption.set_parent(m_surface.get());
+	m_caption.set_parent(m_surface);
 
 	return true;
 }

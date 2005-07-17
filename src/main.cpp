@@ -88,12 +88,7 @@ int main(int argc, char *argv[])
 		
 		SDL_FillRect(screen.get(), NULL, blank_color);
 
-		text.draw();
-		button.draw();
-		change_color.draw();
-		text2->draw();
-		rtext.draw();
-		//Input.draw ();
+		widget_manager->draw();
 		SDL_Flip(screen.get());
 	}
 
