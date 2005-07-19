@@ -1,3 +1,7 @@
+/** \file widget.cpp
+ ** \brief Contains the Widget base class source code
+ **/
+
 #include <iostream>
 
 #include "SDL.h"
@@ -6,6 +10,7 @@
 #include "widget.h"
 #include "manager.h"
 
+/// Constructor; registers the Widget with WidgetManager
 Widget::Widget()
 {
 	// Register with the singleton WidgetManager class
@@ -23,6 +28,7 @@ Widget& Widget::operator=(const Widget& rhs)
 	m_area = rhs.m_area;
 }*/
 
+/// Destructor; unregisters the Widget with WidgetManager
 Widget::~Widget()
 {
 	// Unregister with WidgetManager
@@ -30,17 +36,27 @@ Widget::~Widget()
 }
 
 
+/// Sets the Widget's parent surface
+/**
+ ** @param parent The new parent surface
+ **/
 void Widget::set_parent(const Image& parent)
 {
 	m_parent_surf = parent;
 }
 
+/// Returns the Widget's parent surface
 const Image Widget::get_parent() const
 {
 	return m_parent_surf;
 }
 
 
+/// Moves the widget to another location
+/**
+ ** @param x The x coordinate
+ ** @param y The y coordinate
+ **/
 bool Widget::move(const int x, const int y)
 {
 	m_area.x = x;
@@ -49,6 +65,7 @@ bool Widget::move(const int x, const int y)
 	return true;
 }
 
+/// Resizes m_surface
 bool Widget::resize(const int w, const int h)
 {
 	m_area.w = w;
@@ -69,6 +86,7 @@ bool Widget::resize(const int w, const int h)
 }
 
 
+/// Blits the widget onto m_parent_surf
 bool Widget::blit()
 {
 	if (SDL_BlitSurface(m_surface.get(), 0, m_parent_surf.get(), &m_area) < 0) {
@@ -81,6 +99,7 @@ bool Widget::blit()
 }
 
 
+/// Default event handler
 bool Widget::handle_event(const SDL_Event& event)
 {
 	return false;

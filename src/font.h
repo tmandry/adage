@@ -1,13 +1,18 @@
+/** \file font.h
+ ** \brief Contains the Font class definition
+ **/
+
 #ifndef FONT_H
 #define FONT_H
 
 #include "SDL_ttf.h"
-#include "handle.h"
+#include "smartptr.h"
 
-class Font : public basic_handle<TTF_Font> {
+/// A lazy way to use the SmartPtr class for a TTF_Font
+class Font : public SmartPtr<TTF_Font> {
 public:
 	Font(TTF_Font* prep = 0, delete_function del = TTF_CloseFont):
-		basic_handle<TTF_Font>(prep, del)
+		SmartPtr<TTF_Font>(prep, del)
 	{}
           
 	~Font(){}

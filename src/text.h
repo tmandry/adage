@@ -1,3 +1,7 @@
+/** \file text.h
+ ** \brief Contains the Text class definition
+ **/
+
 #ifndef TEXT_H
 #define TEXT_H
 
@@ -12,8 +16,10 @@
 
 extern Image screen;
 
+/// Renders text with limited decoration
 class Text : public Widget {
 public:
+	// Constructors
 	Text();
 	Text(const std::string& caption, const int size,
 		Image parent_surf = screen);
@@ -32,8 +38,8 @@ public:
 
 	bool resize(const int w, const int h);
 	bool resize(const int size);
-	bool change_caption(const std::string& caption);
-	bool move(const int x, const int y);
+	bool set_caption(const std::string& caption);
+	
 	bool change_color(const Uint8 r, const Uint8 g, const Uint8 b);
 	bool change_background_color(const Uint8 r, const Uint8 g, const Uint8 b);
 	bool disable_background();
@@ -53,15 +59,22 @@ public:
 private:
 	void init(const std::string& caption, Image parent_surf,
 		const std::string& font, const int size, const int x, const int y);
-	
+
+	/// The text to display
 	std::string m_caption;
+	/// Font filename
 	std::string m_font_file;
 	Font m_font;
+	/// Text size
 	int m_size;
+	/// Text style code
 	int m_style;
-	
+
+	/// Text color
 	SDL_Color m_text_color;
+	/// Whether or not to use m_bg_color as the background
 	bool m_use_background;
+	/// Background color
 	Uint32 m_bg_color;
 };
 

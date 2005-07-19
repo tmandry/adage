@@ -1,3 +1,7 @@
+/** \file manager.h
+ ** \brief Contains the WidgetManager class definition
+ **/
+
 #ifndef MANAGER_H
 #define MANAGER_H
 
@@ -7,6 +11,7 @@
 
 #include "widget.h"
 
+/// A singleton class which keeps track of all widgets and dispatches messages to them
 class WidgetManager {
 public:
 	WidgetManager();

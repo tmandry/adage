@@ -1,9 +1,13 @@
+/** \file main.cpp
+ ** \brief Contains the source code for the Adage %Widget Set Preview
+ **/
+
 #include <cstdlib>
 #include <iostream>
 
 #include "SDL.h"
 
-#include "handle.h"
+#include "smartptr.h"
 #include "text.h"
 #include "button.h"
 #include "richtext.h"
@@ -22,7 +26,7 @@ Uint32 blank_color;
 void button_click(Button&);
 void button_change_color(Button&);
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	using namespace std;
 	
@@ -101,11 +105,11 @@ void button_click(Button& button)
 	status ^= 1;
 
 	if (status) {
-		button.change_caption(" Pong! ");
-		text2->change_caption(" Ping? ");
+		button.set_caption(" Pong! ");
+		text2->set_caption(" Ping? ");
 	} else {
-		button.change_caption(" Ping? ");
-		text2->change_caption(" Pong! ");
+		button.set_caption(" Ping? ");
+		text2->set_caption(" Pong! ");
 	}
 }
 

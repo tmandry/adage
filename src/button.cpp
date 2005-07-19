@@ -1,4 +1,9 @@
+/** \file button.cpp
+ ** \brief Contains the Button class source code
+ **/
+
 #include <iostream>
+#include <string>
 
 #include "SDL.h"
 
@@ -6,44 +11,64 @@
 #include "rgbamask.h"
 #include "image.h"
 
-// Default constructor
+/// Default constructor
 Button::Button()
 {
 	init("", 0, 0, 0, 0, 0, false, screen);
 }
 
 
-// Overloaded constructor
-Button::Button(const char* caption, const int x, const int y, Image parent_surf)
+/// Overloaded constructor
+/**
+ ** @param caption The button's text
+ ** @param x The x coordinate of the upper-left corner of the Button on the parent surface
+ ** @param y The y coordinate of the upper-left corner of the Button on the parent surface
+ ** @param parent_surf The surface that the Button will be blitted onto
+ **/
+Button::Button(const std::string& caption, const int x, const int y,
+	Image parent_surf)
 {
 	init(caption, x, y, 0, 0, 0, true, parent_surf);
 }
 
-
-// Overloaded constructor
-Button::Button(const char* caption, const int x, const int y, const int w,
-	const int h, Image parent_surf)
+/// Overloaded constructor
+/**
+ ** @param caption The button's text
+ ** @param x The x coordinate of the upper-left corner of the Button on the parent surface
+ ** @param y The y coordinate of the upper-left corner of the Button on the parent surface
+ ** @param w The width of the Button in pixels
+ ** @param h The height of the Button in pixels
+ ** @param parent_surf The surface that the Button will be blitted onto
+ **/
+Button::Button(const std::string& caption, const int x, const int y,
+	const int w, const int h, Image parent_surf)
 {
 	init(caption, x, y, w, h, 0, false, parent_surf);
 }
 
-
-// Overloaded constructor
-Button::Button(const char* caption, const int x, const int y,
+/// Overloaded constructor
+/**
+ ** @param caption The button's text
+ ** @param x The x coordinate of the upper-left corner of the Button on the parent surface
+ ** @param y The y coordinate of the upper-left corner of the Button on the parent surface
+ ** @param text_size The size of the text
+ ** @param parent_surf The surface that the Button will be blitted onto
+ **/
+Button::Button(const std::string& caption, const int x, const int y,
 	const int text_size, Image parent_surf)
 {
 	init(caption, x, y, 0, 0, text_size, true, parent_surf);
 }
 
 
-// Copy ctor
+/// Copy constructor
 Button::Button(const Button& rhs)
 {
 	*this = rhs;
 }
 
 
-// Assignment operator
+/// Assignment operator
 Button& Button::operator=(const Button& rhs)
 {
 	if (this == &rhs)
@@ -59,13 +84,14 @@ Button& Button::operator=(const Button& rhs)
 }
 
 
-// Destructor
+/// Destructor
 Button::~Button()
 {
 }
 
 
-void Button::init(const char* caption, const int x, const int y, 
+/// Performs initialization of the Button class and its members
+void Button::init(const std::string& caption, const int x, const int y, 
 	const int w, const int h, const int text_size, 
 	const bool do_resize, Image parent_surf)
 {
@@ -80,7 +106,7 @@ void Button::init(const char* caption, const int x, const int y,
 	
 	if (text_size) 
 		resize_text(text_size);
-	change_caption(caption);
+	set_caption(caption);
 	if (do_resize)
 		size_to_text();
 	m_caption.move(side_width, side_width);
@@ -88,9 +114,14 @@ void Button::init(const char* caption, const int x, const int y,
 
 
 
-bool Button::change_caption(const char* caption, const bool resize)
+/// Sets the button text
+/**
+ ** @param caption The button text
+ ** @param resize Whether or not to resize the button to fit the text
+ **/
+bool Button::set_caption(const std::string& caption, const bool resize)
 {
-	if (!m_caption.change_caption(caption)) 
+	if (!m_caption.set_caption(caption)) 
 		return false;
 
 	if (resize) 
@@ -99,6 +130,11 @@ bool Button::change_caption(const char* caption, const bool resize)
 	return true;
 }
 
+/// Resizes the button
+/**
+ ** @param w The button width
+ ** @param h The button height
+ **/
 bool Button::resize(const int w, const int h)
 {
 	m_area.w = w;
@@ -119,6 +155,11 @@ bool Button::resize(const int w, const int h)
 	return true;
 }
 
+/// Resizes the button text
+/**
+ ** @param size Text size
+ ** @param resize Whether or not to resize the button to fit the text
+ **/
 bool Button::resize_text(int size, bool resize)
 {
 	if (!m_caption.resize(size)) 
@@ -130,6 +171,7 @@ bool Button::resize_text(int size, bool resize)
 	return true;
 }
 
+/// Resizes the button to fit the text
 bool Button::size_to_text()
 {
 	SDL_Rect size;
@@ -139,6 +181,10 @@ bool Button::size_to_text()
 		size.h + side_width);
 }
 
+/// Draws the button on m_surface
+/**
+ ** @see Widget::draw()
+ **/
 bool Button::draw()
 {
 	Uint8 face_r, face_g, face_b;
@@ -182,6 +228,7 @@ bool Button::draw()
 	return true;
 }
 
+/// Used by render_button() to move a color a "step" towards black
 inline void step_grad(Uint8 &r, Uint8 &g, Uint8 &b)
 {
 	if ((r > 0) && (g > 0) && (b > 0))	{
@@ -191,7 +238,12 @@ inline void step_grad(Uint8 &r, Uint8 &g, Uint8 &b)
 	}
 }
 
-// The good, the bad, the very ugly button renderer function
+/// Renders the actual button graphic
+/**
+ ** @param face_color The 'base' color of the face gradient
+ ** @param side1_color The color of the side of the button
+ ** @param side2_color The color of the top or bottom of the button
+ **/
 void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	const Uint32 side2_color)
 {
@@ -279,6 +331,11 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 }
 
 
+/// Receives an event from the WidgetManager and handles it
+/**
+ ** @param event The event to handle
+ ** @see WidgetManager::handle_event()
+ **/
 bool Button::handle_event(const SDL_Event& event)
 {
 	Uint8 button, state;
@@ -331,7 +388,12 @@ bool Button::handle_event(const SDL_Event& event)
 	return true;
 }
 
-bool Button::set_event_handler(const Uint8 event, handler_function handler)
+/// Sets the event handler function for the specified event
+/**
+ ** @param event The event to set the handler for
+ ** @param handler A pointer to the handler function
+ **/
+bool Button::set_event_handler(const event_type event, handler_function handler)
 {
 	switch (event) {
 	case button_event_click:
@@ -345,6 +407,7 @@ bool Button::set_event_handler(const Uint8 event, handler_function handler)
 }
 
 
+/// Checks to see if the button is down
 bool Button::is_down()
 {
 	return (m_state == button_state_down || m_state == button_state_fakedown);

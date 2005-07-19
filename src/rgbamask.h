@@ -1,3 +1,7 @@
+/** \file rgbamask.h
+ ** \brief Contains big and little endian bitmasks for 32-bit colors
+ **/
+
 // Different values depending on endianness
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

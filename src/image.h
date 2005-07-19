@@ -1,13 +1,18 @@
+/** \file image.h
+ ** \brief Contains the Image class definition
+ **/
+
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "handle.h"
+#include "smartptr.h"
 #include "SDL.h"
 
-class Image : public basic_handle<SDL_Surface> {
+/// A lazy way to use the SmartPtr class for a SDL_Surface
+class Image : public SmartPtr<SDL_Surface> {
 public:
 	Image(SDL_Surface* prep = 0, delete_function del = SDL_FreeSurface) 
-		: basic_handle<SDL_Surface>(prep, del)
+		: SmartPtr<SDL_Surface>(prep, del)
 	{}
    
 	~Image() {}

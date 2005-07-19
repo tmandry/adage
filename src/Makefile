@@ -8,18 +8,14 @@ CC=g++
 CFLAGS=-Wall -ggdb -pg -O0 `sdl-config --cflags`
 LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
 OUT=adage
-TEST=test
 OBJECTS=main.o text.o button.o richtext.o widget.o manager.o
 
-all: $(OUT) $(TEST)
+all: $(OUT)
 
 clean:
 	rm -rf $(OUT) $(OBJECTS) $(TEST)
 
 $(OUT): $(OBJECTS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
-
-$(TEST): handle_test.cpp
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
 
 main.cpp: text.h

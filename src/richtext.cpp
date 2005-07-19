@@ -1,3 +1,7 @@
+/** \file richtext.cpp
+ ** \brief Contains the RichText class source code
+ **/
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -11,33 +15,58 @@
 #include "rgbamask.h"
 #include "image.h"
 
+/// Default constructor
 RichText::RichText()
 {
 	init(0, 0, 0, 0, "", screen);
 }
 
+/// Overloaded constructor
+/**
+ ** @param x The x coordinate of the upper-left corner of the RichText on the parent surface
+ ** @param y The y coordinate of the upper-left corner of the RichText on the parent surface
+ ** @param w The width of the RichText
+ ** @param h The height of the RichText
+ ** @param parent_surf The surface that the RichText will be blitted onto
+ **/
 RichText::RichText(const int x, const int y, const int w, const int h,
 	Image parent_surf)
 {
 	init(x, y, w, h, "", parent_surf);
 }
 
+/// Overloaded constructor
+/**
+ ** @param format_text The formatted text
+ ** @param parent_surf The surface that the RichText will be blitted onto
+ **/
 RichText::RichText(const std::string& format_text, Image parent_surf)
 {
 	init(0, 0, format_text, parent_surf);
 }
 
+/// Overloaded constructor
+/**
+ ** @param x The x coordinate of the upper-left corner of the RichText on the parent surface
+ ** @param y The y coordinate of the upper-left corner of the RichText on the parent surface
+ ** @param w The width of the RichText
+ ** @param h The height of the RichText
+ ** @param format_text The formatted text
+ ** @param parent_surf The surface that the RichText will be blitted onto
+ **/
 RichText::RichText(const int x, const int y, const int w,
 	const int h, const std::string& format_text, Image parent_surf)
 {
 	init(x, y, w, h, format_text, parent_surf);
 }
 
+/// Destructor
 RichText::~RichText()
 {
 }
 
 
+/// Performs initialization of the RichText class and its members
 void RichText::init(const int x, const int y, const int w, const int h,
 	const std::string& format_text, Image parent_surf)
 {
@@ -49,10 +78,11 @@ void RichText::init(const int x, const int y, const int w, const int h,
 
 	move(x, y);
 	resize(w, h);
-	change_caption(format_text);
+	set_caption(format_text);
 	set_parent(parent_surf);
 }
 
+/// Performs initialization of the RichText class and its members
 void RichText::init(const int x, const int y, const std::string& format_text,
 	Image parent_surf)
 {
@@ -62,12 +92,17 @@ void RichText::init(const int x, const int y, const std::string& format_text,
 	m_use_background = true;
 
 	move(x, y);
-	change_caption(format_text);
+	set_caption(format_text);
 	size_to_text();
 	set_parent(parent_surf);
 }
 
 
+/// Resizes m_surface
+/**
+ ** @param w The width of the surface
+ ** @param h The height of the surface
+ **/
 bool RichText::resize(const int w, const int h)
 {
 	m_area.w = w; m_area.h = h;
@@ -90,7 +125,11 @@ bool RichText::resize(const int w, const int h)
 	return true;
 }
 
-bool RichText::change_caption(const std::string& format_text)
+/// Sets the text of the RichText
+/**
+ ** @param format_text The formatted text string
+ **/
+bool RichText::set_caption(const std::string& format_text)
 {
 	m_format_text = format_text;
 	m_text.clear();
@@ -98,6 +137,7 @@ bool RichText::change_caption(const std::string& format_text)
 	return parse();
 }
 
+/// Resizes m_surface to fit the text
 bool RichText::size_to_text()
 {
 	int w = 0, h = 0;
@@ -118,7 +158,7 @@ bool RichText::size_to_text()
 	return resize(w, h);
 }
 
-
+/// Converts a formatted string of text into a vector<Text>
 bool RichText::parse()
 {
 	std::string atom;
@@ -264,9 +304,13 @@ bool RichText::parse()
 	return true;
 }
 
+/// Draws the RichText.
+/** In fact this function doesn't do anything; child widgets are the only thing
+ ** that need to be drawn, and WidgetManager takes care of that.
+ **
+ ** @see Widget::draw()
+ **/
 bool RichText::draw()
 {
-	// Don't need to do anything; child widgets are the only thing that need to
-	// be drawn, and WidgetManager takes care of that
 	return true;
 }

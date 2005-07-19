@@ -1,3 +1,7 @@
+/** \file manager.cpp
+ ** \brief Contains the WidgetManager class source code
+ **/
+
 #include <vector>
 #include <iostream>
 
@@ -6,14 +10,17 @@
 #include "manager.h"
 #include "widget.h"
 
+/// Constructor
 WidgetManager::WidgetManager()
 {
 }
 
+/// Destructor
 WidgetManager::~WidgetManager()
 {
 }
 
+/// Returns a pointer to the singleton
 WidgetManager* WidgetManager::get_ptr()
 {
 	static WidgetManager widget_manager;
@@ -21,11 +28,19 @@ WidgetManager* WidgetManager::get_ptr()
 	return &widget_manager;
 }
 
+/// Reigsters a newly-created Widget with the WidgetManager
+/**
+ ** @param ptr A pointer to the new Widget
+ **/
 void WidgetManager::register_widget(Widget* ptr)
 {
 	m_widgets.push_front(ptr);
 }
 
+/// Unregisters an old Widget with the WidgetManager
+/**
+ ** @param ptr A pointer to the old Widget
+ **/
 void WidgetManager::unregister_widget(Widget* ptr)
 {
 	// Search for the pointer in the vector and erase it
@@ -38,6 +53,7 @@ void WidgetManager::unregister_widget(Widget* ptr)
 		}
 }
 
+/// Draws all widgets to the screen
 bool WidgetManager::draw()
 {
 	bool status = true;
@@ -52,6 +68,11 @@ bool WidgetManager::draw()
 	return status;
 }
 
+// TODO: Optimize this!
+/// Sends an event to every widget
+/**
+ ** @param event The event to send
+ **/
 bool WidgetManager::handle_event(SDL_Event& event)
 {
 	bool status = false;

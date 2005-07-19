@@ -1,4 +1,5 @@
-- Change const char*s to std::strings -- Use const std::string& in function parameters
-- Add comments! Both before each function (use doxygen), and in the code itself
+- Add comments!
 - Implement exceptions (?)
 - Change cout to cerr for errors
+- Optimize the WidgetManager's handle_event() function
+- Implement caching for widgets

@@ -70,7 +70,7 @@ void Input::init(const int x, const int y, const int w, const int h,
 bool Input::set_text(const std::string& text)
 {
     m_content = text;
-	return m_text.change_caption(text);
+	return m_text.set_caption(text);
 }
 
 bool Input::move(const int x, const int y)
