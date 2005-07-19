@@ -76,10 +76,10 @@ Button& Button::operator=(const Button& rhs)
 
 	m_handle_click= rhs.m_handle_click;
 	m_caption     = rhs.m_caption;
-	m_surface     = rhs.m_surface;
 	set_parent     (rhs.get_parent());
 	m_area        = rhs.m_area;
 	m_state       = rhs.m_state;
+	resize         (m_area.w, m_area.h);
 	return *this;
 }
 

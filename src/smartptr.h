@@ -5,6 +5,8 @@
 #ifndef SMARTPTR_H
 #define SMARTPTR_H
 
+#include "SDL_ttf.h"
+
 /// Smart pointer class.
 /** Counts references and deletes the pointer when there aren't any more
  ** references. */
@@ -187,5 +189,39 @@ void SmartPtr<T>::decrease_count()
 		m_pcount = 0;
 	}
 }
+
+/// Just a little hack to use in place of TTF_Font, which isn't defined in the header
+class TTF_Font_Holder {};
+
+/// Specialized class for TTF_Fonts
+template <>
+class SmartPtr<TTF_Font_Holder> {
+public:
+	// Constructor
+	SmartPtr(TTF_Font* prep = 0);
+
+	// Copying and assignment
+	SmartPtr(const SmartPtr&);
+	SmartPtr& operator=(const SmartPtr&);
+	SmartPtr& operator=(TTF_Font*);
+
+	virtual ~SmartPtr();
+
+	TTF_Font* get() const;
+	TTF_Font* operator->() const;
+	TTF_Font& operator*() const;
+	virtual bool operator==(const TTF_Font* rhs) const;
+	virtual bool operator==(const SmartPtr<TTF_Font_Holder>& rhs) const;
+
+	operator bool() const;
+	
+protected:
+	/// The actual pointer
+	TTF_Font* m_rep;
+	/// Pointer to the reference count
+	int* m_pcount;
+	
+	void decrease_count();
+};
 
 #endif // SMARTPTR_H

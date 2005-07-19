@@ -38,6 +38,8 @@ protected:
 	SDL_Rect m_area;
 	/// The Widget's own surface
 	Image m_surface;
+	/// Whether or not the widget has changed since last draw()
+	bool m_changed;
 
 private:
 	/// The Widget's parent surface

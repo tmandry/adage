@@ -11,7 +11,7 @@
 #include "manager.h"
 
 /// Constructor; registers the Widget with WidgetManager
-Widget::Widget()
+Widget::Widget(): m_changed(true)
 {
 	// Register with the singleton WidgetManager class
 	WidgetManager::get_ptr()->register_widget(this);

@@ -14,7 +14,7 @@ public:
 	Input(const int x, const int y, const int w,
 		SDL_Surface* parent_surf = screen, const int text_size = 12);
 	Input(const int x, const int y, const int w, const int h,
-		SDL_Surface* parent_surf = creen, const int text_size = 12);
+		SDL_Surface* parent_surf = screen, const int text_size = 12);
 	
 	// copy constructor
 	Input(const Input& rhs);

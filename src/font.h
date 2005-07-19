@@ -9,10 +9,10 @@
 #include "smartptr.h"
 
 /// A lazy way to use the SmartPtr class for a TTF_Font
-class Font : public SmartPtr<TTF_Font> {
+class Font : public SmartPtr<TTF_Font_Holder> {
 public:
-	Font(TTF_Font* prep = 0, delete_function del = TTF_CloseFont):
-		SmartPtr<TTF_Font>(prep, del)
+	Font(TTF_Font* prep = 0):
+		SmartPtr<TTF_Font_Holder>(prep)
 	{}
           
 	~Font(){}
