@@ -52,7 +52,6 @@ public:
 	int reset_style();
 	
 	bool draw();
-	bool blit();
 
 	SDL_Rect get_size();
 
@@ -75,7 +74,7 @@ private:
 	/// Whether or not to use m_bg_color as the background
 	bool m_use_background;
 	/// Background color
-	Uint32 m_bg_color;
+	SDL_Color m_bg_color;
 };
 
 #endif // TEXT_H

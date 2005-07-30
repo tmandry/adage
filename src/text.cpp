@@ -65,10 +65,10 @@ Text::Text(const std::string& caption, const int size, const int x, const int y,
  ** @param y The y coordinate of the upper-left corner of the Text on the parent surface
  ** @param parent_surf The surface that the Text will be blitted onto
  **/
-Text::Text(const std::string& caption, const std::string& Font, const int size,
+Text::Text(const std::string& caption, const std::string& font, const int size,
 	const int x, const int y, Image parent_surf)
 {
-	init (caption, parent_surf, Font, size, x, y);
+	init (caption, parent_surf, font, size, x, y);
 }
 
 
@@ -182,7 +182,9 @@ bool Text::change_color(const Uint8 r, const Uint8 g, const Uint8 b)
  **/
 bool Text::change_background_color(const Uint8 r, const Uint8 g, const Uint8 b)
 {
-	m_bg_color = SDL_MapRGB(get_parent()->format, r, g, b);
+	m_bg_color.r = r;
+	m_bg_color.g = g;
+	m_bg_color.b = b;
 	m_use_background = true;
 	return true;
 }
@@ -245,8 +247,13 @@ bool Text::draw()
 {
 	TTF_SetFontStyle(m_font.get(), m_style);
 	
-	Image tmp = TTF_RenderText_Blended(m_font.get(), m_caption.c_str(), 
-		m_text_color);
+	Image tmp;
+	if (m_use_background)
+		tmp = TTF_RenderText_Shaded(m_font.get(), m_caption.c_str(), 
+			m_text_color, m_bg_color);
+	else
+		tmp = TTF_RenderText_Solid(m_font.get(), m_caption.c_str(), 
+			m_text_color);
 	
 	if (!tmp) {
 		std::cout << "TTF_RenderText_Blended() error: ";
@@ -258,25 +265,7 @@ bool Text::draw()
 
 	m_area.w = m_surface->w;
 	m_area.h = m_surface->h;
-	
 
-	return true;
-}
-
-/// Blits the text onto m_parent_surf
-/**
- ** @see Widget::blit()
- **/
-bool Text::blit()
-{
-	if (m_use_background)
-		SDL_FillRect(get_parent().get(), &m_area, m_bg_color);
-
-	if (SDL_BlitSurface(m_surface.get(), 0, get_parent().get(), &m_area) < 0) {
-		std::cout <<  "Widget::blit(): SDL_BlitSurface error: \n"
-			<< SDL_GetError() << std::endl;
-		return false;
-	}
 
 	return true;
 }

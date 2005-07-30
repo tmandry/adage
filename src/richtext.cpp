@@ -73,8 +73,8 @@ void RichText::init(const int x, const int y, const int w, const int h,
 	m_size = 20; 
 	m_style = TTF_STYLE_NORMAL;
 	m_fr = m_fg = m_fb = 0xff;
-	m_fr = m_fg = m_fb = 0x00;
-	m_use_background = true;
+	m_br = m_bg = m_bb = 0x00;
+	m_use_background = false;
 
 	move(x, y);
 	resize(w, h);
@@ -86,10 +86,11 @@ void RichText::init(const int x, const int y, const int w, const int h,
 void RichText::init(const int x, const int y, const std::string& format_text,
 	Image parent_surf)
 {
+	m_size = 20;
 	m_style = TTF_STYLE_NORMAL;
 	m_fr = m_fg = m_fb = 0xff;
-	m_fr = m_fg = m_fb = 0x00;
-	m_use_background = true;
+	m_br = m_bg = m_bb = 0x00;
+	m_use_background = false;
 
 	move(x, y);
 	set_caption(format_text);
@@ -180,10 +181,10 @@ bool RichText::parse()
 		};
 	} raw_to_rgb;
 
-	for (unsigned int i = 0; i < m_format_text.size(); ++i) {
+	for (unsigned int i = 0; i < m_format_text.length(); ++i) {
 		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n'))	{
 			atom += m_format_text[i];
-			continue;
+			if (i != m_format_text.size() - 1) continue;
 		}
 
 		if (m_format_text[i] == '^' && i == m_format_text.size() - 1) {
@@ -191,7 +192,7 @@ bool RichText::parse()
 			continue;
 		}
 
-		if (!atom.empty() || m_format_text[i] == '\n') {
+		if (!atom.empty()) {
 			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface));
 
 			std::vector<Text>::iterator prev_atom;
@@ -208,12 +209,7 @@ bool RichText::parse()
 			if (atom_size.h > row_height) 
 				row_height = atom_size.h;
 			
-			if (m_format_text[i] == '\n') {
-				x = 0;
-				y += row_height;
-				row_height = 0;
-			} else
-				x += atom_size.w;
+			x += atom_size.w;
 
 			prev_atom->change_color(fr, fg, fb);
 			if (use_background) 
@@ -222,8 +218,13 @@ bool RichText::parse()
 			atom.clear();
 		}
 
-		if (m_format_text[i] == '\n') 
+		if (m_format_text[i] == '\n')
+		{
+			x = 0;
+			y += row_height;
+			row_height = 0;
 			continue;
+		}
 		
 		++i;
 
@@ -301,6 +302,7 @@ bool RichText::parse()
 			break;
 		}
 	}
+
 	return true;
 }
 

@@ -68,8 +68,8 @@ int main(int argc, char* argv[])
 	text2->change_background_color(0x55, 0x55, 0xaa);
 
 	RichText rtext(400, 200, 640, 200,
-		 "^Gffffff^Cff0000Hello! ^Bbold\n^U^S12underline^g^B^U^I^s italic\n"
-		 "^T^^caret!!^^ ^S22bye!^R :P", 
+		 "asdf^Gffffff^Cff0000Hello! ^Bbold\n^U^S12underline^g^B^U^I^s italic\n"
+		 "^T^^caret!!^^ ^S22bye!^R^Cffffff :P",
 		 screen);
 	
 	SDL_Event event;
