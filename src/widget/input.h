@@ -2,7 +2,7 @@
 #define INPUT_H
 
 #include "text.h"
-#include "image.h"
+#include "utils/image.h"
 
 #include <string>
 

@@ -1,32 +1,42 @@
-#
-# Makefile for Adage
-# by Tyler Mandry
-#
+##
+## Makefile for Adage
+##
 
-# Variable definitions
+## Variable definitions
 CC=g++
 CFLAGS=-Wall -ggdb -pg -O0 `sdl-config --cflags`
-LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
+LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm -L.
 OUT=adage
-OBJECTS=main.o text.o button.o richtext.o widget.o manager.o smartptr.o
+OBJECTS=main.o
+PREVIEWOUT=preview
+PREVIEWOBJ=widget/preview.o
+MODULES=widget utils
+LIBRARIES=`echo '-l$(MODULES)' | sed 's/ / -l/g'`
+CLEANFILES=gmon.out
 
-all: $(OUT)
+.PHONY: all clean modules
+
+all: $(OUT) $(PREVIEWOUT)
 
 clean:
-	rm -rf $(OUT) $(OBJECTS) $(TEST)
+	rm -f $(OUT) $(OBJECTS) *.a $(CLEANFILES)
+	@for i in $(MODULES) ; do \
+	( cd $$i ; make clean ) ; \
+	done
 
-$(OUT): $(OBJECTS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
+$(OUT): $(OBJECTS) modules
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
 
-main.cpp: text.h
-text.cpp: text.h
-button.cpp: button.h
-richtext.cpp: richtext.h
-handle_test.cpp: handle.h
-#input.cpp: text.h input.h
+$(PREVIEWOUT): $(PREVIEWOBJ) modules
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(PREVIEWOBJ) $(LIBRARIES)
 
-button.h: text.h
-#input.h: text.h
+modules:
+	@for i in $(MODULES) ; do \
+	( cd $$i ; make ) ; \
+	done
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $+
+$(PREVIEWOBJ):
+	@cd widget ; make preview
+
+.cpp.o:
+	$(CC) $(CFLAGS) -c $+	

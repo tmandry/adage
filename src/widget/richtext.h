@@ -11,7 +11,7 @@
 
 #include "widget.h"
 #include "text.h"
-#include "image.h"
+#include "utils/image.h"
 
 extern Image screen;
 

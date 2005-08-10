@@ -8,8 +8,8 @@
 #include "SDL.h"
 
 #include "button.h"
-#include "rgbamask.h"
-#include "image.h"
+#include "misc/rgbamask.h"
+#include "utils/image.h"
 
 /// Default constructor
 Button::Button()

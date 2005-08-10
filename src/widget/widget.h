@@ -7,7 +7,7 @@
 
 #include "SDL.h"
 
-#include "image.h"
+#include "utils/image.h"
 
 /// Widget base class 
 class Widget {

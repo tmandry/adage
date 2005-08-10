@@ -11,8 +11,8 @@
 #include "SDL_ttf.h"
 
 #include "widget.h"
-#include "image.h"
-#include "font.h"
+#include "utils/image.h"
+#include "utils/font.h"
 
 extern Image screen;
 

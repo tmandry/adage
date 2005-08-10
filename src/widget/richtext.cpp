@@ -12,8 +12,8 @@
 
 #include "text.h"
 #include "richtext.h"
-#include "rgbamask.h"
-#include "image.h"
+#include "misc/rgbamask.h"
+#include "utils/image.h"
 
 /// Default constructor
 RichText::RichText()

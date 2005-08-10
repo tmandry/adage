@@ -6,7 +6,7 @@
 
 #include "SDL.h"
 
-#include "rgbamask.h"
+#include "misc/rgbamask.h"
 #include "widget.h"
 #include "manager.h"
 

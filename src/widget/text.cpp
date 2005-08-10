@@ -9,8 +9,8 @@
 #include "SDL_ttf.h"
 
 #include "text.h"
-#include "image.h"
-#include "font.h"
+#include "utils/image.h"
+#include "utils/font.h"
 
 /// Default constructor
 Text::Text()
