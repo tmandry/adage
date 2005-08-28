@@ -7,9 +7,9 @@
 
 #include <string>
 
-#include "widget.h"
-#include "text.h"
-#include "utils/image.h"
+#include "widget/widgetbase.h"
+#include "widget/text.h"
+#include "util/image.h"
 
 extern Image screen;
 

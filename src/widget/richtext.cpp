@@ -13,7 +13,7 @@
 #include "text.h"
 #include "richtext.h"
 #include "misc/rgbamask.h"
-#include "utils/image.h"
+#include "util/image.h"
 
 /// Default constructor
 RichText::RichText()
@@ -181,6 +181,8 @@ bool RichText::parse()
 		};
 	} raw_to_rgb;
 
+	clear_children();
+
 	for (unsigned int i = 0; i < m_format_text.length(); ++i) {
 		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n'))	{
 			atom += m_format_text[i];
@@ -195,8 +197,8 @@ bool RichText::parse()
 		if (!atom.empty()) {
 			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface));
 
-			std::vector<Text>::iterator prev_atom;
-			prev_atom = m_text.end() - 1;
+			std::vector<Text>::iterator prev_atom = m_text.end() - 1;
+			add_child(&(*prev_atom));
 			
 			prev_atom->set_style(style);
 			prev_atom->resize(size);

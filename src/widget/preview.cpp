@@ -7,11 +7,9 @@
 
 #include "SDL.h"
 
-#include "utils/smartptr.h"
-#include "widget/text.h"
-#include "widget/button.h"
-#include "widget/richtext.h"
-#include "utils/image.h"
+#include "widget.h"
+#include "util/smartptr.h"
+#include "util/image.h"
 #include "widget/manager.h"
 /*#include "input.h"*/
 
@@ -30,7 +28,7 @@ int main(int argc, char* argv[])
 {
 	using namespace std;
 	
-	if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		cerr << "SDL_Init() error: " << SDL_GetError() << endl;
 		exit (1);
 	}

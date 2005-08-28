@@ -9,9 +9,9 @@
 
 #include "SDL.h"
 
-#include "widget.h"
+#include "widgetbase.h"
 #include "text.h"
-#include "utils/image.h"
+#include "util/image.h"
 
 extern Image screen;
 
@@ -69,7 +69,7 @@ private:
 			 const std::string& format_text, Image parent_surf);
 	void init(const int x, const int y, const std::string& format_text,
 			 Image parent_surf);
-	
+
 	bool parse();
 };
 

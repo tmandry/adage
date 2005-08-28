@@ -5,7 +5,7 @@ extern SDL_Surface *screen;
 #include "input.h"
 #include "text.h"
 #include "misc/rgbamask.h"
-#include "utils/image.h"
+#include "util/image.h"
 
 Input::Input()
 {

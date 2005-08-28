@@ -201,8 +201,8 @@ public:
 	SmartPtr(TTF_Font* prep = 0);
 
 	// Copying and assignment
-	SmartPtr(const SmartPtr&);
-	SmartPtr& operator=(const SmartPtr&);
+	SmartPtr(const SmartPtr<TTF_Font_Holder>&);
+	SmartPtr& operator=(const SmartPtr<TTF_Font_Holder>&);
 	SmartPtr& operator=(TTF_Font*);
 
 	virtual ~SmartPtr();

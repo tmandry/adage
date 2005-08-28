@@ -9,7 +9,7 @@
 
 #include "button.h"
 #include "misc/rgbamask.h"
-#include "utils/image.h"
+#include "util/image.h"
 
 /// Default constructor
 Button::Button()
@@ -95,20 +95,18 @@ void Button::init(const std::string& caption, const int x, const int y,
 	const int w, const int h, const int text_size, 
 	const bool do_resize, Image parent_surf)
 {
+	add_child(&m_caption);
+	
 	m_state = button_state_up;
-
 	m_handle_click = 0;
-
 	set_parent(parent_surf);
 	
 	move(x, y);
 	resize(w, h);
 	
-	if (text_size) 
-		resize_text(text_size);
+	if (text_size) resize_text(text_size);
 	set_caption(caption);
-	if (do_resize)
-		size_to_text();
+	if (do_resize) size_to_text();
 	m_caption.move(side_width, side_width);
 }
 

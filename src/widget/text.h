@@ -10,9 +10,9 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-#include "widget.h"
-#include "utils/image.h"
-#include "utils/font.h"
+#include "widgetbase.h"
+#include "util/image.h"
+#include "util/font.h"
 
 extern Image screen;
 

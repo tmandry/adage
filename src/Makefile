@@ -4,15 +4,15 @@
 
 ## Variable definitions
 CC=g++
-CFLAGS=-Wall -ggdb -pg -O0 `sdl-config --cflags`
+CFLAGS=-Wall -ggdb -pg -O0 `sdl-config --cflags` -I.
 LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm -L.
 OUT=adage
 OBJECTS=main.o
 PREVIEWOUT=preview
 PREVIEWOBJ=widget/preview.o
-MODULES=widget utils
+MODULES=util io widget window
 LIBRARIES=`echo '-l$(MODULES)' | sed 's/ / -l/g'`
-CLEANFILES=gmon.out
+CLEANFILES=gmon.out $(PREVIEWOUT) $(PREVIEWOBJ)
 
 .PHONY: all clean modules
 
@@ -32,7 +32,7 @@ $(PREVIEWOUT): $(PREVIEWOBJ) modules
 
 modules:
 	@for i in $(MODULES) ; do \
-	( cd $$i ; make ) ; \
+	( cd $$i ; make ) \
 	done
 
 $(PREVIEWOBJ):

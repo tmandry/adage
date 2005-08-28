@@ -1,4 +1,4 @@
-/** \file widget.cpp
+/** \file widgetbase.cpp
  ** \brief Contains the Widget base class source code
  **/
 
@@ -7,14 +7,12 @@
 #include "SDL.h"
 
 #include "misc/rgbamask.h"
-#include "widget.h"
+#include "widgetbase.h"
 #include "manager.h"
 
-/// Constructor; registers the Widget with WidgetManager
+/// Constructor
 Widget::Widget(): m_changed(true)
 {
-	// Register with the singleton WidgetManager class
-	WidgetManager::get_ptr()->register_widget(this);
 }
 
 /*Widget::Widget(const Widget& rhs)
@@ -28,11 +26,9 @@ Widget& Widget::operator=(const Widget& rhs)
 	m_area = rhs.m_area;
 }*/
 
-/// Destructor; unregisters the Widget with WidgetManager
+/// Destructor
 Widget::~Widget()
 {
-	// Unregister with WidgetManager
-	WidgetManager::get_ptr()->unregister_widget(this);
 }
 
 
@@ -49,6 +45,21 @@ void Widget::set_parent(const Image& parent)
 const Image Widget::get_parent() const
 {
 	return m_parent_surf;
+}
+
+std::list<Widget*> Widget::get_children()
+{
+	std::list<Widget*> ret;
+		
+	for (std::list<Widget*>::iterator i = m_children.begin();
+		i != m_children.end(); ++i) {
+		std::list<Widget*> grandchildren((*i)->get_children());
+		ret.splice(ret.begin(), grandchildren);
+	}
+	
+	ret.splice(ret.end(), m_children);
+	
+	return ret;
 }
 
 
@@ -75,7 +86,7 @@ bool Widget::resize(const int w, const int h)
 			w, h, 32, rmask, gmask, bmask, amask);
 	
 	if (!tmp) {
-		std::cout << "Widget::resize(): CreateRGBSurface() failed: "
+		std::cerr << "Widget::resize(): CreateRGBSurface() failed: "
 			<< SDL_GetError() << std::endl;
 		return false;
 	}
