@@ -24,6 +24,8 @@ public:
 	void set_parent(const Image& parent);
 	std::list<Widget*> get_children();
 
+	virtual const SDL_Rect& get_area() const;
+
 	virtual bool move(const int x, const int y);
 	virtual bool resize(const int w, const int h);
 	

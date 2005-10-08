@@ -272,14 +272,13 @@ bool Text::draw()
 
 
 /// Returns the size of the text
-SDL_Rect Text::get_size()
+const SDL_Rect& Text::get_area()
 {
-	SDL_Rect size;
 	int w, h;
 	
 	TTF_SetFontStyle(m_font.get(), m_style);
 	TTF_SizeText(m_font.get(), m_caption.c_str(), &w, &h);
-	size.w = w;
-	size.h = h;
-	return size;
+	m_area.w = w;
+	m_area.h = h;
+	return m_area;
 }

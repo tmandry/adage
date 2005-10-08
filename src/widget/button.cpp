@@ -173,7 +173,7 @@ bool Button::resize_text(int size, bool resize)
 bool Button::size_to_text()
 {
 	SDL_Rect size;
-	size = m_caption.get_size();
+	size = m_caption.get_area();
 	
 	return resize(size.w + side_width,
 		size.h + side_width);

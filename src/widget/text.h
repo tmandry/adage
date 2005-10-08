@@ -53,7 +53,7 @@ public:
 	
 	bool draw();
 
-	SDL_Rect get_size();
+	const SDL_Rect& get_area();
 
 private:
 	void init(const std::string& caption, Image parent_surf,

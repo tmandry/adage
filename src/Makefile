@@ -10,8 +10,8 @@ OUT=adage
 OBJECTS=main.o
 PREVIEWOUT=preview
 PREVIEWOBJ=widget/preview.o
-MODULES=util io widget window
-LIBRARIES=`echo '-l$(MODULES)' | sed 's/ / -l/g'`
+MODULES=io widget window util
+LIBRARIES=`echo 'lib$(MODULES).a' | sed 's/ /.a lib/g'`
 CLEANFILES=gmon.out $(PREVIEWOUT) $(PREVIEWOBJ)
 
 .PHONY: all clean modules

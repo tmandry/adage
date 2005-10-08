@@ -9,7 +9,7 @@ LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
 AR=ar
 ARFLAGS=cr
 OUT=../libwidget.a
-OBJECTS=text.o button.o richtext.o widgetbase.o manager.o
+OBJECTS=text.o button.o richtext.o widgetbase.o
 PREVIEWOBJ=preview.o
 CLEANFILES=
 

@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 		config->get_int("screenh"),
 		config->get_int("bpp"),
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_SRCALPHA |
-		(config->get_bool("fullscreen")) ? SDL_FULLSCREEN : 0);
+		(config->get_bool("fullscreen") ? SDL_FULLSCREEN : 0));
 	
 	if (!screen) {
 		std::cerr << "SDL_SetVideoMode error: " << SDL_GetError() << std::endl;
@@ -52,9 +52,11 @@ int main(int argc, char* argv[])
 	window.resize(640,480);
 	window.register_widget(new Button("Clicky", 320, 10));
 	window.register_widget(new RichText("^Cff0000red ^C00ff00^Bgreen^B ^C0000ff"
-		"^Iblue"))->move(320, 240);
+		"^Iblue"))
+		->move(320, 240);
 	
 	bool done = false;
+	WindowManager* window_manager = WindowManager::get_ptr();
 	while (!done) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
@@ -66,9 +68,11 @@ int main(int argc, char* argv[])
 				if (event.key.keysym.sym == SDLK_ESCAPE)
 					done = true;
 				break;
+			default:
+				window_manager->handle_event(event);
 			}
 		}
-		WindowManager::get_ptr()->draw();
+		window_manager->draw();
 		SDL_Flip(screen.get());
 	}
 	

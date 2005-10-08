@@ -190,8 +190,8 @@ void SmartPtr<T>::decrease_count()
 	}
 }
 
-/// Just a little hack to use in place of TTF_Font, which isn't defined in the header
-class TTF_Font_Holder {};
+/// A little hack to use in place of TTF_Font, which isn't defined in the header
+class TTF_Font_Holder;
 
 /// Specialized class for TTF_Fonts
 template <>

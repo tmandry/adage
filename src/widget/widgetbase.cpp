@@ -8,7 +8,6 @@
 
 #include "misc/rgbamask.h"
 #include "widgetbase.h"
-#include "manager.h"
 
 /// Constructor
 Widget::Widget(): m_changed(true)
@@ -49,12 +48,14 @@ const Image Widget::get_parent() const
 
 std::list<Widget*> Widget::get_children()
 {
+	std::cout << m_children.size() << "\n";
 	std::list<Widget*> ret;
 		
 	for (std::list<Widget*>::iterator i = m_children.begin();
 		i != m_children.end(); ++i) {
-		std::list<Widget*> grandchildren((*i)->get_children());
-		ret.splice(ret.begin(), grandchildren);
+			std::cout << "get\n";
+			std::list<Widget*> grandchildren((*i)->get_children());
+			ret.splice(ret.begin(), grandchildren);
 	}
 	
 	ret.splice(ret.end(), m_children);
@@ -62,6 +63,11 @@ std::list<Widget*> Widget::get_children()
 	return ret;
 }
 
+
+const SDL_Rect& Widget::get_area() const
+{
+	return m_area;
+}
 
 /// Moves the widget to another location
 /**

@@ -133,7 +133,6 @@ bool RichText::resize(const int w, const int h)
 bool RichText::set_caption(const std::string& format_text)
 {
 	m_format_text = format_text;
-	m_text.clear();
 
 	return parse();
 }
@@ -146,7 +145,7 @@ bool RichText::size_to_text()
 	std::vector<Text>::iterator i;
 	for (i = m_text.begin(); i < m_text.end(); ++i) {
 		SDL_Rect size;
-		size = i->get_size();
+		size = i->get_area();
 
 		int right = size.x + size.w;
 		int bottom = size.y + size.h;
@@ -182,6 +181,7 @@ bool RichText::parse()
 	} raw_to_rgb;
 
 	clear_children();
+	m_text.clear();
 
 	for (unsigned int i = 0; i < m_format_text.length(); ++i) {
 		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n'))	{
@@ -204,7 +204,7 @@ bool RichText::parse()
 			prev_atom->resize(size);
 			
 			SDL_Rect atom_size;
-			atom_size = prev_atom->get_size();
+			atom_size = prev_atom->get_area();
 			
 			// This is to keep track of the overall height of the row,
 			// so when there's a newline we know what to do
