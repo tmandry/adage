@@ -61,8 +61,8 @@ Widget* Window::register_widget(Widget* ptr)
 {
 	m_widgets.push_front(ptr);
 	
-	std::list<Widget*> grandchildren(ptr->get_children());
-	m_widgets.splice(m_widgets.begin(), grandchildren);
+	/*std::list<Widget*> grandchildren(ptr->get_children());
+	m_widgets.splice(m_widgets.begin(), grandchildren);*/
 	ptr->set_parent(m_surface);
 	return ptr;
 }
@@ -87,16 +87,30 @@ Widget* Window::register_widget(Widget* ptr)
 void Window::draw()
 {
 	for (std::list<Widget*>::iterator i(m_widgets.begin());
-		i != m_widgets.end(); i++)
-		(*i)->draw();
+		i != m_widgets.end();
+		++i) {
+			std::list<Widget*> grandchildren((*i)->get_children());
+			for (std::list<Widget*>::iterator j(grandchildren.begin());
+				j != m_widgets.end();
+				++j)
+					(*j)->draw();
+			(*i)->draw();
+		}
 }
 
 /// Tells widgets to blit themselves on the window's surface; blits window to screen
 void Window::blit()
 {
 	for (std::list<Widget*>::iterator i(m_widgets.begin());
-		i != m_widgets.end(); i++)
-		(*i)->blit();
+		i != m_widgets.end();
+		++i) {
+			std::list<Widget*> grandchildren((*i)->get_children());
+			for (std::list<Widget*>::iterator j(grandchildren.begin());
+				j != m_widgets.end();
+				++j)
+					(*j)->blit();
+			(*i)->blit();
+		}
 }
 
 /// Sends an event to every widget

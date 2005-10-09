@@ -22,7 +22,7 @@ public:
 	
 	// Members
 	void set_parent(const Image& parent);
-	std::list<Widget*> get_children();
+	std::list<Widget*> get_children() const;
 
 	virtual const SDL_Rect& get_area() const;
 

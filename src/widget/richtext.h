@@ -59,7 +59,7 @@ private:
 	 ** whole glob of text, but not for individual globs (hence why RichText was
 	 ** created).
 	 **/
-	std::vector<Text> m_text;
+	std::list<Text> m_text;
 
 	/// Whether or not to use a background color
 	/** If this is false the background is transparent by default. **/

@@ -46,20 +46,22 @@ const Image Widget::get_parent() const
 	return m_parent_surf;
 }
 
-std::list<Widget*> Widget::get_children()
+std::list<Widget*> Widget::get_children() const
 {
+	std::cout << "hi\n";
 	std::cout << m_children.size() << "\n";
 	std::list<Widget*> ret;
-		
-	for (std::list<Widget*>::iterator i = m_children.begin();
+
+	for (std::list<Widget*>::const_iterator i = m_children.begin();
 		i != m_children.end(); ++i) {
 			std::cout << "get\n";
 			std::list<Widget*> grandchildren((*i)->get_children());
 			ret.splice(ret.begin(), grandchildren);
 	}
 	
-	ret.splice(ret.end(), m_children);
+	ret.insert(ret.end(), m_children.begin(), m_children.end());
 	
+	std::cout << "ret\n";
 	return ret;
 }
 

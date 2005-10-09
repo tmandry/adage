@@ -119,8 +119,8 @@ bool RichText::resize(const int w, const int h)
 
 	m_surface = tmp;
 	
-	std::vector<Text>::iterator i;
-	for (i = m_text.begin(); i < m_text.end(); ++i)
+	std::list<Text>::iterator i;
+	for (i = m_text.begin(); i != m_text.end(); ++i)
 		i->set_parent(m_surface);
 	
 	return true;
@@ -142,8 +142,8 @@ bool RichText::size_to_text()
 {
 	int w = 0, h = 0;
 
-	std::vector<Text>::iterator i;
-	for (i = m_text.begin(); i < m_text.end(); ++i) {
+	std::list<Text>::iterator i;
+	for (i = m_text.begin(); i != m_text.end(); ++i) {
 		SDL_Rect size;
 		size = i->get_area();
 
@@ -195,16 +195,17 @@ bool RichText::parse()
 		}
 
 		if (!atom.empty()) {
+			std::cout << "parse(): this atom: " << atom.c_str() << "\nthe rest: " << m_format_text.substr(i) << "\n";
 			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface));
 
-			std::vector<Text>::iterator prev_atom = m_text.end() - 1;
-			add_child(&(*prev_atom));
+			Text& prev_atom(m_text.back());
+			add_child(&prev_atom);
 			
-			prev_atom->set_style(style);
-			prev_atom->resize(size);
+			prev_atom.set_style(style);
+			prev_atom.resize(size);
 			
 			SDL_Rect atom_size;
-			atom_size = prev_atom->get_area();
+			atom_size = prev_atom.get_area();
 			
 			// This is to keep track of the overall height of the row,
 			// so when there's a newline we know what to do
@@ -213,9 +214,9 @@ bool RichText::parse()
 			
 			x += atom_size.w;
 
-			prev_atom->change_color(fr, fg, fb);
+			prev_atom.change_color(fr, fg, fb);
 			if (use_background) 
-				prev_atom->change_background_color (br, bg, bb);
+				prev_atom.change_background_color (br, bg, bb);
 
 			atom.clear();
 		}
