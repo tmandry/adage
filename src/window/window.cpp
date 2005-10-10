@@ -73,7 +73,7 @@ Widget* Window::register_widget(Widget* ptr)
  **/
 /*void Window::unregister_widget(const Widget* ptr)
 {
-	// Search for the pointer in the vector and erase it
+	// Search for the pointer in the list and erase it
 	std::list<Widget*>::iterator i;
 
 	for (i = m_widgets.begin(); i != m_widgets.end(); i++)
