@@ -37,7 +37,7 @@ private:
 	/// The Window's own surface
 	Image m_surface;
 
-	/// Defines the location and size of the Window on m_parent_surf
+	/// Defines the location and size of the Window on the screen
 	SDL_Rect m_area;
 
 	/// List of all widgets

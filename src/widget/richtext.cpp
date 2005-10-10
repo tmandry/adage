@@ -195,7 +195,6 @@ bool RichText::parse()
 		}
 
 		if (!atom.empty()) {
-			std::cout << "parse(): this atom: " << atom.c_str() << "\nthe rest: " << m_format_text.substr(i) << "\n";
 			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface));
 
 			Text& prev_atom(m_text.back());

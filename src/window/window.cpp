@@ -11,6 +11,8 @@
 #include "windowmanager.h"
 #include "misc/rgbamask.h"
 
+extern Image screen;
+
 /// Constructor; registers the Window with WindowManager
 Window::Window()
 {
@@ -91,7 +93,7 @@ void Window::draw()
 		++i) {
 			std::list<Widget*> grandchildren((*i)->get_children());
 			for (std::list<Widget*>::iterator j(grandchildren.begin());
-				j != m_widgets.end();
+				j != grandchildren.end();
 				++j)
 					(*j)->draw();
 			(*i)->draw();
@@ -106,11 +108,15 @@ void Window::blit()
 		++i) {
 			std::list<Widget*> grandchildren((*i)->get_children());
 			for (std::list<Widget*>::iterator j(grandchildren.begin());
-				j != m_widgets.end();
+				j != grandchildren.end();
 				++j)
 					(*j)->blit();
 			(*i)->blit();
 		}
+	
+	if (SDL_BlitSurface(m_surface.get(), 0, screen.get(), &m_area) < 0)
+		std::cout <<  "Window::blit(): SDL_BlitSurface error: \n"
+			<< SDL_GetError() << std::endl;
 }
 
 /// Sends an event to every widget
