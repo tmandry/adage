@@ -42,14 +42,7 @@ void WindowManager::register_window(Window* ptr)
  **/
 void WindowManager::unregister_window(Window* ptr)
 {
-	// Search for the pointer in the list and erase it
-	std::list<Window*>::iterator i;
-
-	for (i = m_windows.begin(); i != m_windows.end(); i++)
-		if (*i == ptr) {
-			m_windows.erase (i);
-			break;
-		}
+	m_windows.remove(ptr);
 }
 
 /// Draws all windows to the screen
