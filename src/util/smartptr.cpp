@@ -2,6 +2,8 @@
  ** \brief Contains SmartPtr<TTF_Font_Holder> specialized template class source code
  **/
 
+#include <cassert>
+
 #include "smartptr.h"
 #include "SDL_ttf.h"
 
@@ -9,7 +11,6 @@
 /**
  ** @param prep Pointer to use
  **/
-//template<>
 SmartPtr<TTF_Font_Holder>::SmartPtr(TTF_Font* prep)
 	: m_rep(prep), m_pcount(new int(1))
 {
@@ -17,7 +18,6 @@ SmartPtr<TTF_Font_Holder>::SmartPtr(TTF_Font* prep)
 
 
 /// Copy-constructor
-//template<>
 SmartPtr<TTF_Font_Holder>::SmartPtr(const SmartPtr<TTF_Font_Holder>& rhs)
 	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount)
 {
@@ -26,21 +26,23 @@ SmartPtr<TTF_Font_Holder>::SmartPtr(const SmartPtr<TTF_Font_Holder>& rhs)
 
 
 /// Destructor
-//template<>
 SmartPtr<TTF_Font_Holder>::~SmartPtr()
 {
 	decrease_count();
 }
 
 
+/// Releases the assigned pointer, results in a pointer to NULL
+void SmartPtr<TTF_Font_Holder>::release()
+{
+	*this = static_cast<TTF_Font*>(NULL);
+}
+
+
 /// Assignment from SmartPtr
-//template<>
 SmartPtr<TTF_Font_Holder>& SmartPtr<TTF_Font_Holder>::operator=
 	(const SmartPtr<TTF_Font_Holder>& rhs)
 {
-	if (m_rep == rhs.m_rep)
-		return *this;
-	
 	// Delete data if we're overwriting the last handle
 	decrease_count();
 	
@@ -53,13 +55,11 @@ SmartPtr<TTF_Font_Holder>& SmartPtr<TTF_Font_Holder>::operator=
 
 
 /// Assignment from TTF_Font_Holder*
-//template<>
 SmartPtr<TTF_Font_Holder>& SmartPtr<TTF_Font_Holder>::operator=
 	(TTF_Font* rhs)
 {
-	if (m_rep == rhs)
-		return *this;
-
+	assert (m_rep != rhs);
+	
 	decrease_count();
 
 	m_rep = rhs;
@@ -69,7 +69,6 @@ SmartPtr<TTF_Font_Holder>& SmartPtr<TTF_Font_Holder>::operator=
 
 
 /// Returns the pointer
-//template<>
 TTF_Font* SmartPtr<TTF_Font_Holder>::get() const
 {
 	return m_rep;
@@ -77,7 +76,6 @@ TTF_Font* SmartPtr<TTF_Font_Holder>::get() const
 
 
 // Operator->
-//template<>
 TTF_Font* SmartPtr<TTF_Font_Holder>::operator->() const
 {
 	return m_rep;
@@ -85,20 +83,17 @@ TTF_Font* SmartPtr<TTF_Font_Holder>::operator->() const
 
 
 // Operator*
-//template<>
 TTF_Font& SmartPtr<TTF_Font_Holder>::operator*() const
 {
 	return *m_rep;
 }
 
 // Operator==
-//template<>
 bool SmartPtr<TTF_Font_Holder>::operator==(const TTF_Font* rhs) const
 {
      return m_rep == rhs;
 }
 
-//template<>
 bool SmartPtr<TTF_Font_Holder>::operator==(const SmartPtr<TTF_Font_Holder>& rhs)
 	const
 {
@@ -107,7 +102,6 @@ bool SmartPtr<TTF_Font_Holder>::operator==(const SmartPtr<TTF_Font_Holder>& rhs)
 
 
 /// Allow class to be used in if statements
-//template<>
 SmartPtr<TTF_Font_Holder>::operator bool() const
 {
 	return (m_rep)?true:false;
@@ -115,12 +109,10 @@ SmartPtr<TTF_Font_Holder>::operator bool() const
 
 
 /// Clean up - decreases the reference count and deletes if it's at zero
-//template<>
 void SmartPtr<TTF_Font_Holder>::decrease_count()
 {
 	if (--(*m_pcount) == 0) {
 		if (!m_rep) return;
-		
 		TTF_CloseFont(m_rep);
 		
 		delete m_pcount; 

@@ -5,6 +5,9 @@
 #ifndef SMARTPTR_H
 #define SMARTPTR_H
 
+#include <iostream>
+#include <cassert>
+
 #include "SDL_ttf.h"
 
 /// Smart pointer class.
@@ -25,6 +28,8 @@ public:
 	SmartPtr& operator=(T*);
 
 	virtual ~SmartPtr();
+
+	inline void release();
 
 	T* get() const;
 	T* operator->() const;
@@ -77,13 +82,18 @@ SmartPtr<T>::~SmartPtr()
 }
 
 
+/// Releases the assigned pointer, results in a pointer to NULL
+template <class T>
+void SmartPtr<T>::release()
+{
+	*this = static_cast<T*>(NULL);
+}
+
+
 /// Assignment from SmartPtr
 template <class T>
 SmartPtr<T>& SmartPtr<T>::operator=(const SmartPtr<T>& rhs)
 {
-	if (m_rep == rhs.m_rep)
-		return *this;
-	
 	// Delete data if we're overwriting the last handle
 	decrease_count();
 	
@@ -100,8 +110,7 @@ SmartPtr<T>& SmartPtr<T>::operator=(const SmartPtr<T>& rhs)
 template <class T>
 SmartPtr<T>& SmartPtr<T>::operator=(T* rhs)
 {
-	if (m_rep == rhs)
-		return *this;
+	assert (m_rep != rhs);
 
 	decrease_count();
 
@@ -177,6 +186,8 @@ void SmartPtr<T>::decrease_count()
 {
 	if (--(*m_pcount) == 0) {
 		if (!m_rep) return;
+
+		/*std::cout << "killing SmartPtr at " << m_rep << std::endl;*/
 		
 		if (m_pdf) {
 			m_pdf(m_rep);
@@ -206,6 +217,8 @@ public:
 	SmartPtr& operator=(TTF_Font*);
 
 	virtual ~SmartPtr();
+
+	inline void release();
 
 	TTF_Font* get() const;
 	TTF_Font* operator->() const;

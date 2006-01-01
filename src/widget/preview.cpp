@@ -23,6 +23,8 @@ Text* text2;
 
 Uint32 blank_color;
 
+void clean_up();
+
 void button_click(Button&);
 void button_change_color(Button&);
 
@@ -56,6 +58,8 @@ int main(int argc, char* argv[])
 		std::cerr << "SDL_SetVideoMode error: " << SDL_GetError() << std::endl;
 		exit (1);
 	}
+	
+	atexit(clean_up);
 
 	SDL_WM_SetCaption("Adage Widget Set Preview", NULL);
 	// TODO: Set an icon?
@@ -141,4 +145,9 @@ void button_change_color(Button& change_color)
 		blank_color = SDL_MapRGB(screen->format, 0x33, 0xdd, 0x33);
 	else
 		blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
+}
+
+void clean_up()
+{
+	screen.release();
 }

@@ -15,6 +15,8 @@
 
 Image screen;
 
+void clean_up();
+
 int main(int argc, char* argv[])
 {
 	Config* config = Config::get_ptr();
@@ -25,7 +27,7 @@ int main(int argc, char* argv[])
 		exit (1);
 	}
 
-	atexit (SDL_Quit);
+	atexit(SDL_Quit);
 
 	if (TTF_Init() < 0)	{
 		std::cerr << "TTF_Init() error: " << TTF_GetError() << std::endl;
@@ -43,6 +45,8 @@ int main(int argc, char* argv[])
 		std::cerr << "SDL_SetVideoMode error: " << SDL_GetError() << std::endl;
 		exit (1);
 	}
+	
+	atexit(clean_up);
 
 	SDL_WM_SetCaption("Adage", NULL);
 	// TODO: Set an icon
@@ -77,4 +81,9 @@ int main(int argc, char* argv[])
 	}
 	
 	return 0;
+}
+
+void clean_up()
+{
+	screen.release();
 }
