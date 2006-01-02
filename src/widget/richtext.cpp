@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <cassert>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -42,7 +43,7 @@ RichText::RichText(const int x, const int y, const int w, const int h,
  **/
 RichText::RichText(const std::string& format_text, Image parent_surf)
 {
-	init(0, 0, format_text, parent_surf);
+	init(0, 0, 0, 0, format_text, parent_surf, true);
 }
 
 /// Overloaded constructor
@@ -68,8 +69,10 @@ RichText::~RichText()
 
 /// Performs initialization of the RichText class and its members
 void RichText::init(const int x, const int y, const int w, const int h,
-	const std::string& format_text, Image parent_surf)
+	const std::string& format_text, Image parent_surf, bool auto_size)
 {
+	assert (parent_surf);
+	
 	m_size = 20; 
 	m_style = TTF_STYLE_NORMAL;
 	m_fr = m_fg = m_fb = 0xff;
@@ -77,24 +80,14 @@ void RichText::init(const int x, const int y, const int w, const int h,
 	m_use_background = false;
 
 	move(x, y);
-	resize(w, h);
-	set_caption(format_text);
-	set_parent(parent_surf);
-}
-
-/// Performs initialization of the RichText class and its members
-void RichText::init(const int x, const int y, const std::string& format_text,
-	Image parent_surf)
-{
-	m_size = 20;
-	m_style = TTF_STYLE_NORMAL;
-	m_fr = m_fg = m_fb = 0xff;
-	m_br = m_bg = m_bb = 0x00;
-	m_use_background = false;
-
-	move(x, y);
-	set_caption(format_text);
-	size_to_text();
+	m_format_text = format_text;	
+	if (auto_size) {
+		parse();
+		size_to_text();
+	} else {
+		resize(w, h);
+		parse();
+	}
 	set_parent(parent_surf);
 }
 
@@ -112,8 +105,8 @@ bool RichText::resize(const int w, const int h)
 		rmask, gmask, bmask, amask);
 	
 	if (!tmp) {
-		std::cout << "SDL_CreateRGBSurface() error: " << SDL_GetError();
-		std::cout << std::endl;
+		std::cerr << "SDL_CreateRGBSurface() error: " << SDL_GetError();
+		std::cerr << std::endl;
 		return false;
 	}
 
@@ -184,24 +177,21 @@ bool RichText::parse()
 	m_text.clear();
 
 	for (unsigned int i = 0; i < m_format_text.length(); ++i) {
-		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n'))	{
-			atom += m_format_text[i];
-			if (i != m_format_text.size() - 1) continue;
-		}
-
-		if (m_format_text[i] == '^' && i == m_format_text.size() - 1) {
+		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n')) {
 			atom += m_format_text[i];
 			continue;
 		}
 
 		if (!atom.empty()) {
-			m_text.push_back(Text(atom.c_str(), size, x, y, m_surface));
+			m_text.push_back(Text(atom, size, x, y, m_surface));
 
 			Text& prev_atom(m_text.back());
 			add_child(&prev_atom);
 			
 			prev_atom.set_style(style);
 			prev_atom.resize(size);
+			prev_atom.change_color(fr, fg, fb);
+			if (use_background) prev_atom.change_background_color (br, bg, bb);
 			
 			SDL_Rect atom_size;
 			atom_size = prev_atom.get_area();
@@ -213,21 +203,18 @@ bool RichText::parse()
 			
 			x += atom_size.w;
 
-			prev_atom.change_color(fr, fg, fb);
-			if (use_background) 
-				prev_atom.change_background_color (br, bg, bb);
-
 			atom.clear();
 		}
 
-		if (m_format_text[i] == '\n')
-		{
+		if (m_format_text[i] == '\n') {
+			// We've hit a newline
 			x = 0;
 			y += row_height;
 			row_height = 0;
 			continue;
 		}
 		
+		// We've hit a format code
 		++i;
 
 		switch (m_format_text[i]) {

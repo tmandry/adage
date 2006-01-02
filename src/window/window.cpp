@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <list>
+#include <cassert>
 
 #include "SDL.h"
 
@@ -61,6 +62,7 @@ void Window::resize(const int w, const int h)
  **/
 Widget* Window::register_widget(Widget* ptr)
 {
+	assert (ptr);
 	m_widgets.push_front(ptr);
 	
 	/*std::list<Widget*> grandchildren(ptr->get_children());

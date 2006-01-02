@@ -66,9 +66,8 @@ private:
 	bool m_use_background;
 
 	void init(const int x, const int y, const int w, const int h,
-			 const std::string& format_text, Image parent_surf);
-	void init(const int x, const int y, const std::string& format_text,
-			 Image parent_surf);
+			 const std::string& format_text, Image parent_surf,
+			 bool auto_size = false);
 
 	bool parse();
 };

@@ -6,6 +6,7 @@
 #define WIDGET_BASE_H
 
 #include <list>
+#include <cassert>
 
 #include "SDL.h"
 
@@ -41,6 +42,7 @@ protected:
 	/// Adds to the list of the widget's children
 	inline void Widget::add_child(Widget* child)
 	{
+		assert (child);
 		m_children.push_back(child);
 	}
 

@@ -53,7 +53,7 @@ private:
 		const int w, const int h, const int text_size, const bool resize,
 		Image parent_surf);
 
-	void render_button(Uint32 face_color, const Uint32 side1_color,
+	inline void render_button(Uint32 face_color, const Uint32 side1_color,
 		const Uint32 side2_color);
 
 	/// Pointer to the click event handler function

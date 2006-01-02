@@ -31,7 +31,7 @@ void Config::read_config()
 int Config::get_int(std::string param)
 {
 	param_list::iterator i = m_params.find(param);
-	if (i == m_params.end()) return false;
+	if (i == m_params.end()) return 0;
 
 	std::stringstream ss(i->second);
 

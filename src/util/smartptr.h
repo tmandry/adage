@@ -70,6 +70,7 @@ template <class T>
 SmartPtr<T>::SmartPtr(const SmartPtr& rhs)
 	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount), m_pdf(rhs.m_pdf)
 {
+	assert (m_pcount);
 	(*m_pcount)++;
 }
 
@@ -101,6 +102,7 @@ SmartPtr<T>& SmartPtr<T>::operator=(const SmartPtr<T>& rhs)
 	m_pcount = rhs.m_pcount;
 	m_pdf = rhs.m_pdf;
 	
+	assert (m_pcount);
 	(*m_pcount)++;
 	return *this;
 }
@@ -184,6 +186,7 @@ void SmartPtr<T>::set_deleter(delete_function del_func)
 template <class T>
 void SmartPtr<T>::decrease_count()
 {
+	assert (m_pcount);
 	if (--(*m_pcount) == 0) {
 		if (!m_rep) return;
 

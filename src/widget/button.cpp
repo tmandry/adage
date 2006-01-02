@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <string>
+#include <cassert>
+#include <algorithm>
 
 #include "SDL.h"
 
@@ -61,6 +63,8 @@ Button::Button(const std::string& caption, const int x, const int y,
 }
 
 
+// FIXME: If we get any dynamically allocated memory,
+// this will need to be rewritten
 /// Copy constructor
 Button::Button(const Button& rhs)
 {
@@ -95,6 +99,8 @@ void Button::init(const std::string& caption, const int x, const int y,
 	const int w, const int h, const int text_size, 
 	const bool do_resize, Image parent_surf)
 {
+	assert (parent_surf);
+	
 	add_child(&m_caption);
 	
 	m_state = button_state_up;
@@ -142,7 +148,7 @@ bool Button::resize(const int w, const int h)
 			w, h, 32, rmask, gmask, bmask, amask);
 	
 	if (!tmp) {
-		std::cout << "Button::Resize(): CreateRGBSurface() failed: "
+		std::cerr << "Button::Resize(): CreateRGBSurface() failed: "
 			<< SDL_GetError() << std::endl;
 		return false;
 	}
@@ -158,7 +164,7 @@ bool Button::resize(const int w, const int h)
  ** @param size Text size
  ** @param resize Whether or not to resize the button to fit the text
  **/
-bool Button::resize_text(int size, bool resize)
+bool Button::resize_text(const int size, const bool resize)
 {
 	if (!m_caption.resize(size)) 
 		return false;
@@ -242,7 +248,7 @@ inline void step_grad(Uint8 &r, Uint8 &g, Uint8 &b)
  ** @param side1_color The color of the side of the button
  ** @param side2_color The color of the top or bottom of the button
  **/
-void Button::render_button(Uint32 face_color, const Uint32 side1_color,
+inline void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	const Uint32 side2_color)
 {
 	// face is the main color of the button, side is the brighter-colored side,
@@ -255,7 +261,8 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	face.w = m_area.w - side_width;
 	face.h = m_area.h - side_width;
 	side.x = is_down() ? 0 : face.w;
-	side.w = 0; side.h = 1;
+	side.w = 0;
+	side.h = 1;
 
 	// Side - most of this will be covered
 	SDL_FillRect(m_surface.get(), 0, side2_color);
@@ -265,32 +272,30 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	SDL_GetRGB(face_color, m_surface->format, &face_r, &face_g, &face_b);
 	
 	// Paint the gradient
-	int i = (face.w > face.h) ? face.w : face.h;
+	//  - a square as wide as the longest dimension, but cut off on the other
 	SDL_Rect grad;
 	SDL_Rect grad_clip;
 
-	grad_clip.x = grad_clip.y = grad.x = grad.y = face.x, grad.w = grad.h = i;
-	for (; i >= 0; i -= 1) {
-		grad_clip.w = (grad.w > face.w) ? face.w : grad.w;
-		grad_clip.h = (grad.h > face.h) ? face.h : grad.h;
+	int dim = std::max(face.w, face.h);
+	grad_clip.x = grad_clip.y = grad.x = grad.y = face.x, grad.w = grad.h =
+		dim;
+	for (; dim >= 0; --dim, --grad.w, --grad.h, ++grad.x) {
+		grad_clip.w = std::min(face.w, grad.w);
+		grad_clip.h = std::min(face.h, grad.h);
 		
 		SDL_FillRect(m_surface.get(), &grad_clip, face_color);
 		
 		step_grad(face_r, face_g, face_b);
 		face_color = SDL_MapRGB(m_surface->format, face_r, face_g, face_b);
-		
-		grad.h  = i;
-		grad.w -= 1;
-		grad.x += 1;
 	}
 
 	black.x = face.w; black.y = 0;
 	black.w = side_width; black.h = 1;
 	
 	Uint32 black_color;
-	black_color = SDL_MapRGBA (m_surface->format, 0x00, 0x00, 0x00, 0x00);
+	black_color = SDL_MapRGBA(m_surface->format, 0x00, 0x00, 0x00, 0x00);
 
-	// Create the side on the short side of the button
+	// Create the side on the shorter side of the button
 	for (side.y = 0; side.y < m_area.h; ++side.y) {
 		if (side.y < side_width) {
 			// First step:
@@ -336,12 +341,9 @@ void Button::render_button(Uint32 face_color, const Uint32 side1_color,
  **/
 bool Button::handle_event(const SDL_Event& event)
 {
-	Uint8 button, state;
-	Uint16 x, y;
-	
 	// These will only be used if it's a mouse event
-	button = event.button.button; state = event.button.state;
-	x = event.button.x; y = event.button.y;
+	Uint8 /*button(event.button.button),*/ state(event.button.state);
+	Uint16 x(event.button.x), y(event.button.y);
 	
 	switch (event.type) {
 	case SDL_MOUSEBUTTONDOWN:
@@ -350,19 +352,23 @@ bool Button::handle_event(const SDL_Event& event)
 		if (x >= m_area.x && x <= (m_area.x + m_area.w) &&
 			y >= m_area.y && y <= (m_area.y + m_area.h)) {
 
-			// Is it already clicked?
+			// Is it down?
 			if (state == SDL_PRESSED) {
+				// Yes, button is being 'pushed'
 				m_state = button_state_down;
 			} else {
-				// If not, perform the callback
+				// No, was the button already being pushed?
 				if (m_state == button_state_down && m_handle_click) {
+					// Yes, perform the callback
 					m_handle_click(*this);
 				}
 
+				// Not being clicked anymore
 				m_state = button_state_hover;
 			}
 		} else {
 			if (state == SDL_RELEASED)
+				// Not being clicked or hovered over anymore
 				m_state = button_state_up;
 		}
 	case SDL_MOUSEMOTION:
@@ -406,7 +412,7 @@ bool Button::set_event_handler(const event_type event, handler_function handler)
 
 
 /// Checks to see if the button is down
-bool Button::is_down()
+inline bool Button::is_down()
 {
 	return (m_state == button_state_down || m_state == button_state_fakedown);
 }

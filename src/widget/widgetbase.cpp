@@ -3,6 +3,7 @@
  **/
 
 #include <iostream>
+#include <cassert>
 
 #include "SDL.h"
 
@@ -37,6 +38,7 @@ Widget::~Widget()
  **/
 void Widget::set_parent(const Image& parent)
 {
+	/*assert (parent);*/
 	m_parent_surf = parent;
 }
 
@@ -104,8 +106,9 @@ bool Widget::resize(const int w, const int h)
 /// Blits the widget onto m_parent_surf
 bool Widget::blit()
 {
+	assert (m_surface && m_parent_surf);
 	if (SDL_BlitSurface(m_surface.get(), 0, m_parent_surf.get(), &m_area) < 0) {
-		std::cout <<  "Widget::blit(): SDL_BlitSurface error: \n"
+		std::cerr <<  "Widget::blit(): SDL_BlitSurface error: \n"
 			<< SDL_GetError() << std::endl;
 		return false;
 	}

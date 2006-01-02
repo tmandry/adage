@@ -21,6 +21,7 @@ SmartPtr<TTF_Font_Holder>::SmartPtr(TTF_Font* prep)
 SmartPtr<TTF_Font_Holder>::SmartPtr(const SmartPtr<TTF_Font_Holder>& rhs)
 	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount)
 {
+	assert (m_pcount);
 	(*m_pcount)++;
 }
 
@@ -49,6 +50,7 @@ SmartPtr<TTF_Font_Holder>& SmartPtr<TTF_Font_Holder>::operator=
 	m_rep = rhs.m_rep;
 	m_pcount = rhs.m_pcount;
 	
+	assert (m_pcount);
 	(*m_pcount)++;
 	return *this;
 }
@@ -111,6 +113,7 @@ SmartPtr<TTF_Font_Holder>::operator bool() const
 /// Clean up - decreases the reference count and deletes if it's at zero
 void SmartPtr<TTF_Font_Holder>::decrease_count()
 {
+	assert (m_pcount);
 	if (--(*m_pcount) == 0) {
 		if (!m_rep) return;
 		TTF_CloseFont(m_rep);

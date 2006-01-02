@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <cassert>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -84,8 +85,7 @@ Text::Text(const Text& rhs)
 /// Assignment operator
 Text& Text::operator=(const Text& rhs)
 {
-	if (this == &rhs)
-		return *this;
+	assert (this != &rhs);
 
 	m_caption        = rhs.m_caption;
 	m_font_file      = rhs.m_font_file;
@@ -112,6 +112,8 @@ Text::~Text()
 void Text::init(const std::string& caption, Image parent_surf,
 	const std::string& font, const int size, const int x, const int y)
 {
+	/*assert (parent_surf);*/
+	
 	m_use_background = false;
 	set_parent(parent_surf);
 
@@ -128,6 +130,11 @@ void Text::init(const std::string& caption, Image parent_surf,
 bool Text::resize(const int w, const int h)
 {
 	// Should be resized with text size!
+	
+	// There may be something calling this function legally (a function that
+	// processes general Widgets), but it's not likely and this assertion will
+	// be removed in that case
+	assert (false);
 	return false;
 }
 
@@ -139,8 +146,8 @@ bool Text::resize(const int size)
 {
 	Font tmp_font = TTF_OpenFont(m_font_file.c_str(), size);
 	if (!tmp_font) {
-		std::cout << "TTF_OpenFont() error: " << TTF_GetError();
-		std::cout << std::endl;
+		std::cerr << "TTF_OpenFont() error: " << TTF_GetError();
+		std::cerr << std::endl;
 		return false;
 	}
 
@@ -256,8 +263,8 @@ bool Text::draw()
 			m_text_color);
 	
 	if (!tmp) {
-		std::cout << "TTF_RenderText_Blended() error: ";
-		std::cout << TTF_GetError() << std::endl;
+		std::cerr << "TTF_RenderText_Blended/Solid() error: ";
+		std::cerr << TTF_GetError() << std::endl;
 		return false;
 	}
 	
@@ -271,6 +278,7 @@ bool Text::draw()
 }
 
 
+// TODO: When caching is implemented, make this more efficient
 /// Returns the size of the text
 const SDL_Rect& Text::get_area()
 {

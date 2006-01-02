@@ -3,6 +3,7 @@
  **/
 
 #include <list>
+#include <cassert>
 
 #include "SDL.h"
 
@@ -33,6 +34,7 @@ WindowManager* WindowManager::get_ptr()
  **/
 void WindowManager::register_window(Window* ptr)
 {
+	assert (ptr);
 	m_windows.push_front(ptr);
 }
 
@@ -42,6 +44,7 @@ void WindowManager::register_window(Window* ptr)
  **/
 void WindowManager::unregister_window(Window* ptr)
 {
+	assert (ptr);
 	m_windows.remove(ptr);
 }
 
