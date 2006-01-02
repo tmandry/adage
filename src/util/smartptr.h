@@ -23,7 +23,7 @@ public:
 	SmartPtr(T* prep = 0, delete_function = 0);
 
 	// Copying and assignment
-	SmartPtr(const SmartPtr&);
+	template <class T, class S> SmartPtr(const SmartPtr<S>&);
 	SmartPtr& operator=(const SmartPtr&);
 	SmartPtr& operator=(T*);
 
@@ -66,8 +66,8 @@ SmartPtr<T>::SmartPtr(T* prep, delete_function del_func)
 
 
 /// Copy-constructor
-template <class T>
-SmartPtr<T>::SmartPtr(const SmartPtr& rhs)
+template <class T, class S>
+SmartPtr<T>::SmartPtr(const SmartPtr<S>& rhs)
 	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount), m_pdf(rhs.m_pdf)
 {
 	assert (m_pcount);
@@ -188,19 +188,18 @@ void SmartPtr<T>::decrease_count()
 {
 	assert (m_pcount);
 	if (--(*m_pcount) == 0) {
-		if (!m_rep) return;
-
-		/*std::cout << "killing SmartPtr at " << m_rep << std::endl;*/
+		delete m_pcount; 
+		m_pcount = 0;
 		
+		if (!m_rep) return;
+			
+		/*std::cout << "killing SmartPtr at " << m_rep << std::endl;*/
 		if (m_pdf) {
 			m_pdf(m_rep);
 		} else {
 			delete m_rep;
 			m_rep = 0;
 		}
-		
-		delete m_pcount; 
-		m_pcount = 0;
 	}
 }
 

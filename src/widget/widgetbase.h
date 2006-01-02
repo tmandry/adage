@@ -10,11 +10,15 @@
 
 #include "SDL.h"
 
+#include "util/smartptr.h"
 #include "util/image.h"
 
 /// Widget base class 
 class Widget {
 public:
+	typedef SmartPtr<Widget> WidgetPtr;
+	typedef std::list<WidgetPtr> WidgetList;
+
 	// Constructor
 	Widget();
 	
@@ -23,7 +27,7 @@ public:
 	
 	// Members
 	void set_parent(const Image& parent);
-	std::list<Widget*> get_children() const;
+	WidgetList get_children() const;
 
 	virtual const SDL_Rect& get_area() const;
 
@@ -40,7 +44,7 @@ protected:
 	const Image get_parent() const;
 
 	/// Adds to the list of the widget's children
-	inline void Widget::add_child(Widget* child)
+	inline void Widget::add_child(WidgetPtr child)
 	{
 		assert (child);
 		m_children.push_back(child);
@@ -64,7 +68,7 @@ private:
 	Image m_parent_surf;
 
 	/// A list of the widget's children
-	std::list<Widget*> m_children;
+	WidgetList m_children;
 };	
 
 #endif // WIDGET_BASE_H

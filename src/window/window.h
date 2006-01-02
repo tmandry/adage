@@ -6,15 +6,20 @@
 #define WINDOW_H
 
 #include <list>
+#include <memory>
 
 #include "SDL.h"
 
 #include "widget/widgetbase.h"
+#include "util/smartptr.h"
 #include "util/image.h"
 
 /// Displays a window on the screen
 class Window {
 public:
+	typedef SmartPtr<Widget> WidgetPtr;
+	typedef std::list<WidgetPtr> WidgetList;
+
 	// Constructor
 	Window();
 
@@ -25,7 +30,7 @@ public:
 	void move(const int x, const int y);
 	void resize(const int w, const int h);
 
-	Widget* register_widget(Widget* ptr);
+	WidgetPtr register_widget(Widget* ptr);
 	/*void unregister_widget(const Widget* ptr);*/
 
 	void draw();
@@ -41,7 +46,7 @@ private:
 	SDL_Rect m_area;
 
 	/// List of all widgets
-	std::list<Widget*> m_widgets;
+	WidgetList m_widgets;
 };	
 
 #endif // WINDOW_H

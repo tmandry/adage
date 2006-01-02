@@ -14,6 +14,7 @@
 #include "text.h"
 #include "richtext.h"
 #include "misc/rgbamask.h"
+#include "util/smartptr.h"
 #include "util/image.h"
 
 /// Default constructor
@@ -112,9 +113,9 @@ bool RichText::resize(const int w, const int h)
 
 	m_surface = tmp;
 	
-	std::list<Text>::iterator i;
+	TextList::iterator i;
 	for (i = m_text.begin(); i != m_text.end(); ++i)
-		i->set_parent(m_surface);
+		*i->set_parent(m_surface);
 	
 	return true;
 }
@@ -135,10 +136,10 @@ bool RichText::size_to_text()
 {
 	int w = 0, h = 0;
 
-	std::list<Text>::iterator i;
+	TextList::iterator i;
 	for (i = m_text.begin(); i != m_text.end(); ++i) {
 		SDL_Rect size;
-		size = i->get_area();
+		size = *i->get_area();
 
 		int right = size.x + size.w;
 		int bottom = size.y + size.h;
@@ -183,18 +184,18 @@ bool RichText::parse()
 		}
 
 		if (!atom.empty()) {
-			m_text.push_back(Text(atom, size, x, y, m_surface));
+			m_text.push_back(new Text(atom, size, x, y, m_surface));
 
-			Text& prev_atom(m_text.back());
-			add_child(&prev_atom);
+			TextPtr prev_atom(m_text.back());
+			add_child(prev_atom);
 			
-			prev_atom.set_style(style);
-			prev_atom.resize(size);
-			prev_atom.change_color(fr, fg, fb);
-			if (use_background) prev_atom.change_background_color (br, bg, bb);
+			prev_atom->set_style(style);
+			prev_atom->resize(size);
+			prev_atom->change_color(fr, fg, fb);
+			if (use_background) prev_atom->change_background_color (br, bg, bb);
 			
 			SDL_Rect atom_size;
-			atom_size = prev_atom.get_area();
+			atom_size = prev_atom->get_area();
 			
 			// This is to keep track of the overall height of the row,
 			// so when there's a newline we know what to do

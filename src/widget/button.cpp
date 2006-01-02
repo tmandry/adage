@@ -11,6 +11,7 @@
 
 #include "button.h"
 #include "misc/rgbamask.h"
+#include "util/smartptr.h"
 #include "util/image.h"
 
 /// Default constructor
@@ -101,7 +102,8 @@ void Button::init(const std::string& caption, const int x, const int y,
 {
 	assert (parent_surf);
 	
-	add_child(&m_caption);
+	m_caption = new Text;
+	add_child(m_caption);
 	
 	m_state = button_state_up;
 	m_handle_click = 0;
@@ -113,9 +115,8 @@ void Button::init(const std::string& caption, const int x, const int y,
 	if (text_size) resize_text(text_size);
 	set_caption(caption);
 	if (do_resize) size_to_text();
-	m_caption.move(side_width, side_width);
+	m_caption->move(side_width, side_width);
 }
-
 
 
 /// Sets the button text
@@ -125,7 +126,7 @@ void Button::init(const std::string& caption, const int x, const int y,
  **/
 bool Button::set_caption(const std::string& caption, const bool resize)
 {
-	if (!m_caption.set_caption(caption)) 
+	if (!m_caption->set_caption(caption)) 
 		return false;
 
 	if (resize) 
@@ -154,7 +155,7 @@ bool Button::resize(const int w, const int h)
 	}
 
 	m_surface = tmp;
-	m_caption.set_parent(m_surface);
+	m_caption->set_parent(m_surface);
 
 	return true;
 }
@@ -166,7 +167,7 @@ bool Button::resize(const int w, const int h)
  **/
 bool Button::resize_text(const int size, const bool resize)
 {
-	if (!m_caption.resize(size)) 
+	if (!m_caption->resize(size)) 
 		return false;
 
 	if (resize) 
@@ -179,7 +180,7 @@ bool Button::resize_text(const int size, const bool resize)
 bool Button::size_to_text()
 {
 	SDL_Rect size;
-	size = m_caption.get_area();
+	size = m_caption->get_area();
 	
 	return resize(size.w + side_width,
 		size.h + side_width);
@@ -227,7 +228,7 @@ bool Button::draw()
 
 	int text_loc;
 	text_loc = is_down() ? 3 : 0;
-	m_caption.move(text_loc, text_loc);
+	m_caption->move(text_loc, text_loc);
 
 	return true;
 }

@@ -11,6 +11,7 @@
 #include "window.h"
 #include "windowmanager.h"
 #include "misc/rgbamask.h"
+#include "util/smartptr.h"
 
 extern Image screen;
 
@@ -60,15 +61,14 @@ void Window::resize(const int w, const int h)
 /**
  ** @param ptr A pointer to the new Widget
  **/
-Widget* Window::register_widget(Widget* ptr)
+WidgetPtr Window::register_widget(Widget* ptr)
 {
 	assert (ptr);
-	m_widgets.push_front(ptr);
+	WidgetPtr widget(ptr);
 	
-	/*std::list<Widget*> grandchildren(ptr->get_children());
-	m_widgets.splice(m_widgets.begin(), grandchildren);*/
-	ptr->set_parent(m_surface);
-	return ptr;
+	m_widgets.push_front(widget);
+	widget->set_parent(m_surface);
+	return widget;
 }
 
 /// Unregisters an old Widget with the Window
@@ -83,11 +83,11 @@ Widget* Window::register_widget(Widget* ptr)
 /// Tells widgets to render themselves on their own surface
 void Window::draw()
 {
-	for (std::list<Widget*>::iterator i(m_widgets.begin());
+	for (WidgetList::iterator i(m_widgets.begin());
 		i != m_widgets.end();
 		++i) {
-			std::list<Widget*> grandchildren((*i)->get_children());
-			for (std::list<Widget*>::iterator j(grandchildren.begin());
+			WidgetList grandchildren((*i)->get_children());
+			for (WidgetList::iterator j(grandchildren.begin());
 				j != grandchildren.end();
 				++j)
 					(*j)->draw();
@@ -98,11 +98,11 @@ void Window::draw()
 /// Tells widgets to blit themselves on the window's surface; blits window to screen
 void Window::blit()
 {
-	for (std::list<Widget*>::iterator i(m_widgets.begin());
+	for (WidgetList::iterator i(m_widgets.begin());
 		i != m_widgets.end();
 		++i) {
-			std::list<Widget*> grandchildren((*i)->get_children());
-			for (std::list<Widget*>::iterator j(grandchildren.begin());
+			WidgetList grandchildren((*i)->get_children());
+			for (WidgetList::iterator j(grandchildren.begin());
 				j != grandchildren.end();
 				++j)
 					(*j)->blit();
@@ -110,7 +110,7 @@ void Window::blit()
 		}
 	
 	if (SDL_BlitSurface(m_surface.get(), 0, screen.get(), &m_area) < 0)
-		std::cout <<  "Window::blit(): SDL_BlitSurface error: \n"
+		std::cerr <<  "Window::blit(): SDL_BlitSurface error: \n"
 			<< SDL_GetError() << std::endl;
 }
 
@@ -120,7 +120,7 @@ void Window::blit()
  **/
 bool Window::handle_event(const SDL_Event& event)
 {
-	std::list<Widget*>::iterator i;
+	WidgetList::iterator i;
 
 	for (i = m_widgets.begin(); i != m_widgets.end(); i++)
 		if ((*i)->handle_event(event)) return true;

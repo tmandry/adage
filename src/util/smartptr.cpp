@@ -115,10 +115,10 @@ void SmartPtr<TTF_Font_Holder>::decrease_count()
 {
 	assert (m_pcount);
 	if (--(*m_pcount) == 0) {
-		if (!m_rep) return;
-		TTF_CloseFont(m_rep);
-		
 		delete m_pcount; 
 		m_pcount = 0;
+		
+		if (m_rep)
+			TTF_CloseFont(m_rep);
 	}
 }

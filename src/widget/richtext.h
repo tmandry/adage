@@ -5,12 +5,13 @@
 #ifndef RICHTEXT_H
 #define RICHTEXT_H
 
-#include <vector>
+#include <list>
 
 #include "SDL.h"
 
 #include "widgetbase.h"
 #include "text.h"
+#include "util/smartptr.h"
 #include "util/image.h"
 
 extern Image screen;
@@ -18,6 +19,9 @@ extern Image screen;
 /// Renders rich text using a customized set of format codes
 class RichText : public Widget {
 public:
+	typedef SmartPtr<Text> TextPtr;
+	typedef std::list<TextPtr> TextList;
+
 	// Constructors
 	RichText();
 	RichText(const int x, const int y, const int w, const int h,
@@ -59,7 +63,7 @@ private:
 	 ** whole glob of text, but not for individual globs (hence why RichText was
 	 ** created).
 	 **/
-	std::list<Text> m_text;
+	TextList m_text;
 
 	/// Whether or not to use a background color
 	/** If this is false the background is transparent by default. **/
