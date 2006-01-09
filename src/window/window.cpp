@@ -61,7 +61,7 @@ void Window::resize(const int w, const int h)
 /**
  ** @param ptr A pointer to the new Widget
  **/
-WidgetPtr Window::register_widget(Widget* ptr)
+Window::WidgetPtr Window::register_widget(Widget* ptr)
 {
 	assert (ptr);
 	WidgetPtr widget(ptr);

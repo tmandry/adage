@@ -23,7 +23,8 @@ public:
 	SmartPtr(T* prep = 0, delete_function = 0);
 
 	// Copying and assignment
-	template <class T, class S> SmartPtr(const SmartPtr<S>&);
+	template <class S>
+	SmartPtr(const SmartPtr<S>& rhs);
 	SmartPtr& operator=(const SmartPtr&);
 	SmartPtr& operator=(T*);
 
@@ -42,6 +43,9 @@ public:
 	void set_deleter(delete_function);
 	
 protected:
+	template <class S>
+	friend class SmartPtr;
+
 	/// The actual pointer
 	T* m_rep;
 	/// Pointer to the reference count
@@ -65,13 +69,14 @@ SmartPtr<T>::SmartPtr(T* prep, delete_function del_func)
 }
 
 
-/// Copy-constructor
-template <class T, class S>
+/// Copy constructor
+template <class T>
+template <class S>
 SmartPtr<T>::SmartPtr(const SmartPtr<S>& rhs)
-	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount), m_pdf(rhs.m_pdf)
+	: m_rep(rhs.m_rep), m_pcount(rhs.m_pcount), m_pdf(static_cast<delete_function>(rhs.m_pdf))
 {
 	assert (m_pcount);
-	(*m_pcount)++;
+	++(*m_pcount);
 }
 
 
