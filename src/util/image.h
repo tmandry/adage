@@ -5,7 +5,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "smartptr.h"
+#include "util/smartptr.h"
 #include "SDL.h"
 
 /// A lazy way to use the SmartPtr class for a SDL_Surface

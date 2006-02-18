@@ -17,8 +17,8 @@
 /// Displays a window on the screen
 class Window {
 public:
-	typedef SmartPtr<Widget> WidgetPtr;
-	typedef std::list<WidgetPtr> WidgetList;
+	typedef Widget::WidgetPointer WidgetPointer;
+	typedef std::list<WidgetPointer> WidgetList;
 
 	// Constructor
 	Window();
@@ -30,7 +30,7 @@ public:
 	void move(const int x, const int y);
 	void resize(const int w, const int h);
 
-	WidgetPtr register_widget(Widget* ptr);
+	WidgetPointer register_widget(Widget* ptr);
 	/*void unregister_widget(const Widget* ptr);*/
 
 	void draw();

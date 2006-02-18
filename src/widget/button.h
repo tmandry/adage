@@ -10,6 +10,7 @@
 #include "widget/widgetbase.h"
 #include "widget/text.h"
 #include "util/smartptr.h"
+#include "util/widgetptr.h"
 #include "util/image.h"
 
 extern Image screen;
@@ -61,7 +62,7 @@ private:
 	handler_function m_handle_click;
 
 	/// Button text
-	SmartPtr<Text> m_caption;
+	WidgetPtr<Text> m_caption;
 
 	/// Current button state
 	Uint8 m_state;

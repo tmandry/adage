@@ -61,10 +61,10 @@ void Window::resize(const int w, const int h)
 /**
  ** @param ptr A pointer to the new Widget
  **/
-Window::WidgetPtr Window::register_widget(Widget* ptr)
+Window::WidgetPointer Window::register_widget(Widget* ptr)
 {
 	assert (ptr);
-	WidgetPtr widget(ptr);
+	WidgetPointer widget(ptr);
 	
 	m_widgets.push_front(widget);
 	widget->set_parent(m_surface);

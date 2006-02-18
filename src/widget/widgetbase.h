@@ -16,8 +16,8 @@
 /// Widget base class 
 class Widget {
 public:
-	typedef SmartPtr<Widget> WidgetPtr;
-	typedef std::list<WidgetPtr> WidgetList;
+	typedef SmartPtr<Widget> WidgetPointer;
+	typedef std::list<WidgetPointer> WidgetList;
 
 	// Constructor
 	Widget();
@@ -44,7 +44,7 @@ protected:
 	const Image get_parent() const;
 
 	/// Adds to the list of the widget's children
-	inline void Widget::add_child(WidgetPtr child)
+	inline void Widget::add_child(WidgetPointer child)
 	{
 		assert (child);
 		m_children.push_back(child);

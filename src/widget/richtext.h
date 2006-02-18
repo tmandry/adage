@@ -12,6 +12,7 @@
 #include "widgetbase.h"
 #include "text.h"
 #include "util/smartptr.h"
+#include "util/widgetptr.h"
 #include "util/image.h"
 
 extern Image screen;
@@ -19,7 +20,7 @@ extern Image screen;
 /// Renders rich text using a customized set of format codes
 class RichText : public Widget {
 public:
-	typedef SmartPtr<Text> TextPtr;
+	typedef WidgetPtr<Text> TextPtr;
 	typedef std::list<TextPtr> TextList;
 
 	// Constructors
