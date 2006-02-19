@@ -14,7 +14,7 @@
 #include "text.h"
 #include "richtext.h"
 #include "misc/rgbamask.h"
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 
 /// Default constructor
@@ -102,8 +102,8 @@ bool RichText::resize(const int w, const int h)
 {
 	m_area.w = w; m_area.h = h;
 	
-	Image tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32,
-		rmask, gmask, bmask, amask);
+	Image tmp (SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32,
+		rmask, gmask, bmask, amask));
 	
 	if (!tmp) {
 		std::cerr << "SDL_CreateRGBSurface() error: " << SDL_GetError();
@@ -115,7 +115,7 @@ bool RichText::resize(const int w, const int h)
 	
 	TextList::iterator i;
 	for (i = m_text.begin(); i != m_text.end(); ++i)
-		*i->set_parent(m_surface);
+		(*i)->set_parent(m_surface);
 	
 	return true;
 }
@@ -139,7 +139,7 @@ bool RichText::size_to_text()
 	TextList::iterator i;
 	for (i = m_text.begin(); i != m_text.end(); ++i) {
 		SDL_Rect size;
-		size = *i->get_area();
+		size = (*i)->get_area();
 
 		int right = size.x + size.w;
 		int bottom = size.y + size.h;
@@ -184,7 +184,7 @@ bool RichText::parse()
 		}
 
 		if (!atom.empty()) {
-			m_text.push_back(new Text(atom, size, x, y, m_surface));
+			m_text.push_back(TextPtr(new Text(atom, size, x, y, m_surface)));
 
 			TextPtr prev_atom(m_text.back());
 			add_child(prev_atom);

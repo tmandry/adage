@@ -3,3 +3,4 @@
 - Change cout to cerr for errors
 - Optimize the WidgetManager's handle_event() function
 - Implement caching for widgets
+- Get rid of memory leaks!

@@ -9,8 +9,7 @@
 
 #include "widget/widgetbase.h"
 #include "widget/text.h"
-#include "util/smartptr.h"
-#include "util/widgetptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 
 extern Image screen;
@@ -62,7 +61,7 @@ private:
 	handler_function m_handle_click;
 
 	/// Button text
-	WidgetPtr<Text> m_caption;
+	boost::shared_ptr<Text> m_caption;
 
 	/// Current button state
 	Uint8 m_state;

@@ -11,7 +11,7 @@
 
 #include "button.h"
 #include "misc/rgbamask.h"
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 
 /// Default constructor
@@ -102,7 +102,7 @@ void Button::init(const std::string& caption, const int x, const int y,
 {
 	assert (parent_surf);
 	
-	m_caption = new Text;
+	m_caption.reset(new Text);
 	add_child(m_caption);
 	
 	m_state = button_state_up;
@@ -145,8 +145,8 @@ bool Button::resize(const int w, const int h)
 	m_area.w = w;
 	m_area.h = h;
 
-	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
-			w, h, 32, rmask, gmask, bmask, amask);
+	Image tmp(SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
+			w, h, 32, rmask, gmask, bmask, amask));
 	
 	if (!tmp) {
 		std::cerr << "Button::Resize(): CreateRGBSurface() failed: "

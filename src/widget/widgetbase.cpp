@@ -7,7 +7,7 @@
 
 #include "SDL.h"
 
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "misc/rgbamask.h"
 #include "widgetbase.h"
 
@@ -49,7 +49,7 @@ const Image Widget::get_parent() const
 	return m_parent_surf;
 }
 
-WidgetList Widget::get_children() const
+Widget::WidgetList Widget::get_children() const
 {
 	WidgetList ret;
 
@@ -89,8 +89,8 @@ bool Widget::resize(const int w, const int h)
 	m_area.w = w;
 	m_area.h = h;
 
-	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
-			w, h, 32, rmask, gmask, bmask, amask);
+	Image tmp (SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
+			w, h, 32, rmask, gmask, bmask, amask));
 	
 	if (!tmp) {
 		std::cerr << "Widget::resize(): CreateRGBSurface() failed: "

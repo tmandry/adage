@@ -9,7 +9,7 @@ LDFLAGS=`sdl-config --libs` -lSDL_ttf -lm
 AR=ar
 ARFLAGS=crs
 OUT=../libutil.a
-OBJECTS=smartptr.o
+OBJECTS=font.o
 CLEANFILES=
 
 .PHONY: default clean

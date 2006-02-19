@@ -5,14 +5,15 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "SDL.h"
 
 /// A lazy way to use the SmartPtr class for a SDL_Surface
-class Image : public SmartPtr<SDL_Surface> {
+class Image : public boost::shared_ptr<SDL_Surface> {
 public:
+	typedef void (*delete_function)(SDL_Surface*);
 	Image(SDL_Surface* prep = 0, delete_function del = SDL_FreeSurface) 
-		: SmartPtr<SDL_Surface>(prep, del)
+		: boost::shared_ptr<SDL_Surface>(prep, del)
 	{}
    
 	~Image() {}

@@ -10,13 +10,13 @@
 
 #include "SDL.h"
 
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 
 /// Widget base class 
 class Widget {
 public:
-	typedef SmartPtr<Widget> WidgetPointer;
+	typedef boost::shared_ptr<Widget> WidgetPointer;
 	typedef std::list<WidgetPointer> WidgetList;
 
 	// Constructor

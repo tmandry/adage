@@ -6,7 +6,7 @@
 
 #include "SDL.h"
 
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 #include "widget.h"
 #include "window/window.h"
@@ -83,7 +83,9 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
+//This is done before SDL_Quit, because otherwise SDL_Quit would deallocate it
+//automatically, and then the class would try to deallocate it
 void clean_up()
 {
-	screen.release();
+	screen.reset();
 }

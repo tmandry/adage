@@ -144,7 +144,7 @@ bool Text::resize(const int w, const int h)
  **/
 bool Text::resize(const int size)
 {
-	Font tmp_font = TTF_OpenFont(m_font_file.c_str(), size);
+	Font tmp_font (TTF_OpenFont(m_font_file.c_str(), size));
 	if (!tmp_font) {
 		std::cerr << "TTF_OpenFont() error: " << TTF_GetError();
 		std::cerr << std::endl;

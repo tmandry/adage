@@ -11,7 +11,7 @@
 #include "SDL.h"
 
 #include "widget/widgetbase.h"
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 
 /// Displays a window on the screen

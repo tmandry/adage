@@ -7,7 +7,7 @@
 
 #include "SDL.h"
 
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 #include "widget.h"
 #include "window/window.h"
@@ -147,7 +147,9 @@ void button_change_color(Button& change_color)
 		blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
 }
 
+//This is done before SDL_Quit, because otherwise SDL_Quit would deallocate it
+//automatically, and then the class would try to deallocate it
 void clean_up()
 {
-	screen.release();
+	screen.reset();
 }

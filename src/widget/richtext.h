@@ -11,8 +11,7 @@
 
 #include "widgetbase.h"
 #include "text.h"
-#include "util/smartptr.h"
-#include "util/widgetptr.h"
+#include "boost/shared_ptr.hpp"
 #include "util/image.h"
 
 extern Image screen;
@@ -20,7 +19,7 @@ extern Image screen;
 /// Renders rich text using a customized set of format codes
 class RichText : public Widget {
 public:
-	typedef WidgetPtr<Text> TextPtr;
+	typedef boost::shared_ptr<Text> TextPtr;
 	typedef std::list<TextPtr> TextList;
 
 	// Constructors

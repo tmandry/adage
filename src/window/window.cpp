@@ -11,7 +11,7 @@
 #include "window.h"
 #include "windowmanager.h"
 #include "misc/rgbamask.h"
-#include "util/smartptr.h"
+#include "boost/shared_ptr.hpp"
 
 extern Image screen;
 
@@ -45,8 +45,8 @@ void Window::resize(const int w, const int h)
 	m_area.w = w;
 	m_area.h = h;
 
-	Image tmp = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
-			w, h, 32, rmask, gmask, bmask, amask);
+	Image tmp (SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
+			w, h, 32, rmask, gmask, bmask, amask));
 	
 	if (!tmp) {
 		std::cerr << "Window::resize(): CreateRGBSurface() failed: "
