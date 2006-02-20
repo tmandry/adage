@@ -13,8 +13,6 @@
 //
 //  See http://www.boost.org/libs/smart_ptr/shared_ptr.htm for documentation.
 //
-//  Modified by the Adage group
-//
 
 #include <boost/config.hpp>   // for broken compiler workarounds
 
@@ -38,8 +36,6 @@
 # pragma warning(push)
 # pragma warning(disable:4284) // odd return type for operator->
 #endif
-
-#include "SDL_ttf.h"
 
 namespace boost
 {
