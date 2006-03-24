@@ -21,6 +21,18 @@ Window::Window()
 	WindowManager::get_ptr()->register_window(this);
 }
 
+/// Constructor; registers the Window with WindowManager, and sets
+/// surface to an already created surface.
+Window::Window(const Image& surface)
+{
+	WindowManager::get_ptr()->register_window(this);
+
+	m_surface = surface;
+	m_area.x = m_area.y = 0;
+	m_area.w = m_surface->w;
+	m_area.h = m_surface->h;
+}
+
 /// Destructor; unregisters the Window with WindowManager
 Window::~Window()
 {
