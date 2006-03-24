@@ -65,8 +65,8 @@ int main(int argc, char* argv[])
 	// TODO: Set an icon?
 
 	Window window(screen);
-//	window.move(0,0);
-//	window.resize(config->get_int("screenw"),config->get_int("screenh"));
+	window.move(0,0);
+	window.resize(config->get_int("screenw"),config->get_int("screenh"));
 	
 	Text* text;
 	Button* button1;

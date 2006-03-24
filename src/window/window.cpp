@@ -57,8 +57,16 @@ void Window::resize(const int w, const int h)
 	m_area.w = w;
 	m_area.h = h;
 
-	Image tmp (SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
-			w, h, 32, rmask, gmask, bmask, amask));
+	SDL_Surface *surf = NULL;
+
+	if(!m_surface)
+		surf = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
+			w, h, 32, rmask, gmask, bmask, amask);
+	else
+		surf = SDL_CreateRGBSurfaceFrom(m_surface->pixels, w, h, 32,
+			m_surface->pitch, rmask, gmask, bmask, amask);
+
+	Image tmp(surf);
 	
 	if (!tmp) {
 		std::cerr << "Window::resize(): CreateRGBSurface() failed: "
