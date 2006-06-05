@@ -20,9 +20,8 @@ public:
 	typedef Widget::WidgetPointer WidgetPointer;
 	typedef std::list<WidgetPointer> WidgetList;
 
-	// Constructors
+	// Constructor
 	Window();
-	Window(const Image& surface);
 
 	// Destructor
 	~Window();

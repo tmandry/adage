@@ -21,18 +21,6 @@ Window::Window()
 	WindowManager::get_ptr()->register_window(this);
 }
 
-/// Constructor; registers the Window with WindowManager, and sets
-/// surface to an already created surface.
-Window::Window(const Image& surface)
-{
-	WindowManager::get_ptr()->register_window(this);
-
-	m_surface = surface;
-	m_area.x = m_area.y = 0;
-	m_area.w = m_surface->w;
-	m_area.h = m_surface->h;
-}
-
 /// Destructor; unregisters the Window with WindowManager
 Window::~Window()
 {
@@ -57,16 +45,8 @@ void Window::resize(const int w, const int h)
 	m_area.w = w;
 	m_area.h = h;
 
-	SDL_Surface *surf = NULL;
-
-	if(!m_surface)
-		surf = SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
-			w, h, 32, rmask, gmask, bmask, amask);
-	else
-		surf = SDL_CreateRGBSurfaceFrom(m_surface->pixels, w, h, 32,
-			m_surface->pitch, rmask, gmask, bmask, amask);
-
-	Image tmp(surf);
+	Image tmp (SDL_CreateRGBSurface (SDL_SWSURFACE | SDL_SRCALPHA,
+			w, h, 32, rmask, gmask, bmask, amask));
 	
 	if (!tmp) {
 		std::cerr << "Window::resize(): CreateRGBSurface() failed: "
@@ -74,7 +54,7 @@ void Window::resize(const int w, const int h)
 		return;
 	}
 
-	m_surface = tmp;
+	m_surface = SDL_DisplayFormat(tmp.get());
 }
 
 /// Reigsters a newly-created Widget with the Window

@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 	SDL_WM_SetCaption("Adage Widget Set Preview", NULL);
 	// TODO: Set an icon?
 
-	Window window(screen);
+	Window window;
 	window.move(0,0);
 	window.resize(config->get_int("screenw"),config->get_int("screenh"));
 	
