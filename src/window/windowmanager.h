@@ -28,6 +28,9 @@ public:
 	bool handle_event(SDL_Event& event);
 
 private:
+	/// Pointer to the WindowManager instance
+	static WindowManager* m_ptr;
+	
 	/// List of all windows
 	std::list<Window*> m_windows;
 };

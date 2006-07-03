@@ -71,7 +71,10 @@ private:
 		button_state_hover};
 
 	/// The width of each side of the button
-	enum {side_width = 3};
+	enum {side_width = 2};
+	
+	/// The padding to add between the caption and the edges of the button when sizing the button to the text
+	enum {text_padding = 2};
 };
 
 #endif // BUTTON_H

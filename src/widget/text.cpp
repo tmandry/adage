@@ -16,7 +16,7 @@
 /// Default constructor
 Text::Text()
 {
-	init("", screen, "Neuropol.ttf", 10, 0, 0);
+	init("", screen, "Neuropol.ttf", 12, 0, 0);
 }
 
 /// Overloaded constructor
@@ -40,7 +40,7 @@ Text::Text(const std::string& caption, const int size, Image parent_surf)
 Text::Text(const std::string& caption, const int x, const int y,
 	Image parent_surf)
 {
-	init(caption, parent_surf, "Neuropol.ttf", 10, x, y);
+	init(caption, parent_surf, "Neuropol.ttf", 12, x, y);
 }
 
 /// Overloaded constructor

@@ -54,9 +54,9 @@ int main(int argc, char* argv[])
 	Window window;
 	window.move(0,0);
 	window.resize(640,480);
-	window.register_widget(new Button("Clicky", 320, 10));
-	window.register_widget(new RichText("^Cff0000red ^C00ff00^Bgreen^B ^C0000ff"
-		"^Iblue"))
+	window.register_widget(new Button("Clicky", 320, 10, 14));
+	window.register_widget(new RichText("^Cff0000red ^C00ff00^Bgreen^B "
+		"^C0000ff^Iblue"))
 		->move(320, 240);
 	
 	bool done = false;

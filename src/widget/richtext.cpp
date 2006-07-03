@@ -155,8 +155,10 @@ bool RichText::size_to_text()
 /// Converts a formatted string of text into a vector<Text>
 bool RichText::parse()
 {
+	// Contains the contents of each Text atom
 	std::string atom;
 
+	// These keep track of the state of the rich text as it is parsed
 	int x = 0, y = 0;
 	int row_height = 0;
 	int size = m_size;
@@ -165,6 +167,7 @@ bool RichText::parse()
 	Uint8 br = m_fr, bg = m_fg, bb = m_fb;
 	bool use_background = m_use_background;
 
+	// Breaks a raw color code into its RGB components
 	union {
 		unsigned long int Glob;
 		struct {
@@ -174,50 +177,63 @@ bool RichText::parse()
 		};
 	} raw_to_rgb;
 
+	// Purge the old Text atoms
 	clear_children();
 	m_text.clear();
+	
+	std::string::size_type i = 0;
+	// Executes once for every atom
+	while (true) {
+		// Put all the normal characters up to the next newline or format code
+		// in atom
+		std::string::size_type atom_end = m_format_text.find_first_of("^\n", i);
+		if (atom_end == std::string::npos) atom_end = m_format_text.length();
+		atom.assign(m_format_text, i, atom_end - i);
+		i = atom_end;
 
-	for (unsigned int i = 0; i < m_format_text.length(); ++i) {
-		if (!(m_format_text[i] == '^' || m_format_text[i] == '\n')) {
-			atom += m_format_text[i];
-			continue;
-		}
-
+		// We've hit a special character; we need to save this atom and move on
 		if (!atom.empty()) {
-			m_text.push_back(TextPtr(new Text(atom, size, x, y, m_surface)));
-
-			TextPtr prev_atom(m_text.back());
-			add_child(prev_atom);
+			TextPtr prev_atom(new Text(atom, size, x, y, m_surface));
 			
+			m_text.push_back(prev_atom);
+			add_child(prev_atom);
+
 			prev_atom->set_style(style);
 			prev_atom->resize(size);
 			prev_atom->change_color(fr, fg, fb);
-			if (use_background) prev_atom->change_background_color (br, bg, bb);
-			
+			if (use_background) prev_atom->change_background_color(br, bg, bb);
+
 			SDL_Rect atom_size;
 			atom_size = prev_atom->get_area();
-			
+
 			// This is to keep track of the overall height of the row,
 			// so when there's a newline we know what to do
 			if (atom_size.h > row_height) 
 				row_height = atom_size.h;
-			
+
 			x += atom_size.w;
 
 			atom.clear();
 		}
 
 		if (m_format_text[i] == '\n') {
-			// We've hit a newline
+			// We're at a newline
 			x = 0;
 			y += row_height;
 			row_height = 0;
+			
+			++i;
 			continue;
 		}
 		
-		// We've hit a format code
-		++i;
+		// Break out if we're through the whole thing
+		if (i == m_format_text.length()) break;
 
+		// We've hit a format code.
+		
+		// Increment character pointer to compensate for the next character in the code
+		++i;
+		
 		switch (m_format_text[i]) {
 		case 'B': // Bold
 			style ^= TTF_STYLE_BOLD;
@@ -226,7 +242,7 @@ bool RichText::parse()
 		case 'U': // Underline
 			style ^= TTF_STYLE_UNDERLINE;
 			break;
-
+			
 		case 'I': // Italic
 			style ^= TTF_STYLE_ITALIC;
 			break;
@@ -246,7 +262,7 @@ bool RichText::parse()
 		case 's': // Reset size
 			size = m_size;
 			break;
-
+			
 		case 'C': { // Foreground color
 			std::stringstream convert;
 			convert << m_format_text.substr (i + 1, 6);
@@ -255,7 +271,7 @@ bool RichText::parse()
 			i += 6;
 			break;
 		}
-		
+
 		case 'G': { // Background color
 			std::stringstream convert;
 			convert << m_format_text.substr (i+1, 6);
@@ -265,16 +281,16 @@ bool RichText::parse()
 			i += 6;
 			break;
 		}
-		
+
 		case 'c': // Reset foreground color
 			fr = m_fr; fg = m_fg; fb = m_fb;
 			break;
-
+			
 		case 'g': // Reset background color
 			br = m_fr; bg = m_fg; bb = m_fb;
 			use_background = m_use_background;
 			break;
-
+			
 		case 'b': // Clear background color
 			use_background = false;
 			break;
@@ -286,11 +302,13 @@ bool RichText::parse()
 			br = m_fr; bg = m_fg; bb = m_fb;
 			use_background = m_use_background;
 			break;
-		
+
 		case '^': // Literal ^ (caret)
 			atom += '^';
 			break;
 		}
+		
+		++i;
 	}
 
 	return true;

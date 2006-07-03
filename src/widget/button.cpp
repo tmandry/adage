@@ -115,7 +115,7 @@ void Button::init(const std::string& caption, const int x, const int y,
 	if (text_size) resize_text(text_size);
 	set_caption(caption);
 	if (do_resize) size_to_text();
-	m_caption->move(side_width, side_width);
+	m_caption->move(side_width+text_padding, side_width+text_padding);
 }
 
 
@@ -182,8 +182,8 @@ bool Button::size_to_text()
 	SDL_Rect size;
 	size = m_caption->get_area();
 	
-	return resize(size.w + side_width,
-		size.h + side_width);
+	return resize(size.w + side_width + text_padding*2,
+		size.h + side_width + text_padding*2);
 }
 
 /// Draws the button on m_surface
@@ -225,10 +225,17 @@ bool Button::draw()
 			   SDL_GetError ());
 		return false;
 	}*/
-
-	int text_loc;
-	text_loc = is_down() ? 3 : 0;
-	m_caption->move(text_loc, text_loc);
+	
+		
+	// Center text
+	SDL_Rect text_area = m_caption->get_area();
+	SDL_Rect button_area = get_area();
+	int offset = is_down() ? side_width : 0;
+	
+	m_caption->move(
+		(button_area.w-side_width)/2 - text_area.w/2 + offset,
+		(button_area.h-side_width)/2 - text_area.h/2 + offset
+	);
 
 	return true;
 }
@@ -266,7 +273,7 @@ inline void Button::render_button(Uint32 face_color, const Uint32 side1_color,
 	side.h = 1;
 
 	// Side - most of this will be covered
-	SDL_FillRect(m_surface.get(), 0, side2_color);
+	SDL_FillRect(m_surface.get(), NULL, side2_color);
 
 	// Face
 	Uint8 face_r, face_g, face_b;

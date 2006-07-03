@@ -26,9 +26,10 @@ public:
 	// Destructor
 	~Window();
 
-	// Members
+	// Methods
 	void move(const int x, const int y);
 	void resize(const int w, const int h);
+	void set_color(Uint32 color);
 
 	WidgetPointer register_widget(Widget* ptr);
 	/*void unregister_widget(const Widget* ptr);*/
@@ -39,6 +40,9 @@ public:
 	bool handle_event(const SDL_Event& event);
 
 private:
+	/// The Window's background color
+	Uint32 m_color;
+	
 	/// The Window's own surface
 	Image m_surface;
 

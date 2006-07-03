@@ -19,9 +19,8 @@ Image screen;
 
 // Globals like this won't happen outside the preview; everything will be owned
 // by a class
+boost::shared_ptr<Window> window;
 Text* text2;
-
-Uint32 blank_color;
 
 void clean_up();
 
@@ -64,36 +63,34 @@ int main(int argc, char* argv[])
 	SDL_WM_SetCaption("Adage Widget Set Preview", NULL);
 	// TODO: Set an icon?
 
-	Window window;
-	window.move(0,0);
-	window.resize(config->get_int("screenw"),config->get_int("screenh"));
+	window = boost::shared_ptr<Window>(new Window);
+	window->move(0,0);
+	window->resize(config->get_int("screenw"),config->get_int("screenh"));
 	
 	Text* text;
 	Button* button1;
 	Button* button2;
 	RichText* richtext;
 	
-	window.register_widget(text = new Text("HELLO!", 30, 100, 100));
+	window->register_widget(text = new Text("HELLO!", 30, 100, 100));
 	
-	window.register_widget(button1 = new Button(" Ping? ", 100, 150, 20));
+	window->register_widget(button1 = new Button(" Ping? ", 100, 150, 20));
 	button1->set_event_handler(Button::button_event_click, button_click);
 
-	window.register_widget(button2 =
+	window->register_widget(button2 =
 		new Button("Thou shalt not poketh me!",200, 400, 10));
 	button2->set_event_handler(Button::button_event_click, button_change_color);
 
-	window.register_widget(text2 = new Text(" Pong! ", 48, 300, 300));
+	window->register_widget(text2 = new Text(" Pong! ", 48, 300, 300));
 	text2->change_color(0x00, 0x00, 0x00);
 	text2->change_background_color(0x55, 0x55, 0xaa);
 
-	window.register_widget(richtext =
+	window->register_widget(richtext =
 		new RichText(400, 200, 640, 200,
-			"asdf^Gffffff^Cff0000Hello! ^Bbold\n^U^S12underline^g^B^U^I"
-			"^s italic\n^T^^caret!!^^ ^S22bye!^R^Cffffff :P",
+			"asdf^Gffffff^Cff0000Hello! ^Bbold\n^U^S12underline "
+			"^g^B^U^I^sitalic\n^T^^caret!!^^ ^S22bye!^R^Cffffff :P",
 			screen)
 	);
-	
-	blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
 	
 	Uint8 done = 0;
 	WindowManager* window_manager = WindowManager::get_ptr();
@@ -112,8 +109,6 @@ int main(int argc, char* argv[])
 				window_manager->handle_event(event);
 			}
 		}
-		
-		SDL_FillRect(screen.get(), NULL, blank_color);
 
 		window_manager->draw();
 		SDL_Flip(screen.get());
@@ -142,9 +137,9 @@ void button_change_color(Button& change_color)
 	status ^= 1;
 
 	if (status)
-		blank_color = SDL_MapRGB(screen->format, 0x33, 0xdd, 0x33);
+		window->set_color(SDL_MapRGB(screen->format, 0x33, 0xdd, 0x33));
 	else
-		blank_color = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
+		window->set_color(SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 }
 
 //This is done before SDL_Quit, because otherwise SDL_Quit would deallocate it

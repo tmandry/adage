@@ -20,12 +20,14 @@ WindowManager::~WindowManager()
 {
 }
 
-/// Returns a pointer to the singleton
+// Default value of the pointer
+WindowManager* WindowManager::m_ptr = NULL;
+
+/// Returns a pointer to the singleton, allocating the singleton first if need be
 WindowManager* WindowManager::get_ptr()
 {
-	static WindowManager window_manager;
-	
-	return &window_manager;
+	if (m_ptr == NULL) m_ptr = new WindowManager;
+	return m_ptr;
 }
 
 /// Reigsters a newly-created Window with the WindowManager
@@ -38,14 +40,16 @@ void WindowManager::register_window(Window* ptr)
 	m_windows.push_front(ptr);
 }
 
-/// Unregisters an old Window with the WindowManager
+/// Unregisters an old Window with the WindowManager and deletes the singleton if there aren't any Windows left
 /**
  ** @param ptr A pointer to the old Window
  **/
 void WindowManager::unregister_window(Window* ptr)
 {
-	assert (ptr);
+	assert (ptr); assert (!m_windows.empty());
 	m_windows.remove(ptr);
+	
+	if (m_windows.empty()) delete m_ptr;
 }
 
 /// Draws all windows to the screen

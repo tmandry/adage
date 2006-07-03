@@ -16,7 +16,7 @@
 extern Image screen;
 
 /// Constructor; registers the Window with WindowManager
-Window::Window()
+Window::Window(): m_color()
 {
 	WindowManager::get_ptr()->register_window(this);
 }
@@ -55,6 +55,15 @@ void Window::resize(const int w, const int h)
 	}
 
 	m_surface = SDL_DisplayFormat(tmp.get());
+}
+
+/// Sets the window's background color
+/**
+ ** @param color The background color
+ **/
+void Window::set_color(Uint32 color)
+{
+	m_color = color;
 }
 
 /// Reigsters a newly-created Widget with the Window
@@ -98,6 +107,8 @@ void Window::draw()
 /// Tells widgets to blit themselves on the window's surface; blits window to screen
 void Window::blit()
 {
+	SDL_FillRect(m_surface.get(), NULL, m_color);
+	
 	for (WidgetList::iterator i(m_widgets.begin());
 		i != m_widgets.end();
 		++i) {
