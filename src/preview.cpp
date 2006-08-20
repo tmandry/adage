@@ -2,6 +2,8 @@
  ** \brief Contains the source code for the Adage %Widget Set Preview
  **/
 
+#include "config.h"
+
 #include <cstdlib>
 #include <iostream>
 

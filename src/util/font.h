@@ -5,6 +5,8 @@
 #ifndef FONT_H
 #define FONT_H
 
+#include "config.h"
+
 #include "SDL_ttf.h"
 #include "boost/shared_ptr.hpp"
 

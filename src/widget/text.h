@@ -5,6 +5,8 @@
 #ifndef TEXT_H
 #define TEXT_H
 
+#include "config.h"
+
 #include <string>
 
 #include "SDL.h"

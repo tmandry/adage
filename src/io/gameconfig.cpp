@@ -2,6 +2,8 @@
  ** \brief Contains the source code for the Config class
  **/
 
+#include "config.h"
+
 #include <iostream>
 #include <sstream>
 #include <fstream>

@@ -2,6 +2,8 @@
  ** \brief Contains the Button class source code
  **/
 
+#include "config.h"
+
 #include <iostream>
 #include <string>
 #include <cassert>

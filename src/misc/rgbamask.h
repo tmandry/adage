@@ -2,6 +2,8 @@
  ** \brief Contains big and little endian bitmasks for 32-bit colors
  **/
 
+#include "config.h"
+
 // Different values depending on endianness
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

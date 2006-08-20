@@ -2,6 +2,8 @@
  ** \brief Contains source code for WindowManager class
  **/
 
+#include "config.h"
+
 #include <list>
 #include <cassert>
 

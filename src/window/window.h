@@ -5,6 +5,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "config.h"
+
 #include <list>
 #include <memory>
 

@@ -5,6 +5,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include "config.h"
+
 #include "boost/shared_ptr.hpp"
 #include "SDL.h"
 

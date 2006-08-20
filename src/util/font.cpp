@@ -2,6 +2,8 @@
  ** \brief Contains the FontHolder<void> methods
  **/
 
+#include "config.h"
+
 #include "util/font.h"
 #include "boost/shared_ptr.hpp"
 #include "SDL_ttf.h"

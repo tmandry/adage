@@ -2,6 +2,8 @@
  ** \brief Contains the Widget base class source code
  **/
 
+#include "config.h"
+
 #include <iostream>
 #include <cassert>
 

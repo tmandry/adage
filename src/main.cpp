@@ -2,6 +2,8 @@
  ** \brief Implements main()
  **/
 
+#include "config.h"
+
 #include <iostream>
 
 #include "SDL.h"

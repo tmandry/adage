@@ -5,6 +5,8 @@
 #ifndef RICHTEXT_H
 #define RICHTEXT_H
 
+#include "config.h"
+
 #include <list>
 
 #include "SDL.h"

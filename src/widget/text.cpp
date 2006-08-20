@@ -2,6 +2,8 @@
  ** \brief Contains the Text class source code
  **/
 
+#include "config.h"
+
 #include <string>
 #include <iostream>
 #include <cassert>

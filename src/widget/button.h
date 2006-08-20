@@ -5,6 +5,8 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include "config.h"
+
 #include <string>
 
 #include "widget/widgetbase.h"

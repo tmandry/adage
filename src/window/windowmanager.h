@@ -5,6 +5,8 @@
 #ifndef WINDOWMANAGER_H
 #define WINDOWMANAGER_H
 
+#include "config.h"
+
 #include <list>
 
 #include "SDL.h"

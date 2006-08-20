@@ -5,6 +5,8 @@
 #ifndef WIDGET_BASE_H
 #define WIDGET_BASE_H
 
+#include "config.h"
+
 #include <list>
 #include <cassert>
 

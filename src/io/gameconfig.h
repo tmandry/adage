@@ -5,6 +5,8 @@
 #ifndef GAMECONFIG_H
 #define GAMECONFIG_H
 
+#include "config.h"
+
 #include <string>
 #include <map>
 

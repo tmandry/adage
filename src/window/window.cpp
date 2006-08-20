@@ -2,6 +2,8 @@
  ** \brief Contains the source code for the Window class
  **/
 
+#include "config.h"
+
 #include <iostream>
 #include <list>
 #include <cassert>
