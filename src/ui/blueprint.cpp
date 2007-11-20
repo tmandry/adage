@@ -39,6 +39,9 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 	const Map::WallList& walls( mGame->map().walls() );
 	for (unsigned int i=0; i<walls.size(); ++i)
 		p.drawLine(walls[i].segment());
+	
+	p.setPen(QColor(41, 105, 142));
+	//TODO: gridlines
 }
 
 void Blueprint::mousePressEvent(QMouseEvent* event)
