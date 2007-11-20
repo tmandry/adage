@@ -1,6 +1,0 @@
-#Build for debugging by default
-SET(CMAKE_BUILD_TYPE Debug)
-
-SUBDIRS(src)
-
-#SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
