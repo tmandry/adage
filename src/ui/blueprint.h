@@ -16,6 +16,12 @@ public:
 	virtual ~Blueprint();
 	
 	virtual QSize sizeHint() const;
+
+public slots:
+	void setZoom(float zoom);
+
+signals:
+	void zoomChanged(float zoom);
 	
 protected:
 	void paintEvent(QPaintEvent* event);
@@ -26,15 +32,18 @@ protected:
 	void wheelEvent(QWheelEvent* event);
 
 private:
-	enum { basePxPerFoot = 2 };
+	enum { basePxPerMeter = 2 };
 	
-	//returns px per foot scale with zoom
-	inline double scale() const;
+	//returns px per meter scale with zoom
+	inline float scale() const;
+	//returns grid line interval in meters
+	int gridResolution() const;
 
 	Game* mGame;
 	
 	QPointF mPanning;
-	double mZoom;
+	float mZoom;
+	int mGridRes;
 	
 	bool mMovePressed;
 	QPointF mMovePanningStart;

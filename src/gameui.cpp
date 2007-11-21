@@ -17,7 +17,7 @@ GameUI::GameUI()
 	//resize(320, 210);
 	setWindowTitle("Adage");
 	
-	mLayout = new QVBoxLayout(this);
+	/*mLayout = new QVBoxLayout(this);
 	
 	QHBoxLayout* horizLayout = new QHBoxLayout(); 
 	
@@ -27,14 +27,12 @@ GameUI::GameUI()
 	mBtnClose = new QPushButton("Close");
 	horizLayout->addWidget(mBtnClose, 0, Qt::AlignRight);
 	
-	mLayout->addLayout(horizLayout);
+	mLayout->addLayout(horizLayout);*/
 	
 	mBlueprint = new Blueprint(mGame);
-	mLayout->addWidget(mBlueprint);
-	
-	setLayout(mLayout);
-	
-	connect(mBtnClose, SIGNAL(clicked()), this, SLOT(close()));
+	setCentralWidget(mBlueprint);
+		
+	//connect(mBtnClose, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 GameUI::~GameUI()

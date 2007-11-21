@@ -1,14 +1,14 @@
 #ifndef GAMEUI_H_
 #define GAMEUI_H_
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include "game.h"
 #include "ui/blueprint.h"
 
-class GameUI : public QWidget
+class GameUI : public QMainWindow
 {
 	Q_OBJECT
 public:
