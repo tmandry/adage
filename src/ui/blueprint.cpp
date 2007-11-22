@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QSize>
+#include <QSizePolicy>
 #include "game.h"
 #include "world/map.h"
 #include "world/wall.h"
@@ -14,30 +15,34 @@ Blueprint::Blueprint(Game* game, QWidget* parent)
 	:	QWidget(parent),
 		mGame(game),
 		mPanning(0,0),
-		mZoom(1.0),
-		mGridRes(10),
+		mZoom(0.8),
+		mGridRes(50),
 		mMovePressed(false)
 {
-	resize(320,240);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 Blueprint::~Blueprint()
 {
 }
 
-QSize Blueprint::sizeHint() const
-{
-	return QSize(480,640);
-}
-
 void Blueprint::setZoom(float zoom)
 {	
+	zoom = std::max(zoom, 0.1F);
+	zoom = std::min(zoom, 2.0F);
+	
 	if (mZoom == zoom) return;
 	
 	mZoom = zoom;
 	//TODO: calc gridRes based on zoom; let user override
 	
 	emit zoomChanged(zoom);
+	update();
+}
+
+void Blueprint::goHome()
+{
+	mPanning = QPointF(0,0);
 	update();
 }
 
@@ -56,7 +61,7 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 	p.scale(scale(), scale());
 	p.translate(-viewArea.topLeft());
 	
-	p.setPen(QColor(41, 105, 142));
+	p.setPen(QColor(20, 52, 71));
 	
 	//draw gridlines (start with left bound rounded down to nearest line interval)
 	for (int x=(int)Math::floorTo(viewArea.left(), mGridRes); x <=(int)viewArea.right(); x += mGridRes)
@@ -116,9 +121,6 @@ void Blueprint::wheelEvent(QWheelEvent* event)
 		//		motion blur?
 		float z = mZoom;
 		z += event->delta() / 1200.0; //about .1 per step
-		
-		z = std::max(z, 0.1F);
-		z = std::min(z, 2.0F);
 		
 		setZoom(z);
 	}

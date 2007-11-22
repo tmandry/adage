@@ -6,18 +6,17 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include "game.h"
-#include "ui/blueprint.h"
+#include "ui/blueprintwindow.h"
 
 class GameUI : public QMainWindow
 {
-	Q_OBJECT
 public:
 	GameUI();
 	~GameUI();
 	
 private:
 	Game* mGame;
-	Blueprint* mBlueprint;
+	BlueprintWindow* mBlueprint;
 
 	QVBoxLayout* mLayout;
 	QPushButton* mButton;

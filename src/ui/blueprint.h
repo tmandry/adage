@@ -15,10 +15,11 @@ public:
 	Blueprint(Game* game, QWidget* parent=0);
 	virtual ~Blueprint();
 	
-	virtual QSize sizeHint() const;
+	float zoom() const { return mZoom; }
 
 public slots:
 	void setZoom(float zoom);
+	void goHome();
 
 signals:
 	void zoomChanged(float zoom);

@@ -54,3 +54,5 @@ QToolBar {
 	background-color: #00a;
 	alternate-background-color: #00a;
 }*/
+
+/*TODO: Customize QDockWidget & QMainWindow::separator in Qt 4.4*/
