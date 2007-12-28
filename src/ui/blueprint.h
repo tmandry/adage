@@ -19,6 +19,7 @@ public:
 
 public slots:
 	void setZoom(float zoom);
+	//eventually will be used for returning the view to the main point of interest in the mission
 	void goHome();
 
 signals:
