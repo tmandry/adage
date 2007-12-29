@@ -10,7 +10,7 @@
 
 #include "math/const.h"
 #include "math/real.h"
-#include "math/point.h"
+#include "math/Point.h"
 
 namespace Math {
 

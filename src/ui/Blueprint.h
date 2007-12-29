@@ -5,7 +5,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QPoint>
-#include "game.h"
+#include "Game.h"
 
 class Blueprint : public QWidget
 {

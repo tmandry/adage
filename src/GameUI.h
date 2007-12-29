@@ -5,8 +5,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QTextEdit>
-#include "game.h"
-#include "ui/blueprintwindow.h"
+#include "Game.h"
+#include "ui/BlueprintWindow.h"
 
 class GameUI : public QMainWindow
 {

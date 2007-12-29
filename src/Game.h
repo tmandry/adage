@@ -1,7 +1,7 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "world/map.h"
+#include "world/Map.h"
 
 class Game
 {

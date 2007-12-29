@@ -2,7 +2,7 @@
 #define SEGMENT_H_
 
 #include <QLineF>
-#include "math/point.h"
+#include "math/Point.h"
 
 namespace Math {
 

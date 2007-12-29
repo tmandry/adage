@@ -2,7 +2,7 @@
 #include <QVBoxLayout>
 #include <QSizePolicy>
 #include <QString>
-#include "ui/blueprintwindow.h"
+#include "ui/BlueprintWindow.h"
 
 BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	QWidget(parent),

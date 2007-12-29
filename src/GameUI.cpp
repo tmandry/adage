@@ -3,12 +3,12 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QDockWidget>
-#include "gameui.h"
-#include "game.h"
-#include "ui/blueprintwindow.h"
-#include "ui/shellwindow.h"
-#include "ui/commwindow.h"
-#include "world/wall.h"
+#include "GameUI.h"
+#include "Game.h"
+#include "ui/BlueprintWindow.h"
+#include "ui/ShellWindow.h"
+#include "ui/CommWindow.h"
+#include "world/Wall.h"
 
 GameUI::GameUI()
 {

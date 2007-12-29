@@ -1,4 +1,4 @@
-#include "shellwindow.h"
+#include "ShellWindow.h"
 
 #include <QSizePolicy>
 #include <QSize>

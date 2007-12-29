@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QFile>
-#include "gameui.h"
+#include "GameUI.h"
 
 int main(int argc, char **argv)
 {

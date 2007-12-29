@@ -2,7 +2,7 @@
 #define MAP_H_
 
 #include <vector>
-#include "world/wall.h"
+#include "world/Wall.h"
 
 class Map
 {

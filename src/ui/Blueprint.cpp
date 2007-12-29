@@ -1,14 +1,13 @@
-#include "blueprint.h"
-
 #include <cmath>
 #include <utility>
 #include <QWidget>
 #include <QPainter>
 #include <QSize>
 #include <QSizePolicy>
-#include "game.h"
-#include "world/map.h"
-#include "world/wall.h"
+#include "Blueprint.h"
+#include "Game.h"
+#include "world/Map.h"
+#include "world/Wall.h"
 #include "math/real.h"
 
 Blueprint::Blueprint(Game* game, QWidget* parent)

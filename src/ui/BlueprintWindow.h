@@ -6,8 +6,8 @@
 #include <QSize>
 #include <QStatusBar>
 #include <QLabel>
-#include "game.h"
-#include "ui/blueprint.h"
+#include "Game.h"
+#include "ui/Blueprint.h"
 
 class BlueprintWindow : public QWidget
 {

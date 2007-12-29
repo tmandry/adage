@@ -2,9 +2,9 @@
 #define WALL_H_
 
 #include <utility>
-#include "math/point.h"
-#include "math/vector.h"
-#include "math/segment.h"
+#include "math/Point.h"
+#include "math/Vector.h"
+#include "math/Segment.h"
 
 class Wall
 {

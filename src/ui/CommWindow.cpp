@@ -1,4 +1,4 @@
-#include "commwindow.h"
+#include "CommWindow.h"
 
 #include <QSize>
 #include <QSizePolicy>
