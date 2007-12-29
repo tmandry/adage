@@ -16,4 +16,5 @@ public:
 	const Map& map() const { return mMap; }
 };
 
+
 #endif /*GAME_H_*/
