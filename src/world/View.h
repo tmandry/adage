@@ -1,7 +1,7 @@
 #ifndef VIEW_H_
 #define VIEW_H_
 
-#include <QPainter>
+class QPainter;
 
 class View
 {

@@ -8,7 +8,7 @@
 #include "math/Point.h"
 
 //forward declaration
-//class World;
+class World;
 
 class Entity
 {
@@ -17,26 +17,19 @@ public:
 	
 protected:
 	//subclass must redefine constructor
-	Entity(Entity* parent, std::string name="Entity")
-		:	mParent(parent),
-			mName(name),
-			mView(0),
-			mVisible(false),
-			mRemove(false)
-	{
-		if (parent) {
-			parent->addChild(this);
-			mWorld = parent->world();
-		}
-	}
+	Entity(Entity* parent, std::string name="Entity");
 	
 public:
 	virtual ~Entity()
 	{
+		for (ChildList::iterator i=mChildren.begin(); i!=mChildren.end(); ++i)
+			delete (*i);
+		
 		if (parent()) parent()->delChild(this);
 		if (mView) delete mView;
 	}
 	
+	//replace with region? or abstract intersects function?
 	void setPos(const Math::Point& loc) { mLoc = loc; }
 	Math::Point pos() const { return mLoc; }
 	
@@ -73,5 +66,18 @@ private:
 	
 	bool mRemove;
 };
+
+inline Entity::Entity(Entity* parent, std::string name)
+	:	mParent(parent),
+		mName(name),
+		mView(0),
+		mVisible(false),
+		mRemove(false)
+{
+	if (parent) {
+		parent->addChild(this);
+		mWorld = parent->world();
+	}
+}
 
 #endif /*ENTITY_H_*/

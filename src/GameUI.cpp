@@ -8,14 +8,12 @@
 #include "ui/BlueprintWindow.h"
 #include "ui/ShellWindow.h"
 #include "ui/CommWindow.h"
-#include "world/Wall.h"
+#include "world/Building.h"
 
 GameUI::GameUI()
 {
 	mGame = new Game();
-	mGame->map().addWall( Wall(0,0, 100,200) );
-	mGame->map().addWall( Wall(100,200, 200,200) );
-	mGame->map().addWall( Wall(200,200, 320,240) );
+	new Building(mGame->world());
 	
 	resize(930, 640);
 	setWindowTitle("Adage");

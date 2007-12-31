@@ -12,6 +12,8 @@ public:
 	World(Game* game, std::string name="World");
 	virtual ~World();
 	
+	void paint(QPainter* p) { Entity::paint(p); }
+	
 	Game* game() const { return mGame; }
 
 private:

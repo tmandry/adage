@@ -68,12 +68,7 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 	for (int y=(int)Math::floorTo(viewArea.top(), mGridRes); y<=(int)viewArea.bottom(); y += mGridRes)
 		p.drawLine(QPointF(viewArea.left(), y), QPointF(viewArea.right(), y));
 	
-	QPen wallPen(Qt::white);
-	p.setPen(wallPen);
-	
-	const Map::WallList& walls( mGame->map().walls() );
-	for (unsigned int i=0; i<walls.size(); ++i)
-		p.drawLine(walls[i].segment());
+	mGame->world()->paint(&p);
 }
 
 void Blueprint::mousePressEvent(QMouseEvent* event)
