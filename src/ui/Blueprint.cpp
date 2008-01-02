@@ -6,7 +6,6 @@
 #include <QSizePolicy>
 #include "Blueprint.h"
 #include "Game.h"
-#include "world/Map.h"
 #include "world/Wall.h"
 #include "math/real.h"
 
@@ -60,7 +59,7 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 	p.scale(scale(), scale());
 	p.translate(-viewArea.topLeft());
 	
-	p.setPen(QColor(20, 52, 71));
+	p.setPen(QColor(25, 65, 89));
 	
 	//draw gridlines (start with left bound rounded down to nearest line interval)
 	for (int x=(int)Math::floorTo(viewArea.left(), mGridRes); x <=(int)viewArea.right(); x += mGridRes)

@@ -2,6 +2,7 @@
 #define ENTITY_H_
 
 #include <string>
+#include <vector>
 #include <set>
 #include <QPainter>
 #include "world/View.h"
@@ -16,19 +17,15 @@ public:
 	typedef std::set<Entity*> ChildList;
 	
 protected:
-	//subclass must redefine constructor
+	//subclass must redefine constructor, and call subclass()
 	Entity(Entity* parent, std::string name="Entity");
+	void subclass(std::string type);
 	
+	virtual ~Entity();
+
 public:
-	virtual ~Entity()
-	{
-		for (ChildList::iterator i=mChildren.begin(); i!=mChildren.end(); ++i)
-			delete (*i);
-		
-		if (parent()) parent()->delChild(this);
-		if (mView) delete mView;
-	}
-	
+	bool inherits(std::string type) const;
+
 	//replace with region? or abstract intersects function?
 	void setPos(const Math::Point& loc) { mLoc = loc; }
 	Math::Point pos() const { return mLoc; }
@@ -53,6 +50,8 @@ private:
 	void delChild(Entity* child) { mChildren.erase(child); }
 	
 	virtual void updateEvent(double /*secsElapsed*/) {}
+	
+	std::vector<std::string> mSubclasses;
 	
 	Entity *mParent;
 	World *mWorld;

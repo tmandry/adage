@@ -4,6 +4,8 @@
 
 void Wall::init()
 {
+	subclass("Wall");
+	
 	Math::Vector temp = mA-mB;
 	temp.normalize();
 	

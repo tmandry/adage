@@ -1,4 +1,31 @@
 #include "Entity.h"
+#include "World.h"
+
+virtual Entity::~Entity()
+{
+	for (unsigned int i=0; i<mSubclasses.size(); ++i)
+		world()->removeEntity(mSubclasses[i], this);
+	
+	for (ChildList::iterator i=mChildren.begin(); i!=mChildren.end(); ++i)
+		delete (*i);
+	
+	if (parent()) parent()->delChild(this);
+	if (mView) delete mView;
+}
+
+void Entity::subclass(std::string type)
+{
+	mSubclasses.push_back(type);
+	world()->addEntity(type, this);
+}
+
+bool Entity::inherits(std::string type)
+{
+	for (unsigned int i=0; i<mSubclasses.size(); ++i)
+		if (mSubclasses[i] == type) return true;
+	
+	return false;
+}
 
 void Entity::update(double secsElapsed)
 {
