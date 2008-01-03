@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include "World.h"
 
-virtual Entity::~Entity()
+Entity::~Entity()
 {
 	for (unsigned int i=0; i<mSubclasses.size(); ++i)
 		world()->removeEntity(mSubclasses[i], this);
@@ -19,7 +19,7 @@ void Entity::subclass(std::string type)
 	world()->addEntity(type, this);
 }
 
-bool Entity::inherits(std::string type)
+bool Entity::inherits(std::string type) const
 {
 	for (unsigned int i=0; i<mSubclasses.size(); ++i)
 		if (mSubclasses[i] == type) return true;

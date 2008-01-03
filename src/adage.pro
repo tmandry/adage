@@ -11,6 +11,10 @@ INCLUDEPATH += . world math ui
 # Input
 HEADERS += Game.h \
            GameUI.h \
+           actors/Actor.h \
+           actors/Person.h \
+           actors/steering/Seek.h \
+           actors/steering/SteeringBehavior.h \
            math/const.h \
            math/Point.h \
            math/real.h \
@@ -23,12 +27,16 @@ HEADERS += Game.h \
            world/Building.h \
            world/CellSpacePartition.h \
            world/Entity.h \
-           world/Map.h \
+           world/MovingEntity.h \
            world/View.h \
            world/Wall.h \
            world/World.h
-SOURCES += GameUI.cpp \
+SOURCES += Game.cpp \
+           GameUI.cpp \
            main.cpp \
+           actors/Actor.cpp \
+           actors/Person.cpp \
+           actors/steering/Seek.cpp \
            ui/Blueprint.cpp \
            ui/BlueprintWindow.cpp \
            ui/CommWindow.cpp \
@@ -36,5 +44,6 @@ SOURCES += GameUI.cpp \
            world/Building.cpp \
            world/CellSpacePartition.cpp \
            world/Entity.cpp \
+           world/MovingEntity.cpp \
            world/Wall.cpp \
            world/World.cpp

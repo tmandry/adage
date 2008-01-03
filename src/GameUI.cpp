@@ -9,11 +9,16 @@
 #include "ui/ShellWindow.h"
 #include "ui/CommWindow.h"
 #include "world/Building.h"
+#include "actors/Person.h"
 
 GameUI::GameUI()
 {
 	mGame = new Game();
+	connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
+	
+	//TEST GAME ENTITIES GO HERE
 	new Building(mGame->world());
+	new Person(Math::Point(), mGame->world());
 	
 	resize(930, 640);
 	setWindowTitle("Adage");
@@ -48,4 +53,5 @@ GameUI::GameUI()
 
 GameUI::~GameUI()
 {
+	delete mGame;
 }

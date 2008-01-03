@@ -46,6 +46,8 @@ protected:
 	View* view() const { return mView; }
 	
 private:
+	virtual World* theWorld() { return mWorld; }
+
 	void addChild(Entity* child) { mChildren.insert(child); }
 	void delChild(Entity* child) { mChildren.erase(child); }
 	
@@ -75,7 +77,7 @@ inline Entity::Entity(Entity* parent, std::string name)
 {
 	if (parent) {
 		parent->addChild(this);
-		mWorld = parent->world();
+		mWorld = parent->theWorld();
 	}
 }
 
