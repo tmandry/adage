@@ -13,6 +13,7 @@ HEADERS += Game.h \
            GameUI.h \
            actors/Actor.h \
            actors/Person.h \
+           actors/steering/Arrive.h \
            actors/steering/Seek.h \
            actors/steering/SteeringBehavior.h \
            math/const.h \
@@ -36,6 +37,7 @@ SOURCES += Game.cpp \
            main.cpp \
            actors/Actor.cpp \
            actors/Person.cpp \
+           actors/steering/Arrive.cpp \
            actors/steering/Seek.cpp \
            ui/Blueprint.cpp \
            ui/BlueprintWindow.cpp \

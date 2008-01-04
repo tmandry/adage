@@ -36,7 +36,7 @@ void Actor::updateEvent(double secsElapsed)
 		if (magRemaining <= 0.0) break;
 		
 		//calculate force to add
-		force = (*i)->calculate() * (*i)->factor();
+		force = (*i)->calculate() * (*i)->factor() * 15.0;
 		
 		//truncate vector we're about to add with the magnitude remaining
 		// NOTE: in reality the amount of magnitude about to be added depends (a lot) upon the direction, but this technique works anyway

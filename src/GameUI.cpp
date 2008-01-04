@@ -19,6 +19,8 @@ GameUI::GameUI()
 	//TEST GAME ENTITIES GO HERE
 	new Building(mGame->world());
 	new Person(Math::Point(), mGame->world());
+	new Person(Math::Point(30,5), mGame->world());
+	new Person(Math::Point(70,-20), mGame->world());
 	
 	resize(930, 640);
 	setWindowTitle("Adage");

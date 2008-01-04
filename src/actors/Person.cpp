@@ -3,11 +3,11 @@
 #include <QColor>
 #include <QRectF>
 #include "Person.h"
-#include "steering/Seek.h"
+#include "steering/Arrive.h"
 
 Person::Person(Math::Point pos, Entity* parent, std::string name)
 	:	Actor(parent, name),
-		mSeek(Math::Point(50, 0), this)
+		mArrive(this, Math::Point(50, 0), Arrive::slow)
 {
 	setPos(pos);
 	

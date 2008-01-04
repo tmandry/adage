@@ -2,7 +2,7 @@
 #define PERSON_H_
 
 #include "Actor.h"
-#include "steering/Seek.h"
+#include "steering/Arrive.h"
 #include "world/View.h"
 #include "math/Point.h"
 
@@ -13,7 +13,7 @@ public:
 	virtual ~Person() {}
 	
 private:
-	Seek mSeek;
+	Arrive mArrive;
 };
 
 

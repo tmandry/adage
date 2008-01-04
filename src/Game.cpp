@@ -15,7 +15,7 @@ Game::Game()
 
 void Game::updateWorld()
 {
-	double secsElapsed = mElapsed.restart();
+	double secsElapsed = mElapsed.restart() / 1000.0;
 	mWorld->update(secsElapsed);
 	
 	emit worldUpdated();
