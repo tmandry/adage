@@ -25,6 +25,7 @@ protected:
 
 public:
 	bool inherits(std::string type) const;
+	std::string name() const { return mName; }
 
 	//replace with region? or abstract intersects function?
 	void setPos(const Math::Point& loc) { mLoc = loc; }

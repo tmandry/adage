@@ -1,8 +1,13 @@
 #ifndef PERSON_H_
 #define PERSON_H_
 
+#include <vector>
+#include <utility>
+#include <QColor>
 #include "Actor.h"
 #include "steering/Arrive.h"
+#include "steering/Wander.h"
+#include "steering/Flee.h"
 #include "world/View.h"
 #include "math/Point.h"
 
@@ -13,20 +18,27 @@ public:
 	virtual ~Person() {}
 	
 private:
+	friend class PersonView;
+	virtual void updateEvent(double secsElapsed);
+	
+	std::vector<Flee*> mFlee;
 	Arrive mArrive;
+	Wander mWander;
 };
 
 
 class PersonView : public View
 {
 public:
-	PersonView(Person* parent): mParent(parent) {}
+	PersonView(Actor* parent);
 	~PersonView() {}
 	
 	void paint(QPainter* p);
+	void setColor(QColor color) { mColor = color; }
 	
 private:
-	Person* mParent;
+	Actor* mParent;
+	QColor mColor;
 };
 
 #endif /*PERSON_H_*/

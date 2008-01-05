@@ -69,14 +69,8 @@ struct Vector {
 	//calculate absolute angle (from y-axis)
 	double absAngle() const
 	{
-		double a = angle(Vector(0,1));
-		if (x < 0) a = 2*PI - a;
-		return a;
-	}
-	double iabsAngle() const
-	{
-		double a = angle(Vector(0,-1));
-		if (x < 0) a = 2*PI - a;
+		double a = this->angle(Vector(1,0));
+		if (y > 0) a = 2*PI - a;
 		return a;
 	}
 

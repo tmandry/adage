@@ -11,7 +11,7 @@ class SteeringBehavior;
 class Actor : public MovingEntity
 {
 public:
-	Actor(Entity* parent, std::string name="Actor"): MovingEntity(parent, name) {}
+	Actor(Entity* parent, std::string name="Actor"): MovingEntity(parent, name) { subclass("Actor"); }
 	virtual ~Actor() {}
 	
 	int health() const { return mHealth; }
@@ -23,9 +23,9 @@ public:
 protected:
 	void setHealth(int health) { mHealth = health; }
 	
-private:
 	virtual void updateEvent(double secsElapsed);
 	
+private:
 	typedef std::vector<SteeringBehavior*> SBList;
 
 	int mHealth;

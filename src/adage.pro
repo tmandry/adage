@@ -12,10 +12,13 @@ INCLUDEPATH += . world math ui
 HEADERS += Game.h \
            GameUI.h \
            actors/Actor.h \
+           actors/Ghost.h \
            actors/Person.h \
            actors/steering/Arrive.h \
+           actors/steering/Flee.h \
            actors/steering/Seek.h \
            actors/steering/SteeringBehavior.h \
+           actors/steering/Wander.h \
            math/const.h \
            math/Point.h \
            math/real.h \
@@ -36,9 +39,12 @@ SOURCES += Game.cpp \
            GameUI.cpp \
            main.cpp \
            actors/Actor.cpp \
+           actors/Ghost.cpp \
            actors/Person.cpp \
            actors/steering/Arrive.cpp \
+           actors/steering/Flee.cpp \
            actors/steering/Seek.cpp \
+           actors/steering/Wander.cpp \
            ui/Blueprint.cpp \
            ui/BlueprintWindow.cpp \
            ui/CommWindow.cpp \

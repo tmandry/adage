@@ -47,4 +47,8 @@ void Actor::updateEvent(double secsElapsed)
 	
 	setForce(steeringForce);
 	MovingEntity::updateEvent(secsElapsed);
+	
+	//only update heading if traveling at a reasonable speed
+	if (velocity().length() > 0.01)
+		setHeading(velocity().normal());
 }

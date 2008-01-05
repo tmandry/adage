@@ -1,7 +1,9 @@
+#include <QMatrix>
 #include "MovingEntity.h"
+#include "math/convert.h"
 
 MovingEntity::MovingEntity(Entity* parent, std::string name)
-	:	Entity(parent,name), mMass(1), mMaxSpeed(9.0), mMaxForce(27.0)
+	:	Entity(parent,name), mMass(1), mHeading(1,0), mMaxSpeed(9.0), mMaxForce(27.0)
 { subclass("MovingEntity"); }
 
 void MovingEntity::updateEvent(double secsElapsed)
@@ -15,4 +17,12 @@ void MovingEntity::updateEvent(double secsElapsed)
 	mVelocity.truncate(mMaxSpeed);
 	
 	setPos(pos() + (mVelocity*secsElapsed));
+}
+
+Math::Point MovingEntity::toWorldSpace(Math::Point local) const
+{
+	QMatrix matrix;
+	//matrix.translate(pos().x, pos().y);
+	matrix.rotate( Math::toDegrees(heading().absAngle()) );
+	return Math::Point( matrix.map(local) ) + Math::Vector(pos().x,pos().y);
 }
