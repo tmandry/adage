@@ -10,7 +10,7 @@ Ghost::Ghost(Math::Point pos, Entity* parent, std::string name)
 	setPos(pos);
 	
 	PersonView* view = new PersonView(this);
-	view->setColor(Qt::red);
+	view->setColor(Qt::green); // HULK SMASH!  -- 20070108 iank
 	setView(view);
 	setVisible(true);
 }
