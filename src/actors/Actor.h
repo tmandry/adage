@@ -18,7 +18,7 @@ public:
 	
 	//do not call directly
 	void addSteeringBehavior(SteeringBehavior* s);
-	void delSteeringBehavior(SteeringBehavior* s);
+	void remSteeringBehavior(SteeringBehavior* s);
 	
 protected:
 	void setHealth(int health) { mHealth = health; }

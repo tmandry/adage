@@ -3,6 +3,7 @@
 
 #include "Actor.h"
 #include "steering/Wander.h"
+#include "steering/Pursue.h"
 
 class Ghost : public Actor
 {
@@ -11,6 +12,9 @@ public:
 	virtual ~Ghost() {}
 
 private:
+	friend class PersonView;
+	
+	Pursue mPursue;
 	Wander mWander;
 };
 

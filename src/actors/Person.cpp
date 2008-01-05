@@ -4,6 +4,7 @@
 #include <QRectF>
 #include <QPointF>
 #include "Person.h"
+#include "Ghost.h"
 #include "world/World.h"
 #include "steering/Arrive.h"
 #include "math/convert.h"
@@ -11,14 +12,14 @@
 
 Person::Person(Math::Point pos, Entity* parent, std::string name)
 	:	Actor(parent, name),
-		mArrive(this, Math::Point(50, 0), Arrive::normal),
-		mWander(this, 0.8)
+		mWander(this, 0.5)
 {
 	subclass("Person");
 	
 	setPos(pos);
-	setMaxSpeed(7.5);
-	mArrive.off();
+	setMaxSpeed(7.0);
+	
+	addSteeringBehavior(&mWander);
 	
 	setView(new PersonView(this));
 	setVisible(true);
@@ -26,13 +27,18 @@ Person::Person(Math::Point pos, Entity* parent, std::string name)
 
 void Person::updateEvent(double secsElapsed)
 {
-	const World::EntityList& ghosts(world()->findEntities("Ghost"));
+	EntityList<Ghost>::const_type ghosts = world()->findEntities<Ghost>("Ghost");
 	
-	for (unsigned int i=0; i<mFlee.size(); ++i) delete mFlee[i];
-	mFlee.resize(ghosts.size());
+	for (unsigned int i=0; i<mEvade.size(); ++i) {
+		remSteeringBehavior(mEvade[i]);
+		delete mEvade[i];
+	}
+	mEvade.resize(ghosts.second - ghosts.first);
 	
-	for (unsigned int i=0; i<ghosts.size(); ++i)
-		mFlee[i] = new Flee(this, ghosts[i]->pos());
+	for (unsigned int i = 0; i < ghosts.second-ghosts.first; ++i) {
+		mEvade[i] = new Evade(this, *(ghosts.first+i));
+		addSteeringBehavior(mEvade[i]);
+	}
 	
 	Actor::updateEvent(secsElapsed);
 }
@@ -60,4 +66,16 @@ void PersonView::paint(QPainter* p)
 	p->drawConvexPolygon(points, 3);
 	
 	p->restore();
+	
+	if (mParent->inherits("Ghost")) {
+		const MovingEntity* t = ((Ghost*)mParent)->mPursue.mTarget;
+		QRectF icon(
+			t->pos().x - 2.1, t->pos().y - 2.1,
+			4.2, 4.2
+		);
+		
+		p->setPen(QPen(QBrush(Qt::red), 0.6));
+		p->setBrush(Qt::NoBrush);
+		p->drawEllipse(icon);
+	}
 }

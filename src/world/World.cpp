@@ -14,7 +14,7 @@ World::~World()
 
 void World::removeEntity(std::string type, Entity* e)
 {
-	EntityList& list(mEntities[type]);
+	EntityVector& list(mEntities[type]);
 	
 	//faster way to remove an element since this is an unordered list
 	std::swap(

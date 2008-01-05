@@ -15,7 +15,9 @@ HEADERS += Game.h \
            actors/Ghost.h \
            actors/Person.h \
            actors/steering/Arrive.h \
+           actors/steering/Evade.h \
            actors/steering/Flee.h \
+           actors/steering/Pursue.h \
            actors/steering/Seek.h \
            actors/steering/SteeringBehavior.h \
            actors/steering/Wander.h \
@@ -42,7 +44,9 @@ SOURCES += Game.cpp \
            actors/Ghost.cpp \
            actors/Person.cpp \
            actors/steering/Arrive.cpp \
+           actors/steering/Evade.cpp \
            actors/steering/Flee.cpp \
+           actors/steering/Pursue.cpp \
            actors/steering/Seek.cpp \
            actors/steering/Wander.cpp \
            ui/Blueprint.cpp \

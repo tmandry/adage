@@ -20,10 +20,11 @@ GameUI::GameUI()
 	
 	//TEST GAME ENTITIES GO HERE
 	new Building(mGame->world());
-	for (int i=0; i<3; ++i)
-		new Ghost(Math::Point(Math::randFloat(-40,40),Math::randFloat(-40,40)), mGame->world());
+	
 	for (int i=0; i<50; ++i)
 		new Person(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());
+	for (int i=0; i<3; ++i)
+		new Ghost(Math::Point(Math::randFloat(-40,40),Math::randFloat(-40,40)), mGame->world());
 	
 	resize(930, 640);
 	setWindowTitle("Adage");

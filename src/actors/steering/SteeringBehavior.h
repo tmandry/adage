@@ -10,12 +10,12 @@ public:
 	SteeringBehavior(Actor* parent, double factor, bool on=true)
 		:	mParent(parent), mFactor(factor), mOn(on)
 	{
-		mParent->addSteeringBehavior(this);
+		/*mParent->addSteeringBehavior(this);*/
 	}
 	
 	virtual ~SteeringBehavior()
 	{
-		mParent->delSteeringBehavior(this);
+		/*mParent->delSteeringBehavior(this);*/
 	}
 	
 	virtual Math::Vector calculate() = 0;

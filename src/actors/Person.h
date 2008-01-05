@@ -7,7 +7,7 @@
 #include "Actor.h"
 #include "steering/Arrive.h"
 #include "steering/Wander.h"
-#include "steering/Flee.h"
+#include "steering/Evade.h"
 #include "world/View.h"
 #include "math/Point.h"
 
@@ -21,8 +21,7 @@ private:
 	friend class PersonView;
 	virtual void updateEvent(double secsElapsed);
 	
-	std::vector<Flee*> mFlee;
-	Arrive mArrive;
+	std::vector<Evade*> mEvade;
 	Wander mWander;
 };
 

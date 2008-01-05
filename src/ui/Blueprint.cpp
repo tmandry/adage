@@ -27,7 +27,7 @@ Blueprint::~Blueprint()
 void Blueprint::setZoom(float zoom)
 {	
 	zoom = std::max(zoom, 0.1F);
-	zoom = std::min(zoom, 5.0F);
+	zoom = std::min(zoom, 3.0F);
 	
 	if (mZoom == zoom) return;
 	

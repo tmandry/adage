@@ -11,7 +11,7 @@ void Actor::addSteeringBehavior(SteeringBehavior* s)
 	);
 }
 
-void Actor::delSteeringBehavior(SteeringBehavior* s)
+void Actor::remSteeringBehavior(SteeringBehavior* s)
 {
 	mSteering.erase(
 		std::find(mSteering.begin(), mSteering.end(), s)
