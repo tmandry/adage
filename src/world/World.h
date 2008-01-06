@@ -7,18 +7,7 @@
 #include <cassert>
 #include <utility>
 #include "Entity.h"
-#include "detail/StaticCastIterator.h"
-
-template<class E>
-class EntityList
-{
-public:
-	typedef StaticCastIterator<E*, typename std::vector<Entity*>::iterator > iterator;
-	typedef StaticCastIterator<const E*, typename std::vector<Entity*>::const_iterator > const_iterator;
-	typedef std::pair<iterator, iterator> type;
-	typedef std::pair<const_iterator, const_iterator> const_type;
-};
-
+#include "EntityList.h"
 
 //forward declaration
 class Game;
@@ -39,11 +28,11 @@ public:
 	void removeEntity(std::string type, Entity* e);
 	
 	template<class E>
-	typename EntityList<E>::const_type findEntities(std::string type) const
+	ConstEntityList<E> findEntities(std::string type) const
 	{
 		EntityMap::const_iterator result = mEntities.find(type);
 		assert(result != mEntities.end());
-		return std::make_pair<>(result->second.begin(), result->second.end());
+		return ConstEntityList<E>(result->second);
 	}
 	
 	Game* game() const { return mGame; }

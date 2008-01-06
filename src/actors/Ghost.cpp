@@ -22,7 +22,7 @@ Ghost::Ghost(Math::Point pos, Entity* parent, std::string name)
 	setVisible(true);
 	
 	//pick a random person to pursue
-	EntityList<Person>::const_type people = world()->findEntities<Person>("Person");
-	int idx = Math::randInt(0, people.second-people.first);
-	mPursue.setTarget(*(people.first + idx));
+	ConstEntityList<Person> people = world()->findEntities<Person>("Person");
+	int idx = Math::randInt(0, people.size());
+	mPursue.setTarget(people[idx]);
 }

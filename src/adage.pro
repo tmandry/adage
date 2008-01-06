@@ -21,6 +21,7 @@ HEADERS += Game.h \
            actors/steering/Seek.h \
            actors/steering/SteeringBehavior.h \
            actors/steering/Wander.h \
+           detail/StaticCastIterator.h \
            math/const.h \
            math/Point.h \
            math/real.h \
@@ -33,6 +34,7 @@ HEADERS += Game.h \
            world/Building.h \
            world/CellSpacePartition.h \
            world/Entity.h \
+           world/EntityList.h \
            world/MovingEntity.h \
            world/View.h \
            world/Wall.h \

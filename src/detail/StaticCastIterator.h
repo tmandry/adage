@@ -1,6 +1,8 @@
 #ifndef STATICCASTITERATOR_H_
 #define STATICCASTITERATOR_H_
 
+namespace Detail {
+
 template<class Type, class Iterator>
 class StaticCastIterator;
 
@@ -55,5 +57,7 @@ private:
 	
 	Iterator mIt;
 };
+
+} //namespace Detail
 
 #endif /*STATICCASTITERATOR_H_*/

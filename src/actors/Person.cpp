@@ -27,16 +27,16 @@ Person::Person(Math::Point pos, Entity* parent, std::string name)
 
 void Person::updateEvent(double secsElapsed)
 {
-	EntityList<Ghost>::const_type ghosts = world()->findEntities<Ghost>("Ghost");
+	ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
 	
 	for (unsigned int i=0; i<mEvade.size(); ++i) {
 		remSteeringBehavior(mEvade[i]);
 		delete mEvade[i];
 	}
-	mEvade.resize(ghosts.second - ghosts.first);
+	mEvade.resize(ghosts.size());
 	
-	for (unsigned int i = 0; i < ghosts.second-ghosts.first; ++i) {
-		mEvade[i] = new Evade(this, *(ghosts.first+i));
+	for (unsigned int i = 0; i < ghosts.size(); ++i) {
+		mEvade[i] = new Evade(this, ghosts[i]);
 		addSteeringBehavior(mEvade[i]);
 	}
 	
