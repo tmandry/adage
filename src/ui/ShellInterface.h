@@ -16,11 +16,13 @@ public:
 	ShellInterface();
 	virtual ~ShellInterface();
 
+	QSize sizeHint() const;
+
 private:
 
 	void keyPressEvent(QKeyEvent *event);
 
-	//QWidget* mParent;
+	QWidget* mParent;
 	QLabel *mInput;
 	QVBoxLayout* mLayout;
 };

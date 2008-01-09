@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QDockWidget>
 #include <QTabWidget>
+#include <QKeyEvent>
 
 class ShellWindow : public QWidget
 {
@@ -14,6 +15,7 @@ public:
 	virtual QSize sizeHint() const; 
 	
 private:
+
 	QDockWidget *mParent;
 	QTabWidget *mShellTab;
 };

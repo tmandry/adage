@@ -4,6 +4,9 @@
 #include <QSizePolicy>
 #include <QSize>
 #include <QTabWidget>
+#include <QKeyEvent>
+
+#include <iostream>
 
 ShellWindow::ShellWindow(QDockWidget* parent): QWidget(parent), mParent(parent)
 {
@@ -13,6 +16,9 @@ ShellWindow::ShellWindow(QDockWidget* parent): QWidget(parent), mParent(parent)
 
 	mShellTab = new QTabWidget(this);
 	mShellTab->addTab(new ShellInterface(this), tr("adgterm"));
+
+	setFocusProxy(mShellTab);
+	setFocusPolicy(Qt::WheelFocus);
 }
 
 ShellWindow::~ShellWindow()
