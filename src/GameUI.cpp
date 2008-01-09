@@ -8,16 +8,19 @@
 #include "ui/BlueprintWindow.h"
 #include "ui/ShellWindow.h"
 #include "ui/CommWindow.h"
+#include "ui/ShellInterface.h"
 #include "world/Building.h"
 #include "actors/Person.h"
 #include "actors/Ghost.h"
 #include "math/rand.h"
 
+#include <iostream>
+
 GameUI::GameUI()
 {
 	mGame = new Game();
 	connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
-	
+
 	//TEST GAME ENTITIES GO HERE
 	new Building(mGame->world());
 	
@@ -46,6 +49,7 @@ GameUI::GameUI()
 	
 	QDockWidget *dock = new QDockWidget(tr("Shell"), this);
 	ShellWindow *shell = new ShellWindow(dock);
+	//ShellInterface *shellInt = new ShellInterface(shell);
 	dock->setWidget(shell);
 	addDockWidget(Qt::RightDockWidgetArea, dock);
 	

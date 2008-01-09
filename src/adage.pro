@@ -30,6 +30,7 @@ HEADERS += Game.h \
            ui/Blueprint.h \
            ui/BlueprintWindow.h \
            ui/CommWindow.h \
+           ui/ShellInterface.h \
            ui/ShellWindow.h \
            world/Building.h \
            world/CellSpacePartition.h \
@@ -54,6 +55,7 @@ SOURCES += Game.cpp \
            ui/Blueprint.cpp \
            ui/BlueprintWindow.cpp \
            ui/CommWindow.cpp \
+           ui/ShellInterface.cpp \
            ui/ShellWindow.cpp \
            world/Building.cpp \
            world/CellSpacePartition.cpp \

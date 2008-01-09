@@ -1,13 +1,18 @@
 #include "ShellWindow.h"
+#include "ShellInterface.h"
 
 #include <QSizePolicy>
 #include <QSize>
+#include <QTabWidget>
 
 ShellWindow::ShellWindow(QDockWidget* parent): QWidget(parent), mParent(parent)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	
-	mParent->setWindowTitle("Shell - tyler@gyro:~");
+	mParent->setWindowTitle("Adage Terminal Interface");
+
+	mShellTab = new QTabWidget(this);
+	mShellTab->addTab(new ShellInterface(), tr("adgterm"));
 }
 
 ShellWindow::~ShellWindow()

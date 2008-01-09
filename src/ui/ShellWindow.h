@@ -3,9 +3,7 @@
 
 #include <QWidget>
 #include <QDockWidget>
-
-//TODO: title, new shell button, shell tab bar (?)
-//use QDockWidgets for tabs?
+#include <QTabWidget>
 
 class ShellWindow : public QWidget
 {
@@ -17,6 +15,7 @@ public:
 	
 private:
 	QDockWidget *mParent;
+	QTabWidget *mShellTab;
 };
 
 #endif /*SHELLWINDOW_H_*/
