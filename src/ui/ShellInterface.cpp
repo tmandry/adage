@@ -7,16 +7,9 @@
 
 #include <iostream>
 
-ShellInterface::ShellInterface(QWidget *parent) : QWidget(parent)
+ShellInterface::ShellInterface(QWidget *parent) : QLabel(parent)
 {
-	mInput = new QLabel;
-	mParent = parent;
-
-	mInput->setWordWrap(true);
-	
-	mLayout = new QVBoxLayout;
-	mLayout->addWidget(mInput);
-	setLayout(mLayout);
+	setWordWrap(true);
 
 	setFocusPolicy(Qt::WheelFocus);
 }
@@ -32,7 +25,7 @@ QSize ShellInterface::sizeHint() const
 
 void ShellInterface::keyPressEvent(QKeyEvent *event)
 {
-	QString text = mInput->text();
+	QString text( this->text() );
 
 	switch(event->key())
 	{
@@ -43,5 +36,5 @@ void ShellInterface::keyPressEvent(QKeyEvent *event)
 		default:
 			text += event->text();
 	}
-	mInput->setText(text);
+	setText(text);
 }

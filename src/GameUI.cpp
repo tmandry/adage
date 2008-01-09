@@ -19,8 +19,6 @@
 
 GameUI::GameUI()
 {
-	
-	std::cout << "hi" << std::endl;
 	mGame = new Game();
 	connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
 

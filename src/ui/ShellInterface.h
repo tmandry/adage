@@ -7,24 +7,18 @@
 
 class QVBoxLayout;
 
-class ShellInterface : public QWidget
+class ShellInterface : protected QLabel
 {
 	Q_OBJECT
 
 public:
 	ShellInterface(QWidget* parent=0);
-	ShellInterface();
 	virtual ~ShellInterface();
 
 	QSize sizeHint() const;
 
 private:
-
 	void keyPressEvent(QKeyEvent *event);
-
-	QWidget* mParent;
-	QLabel *mInput;
-	QVBoxLayout* mLayout;
 };
 
 #endif	/*SHELLINTERFACE_H_*/
