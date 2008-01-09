@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-ShellInterface::ShellInterface()//QWidget *parent) : mParent(parent)
+ShellInterface::ShellInterface(QWidget *parent) : QWidget(parent)
 {
 	mInput = new QLabel("Hello, World", this);
 	setFocusPolicy(Qt::WheelFocus);

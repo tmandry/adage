@@ -13,11 +13,14 @@
 #include "actors/Person.h"
 #include "actors/Ghost.h"
 #include "math/rand.h"
+#include <iostream>
 
 #include <iostream>
 
 GameUI::GameUI()
 {
+	
+	std::cout << "hi" << std::endl;
 	mGame = new Game();
 	connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
 

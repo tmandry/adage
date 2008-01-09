@@ -12,7 +12,7 @@ ShellWindow::ShellWindow(QDockWidget* parent): QWidget(parent), mParent(parent)
 	mParent->setWindowTitle("Adage Terminal Interface");
 
 	mShellTab = new QTabWidget(this);
-	mShellTab->addTab(new ShellInterface(), tr("adgterm"));
+	mShellTab->addTab(new ShellInterface(this), tr("adgterm"));
 }
 
 ShellWindow::~ShellWindow()

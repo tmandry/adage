@@ -10,7 +10,7 @@ class ShellInterface : public QWidget
 	Q_OBJECT
 
 public:
-	//ShellInterface(QWidget* parent=0);
+	ShellInterface(QWidget* parent=0);
 	ShellInterface();
 	virtual ~ShellInterface();
 
