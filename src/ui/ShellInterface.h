@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QKeyEvent>
 
+class QVBoxLayout;
+
 class ShellInterface : public QWidget
 {
 	Q_OBJECT
@@ -20,6 +22,7 @@ private:
 
 	//QWidget* mParent;
 	QLabel *mInput;
+	QVBoxLayout* mLayout;
 };
 
 #endif	/*SHELLINTERFACE_H_*/

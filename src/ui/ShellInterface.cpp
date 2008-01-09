@@ -1,14 +1,18 @@
 #include <QWidget>
 #include <QLabel>
 #include <QKeyEvent>
+#include <QVBoxLayout>
 
 #include "ShellInterface.h"
 
-#include <iostream>
-
 ShellInterface::ShellInterface(QWidget *parent) : QWidget(parent)
 {
-	mInput = new QLabel("Hello, World", this);
+	mInput = new QLabel("Hello, World");
+	
+	mLayout = new QVBoxLayout;
+	mLayout->addWidget(mInput);
+	setLayout(mLayout);
+	
 	setFocusPolicy(Qt::WheelFocus);
 }
 
