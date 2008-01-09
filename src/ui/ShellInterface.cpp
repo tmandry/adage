@@ -10,17 +10,14 @@
 ShellInterface::ShellInterface(QWidget *parent) : QLabel(parent)
 {
 	setWordWrap(true);
+	setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
 	setFocusPolicy(Qt::WheelFocus);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 ShellInterface::~ShellInterface()
 {
-}
-
-QSize ShellInterface::sizeHint() const
-{
-	return QSize(200,200);
 }
 
 void ShellInterface::keyPressEvent(QKeyEvent *event)

@@ -8,16 +8,14 @@
 
 #include <iostream>
 
-ShellWindow::ShellWindow(QDockWidget* parent): QWidget(parent), mParent(parent)
+ShellWindow::ShellWindow(QDockWidget* p): QTabWidget(p)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	
-	mParent->setWindowTitle("Adage Terminal Interface");
+	window()->setWindowTitle("Adage Terminal Interface");
 
-	mShellTab = new QTabWidget(this);
-	mShellTab->addTab(new ShellInterface(this), tr("adgterm"));
+	addTab(new ShellInterface(this), tr("adgterm"));
 
-	setFocusProxy(mShellTab);
 	setFocusPolicy(Qt::WheelFocus);
 }
 

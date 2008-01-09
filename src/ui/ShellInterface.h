@@ -15,8 +15,6 @@ public:
 	ShellInterface(QWidget* parent=0);
 	virtual ~ShellInterface();
 
-	QSize sizeHint() const;
-
 private:
 	void keyPressEvent(QKeyEvent *event);
 };
