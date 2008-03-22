@@ -12,7 +12,7 @@ ShellWindow::ShellWindow(QDockWidget* p): QTabWidget(p)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	
-	window()->setWindowTitle("Adage Terminal Interface");
+	setWindowTitle("Adage Terminal Interface");
 
 	addTab(new ShellInterface(this), tr("adgterm"));
 
