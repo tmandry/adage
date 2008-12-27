@@ -13,7 +13,10 @@ public:
 
 private:
 	friend class PersonView;
-	
+
+	virtual void updateEvent(double secsElapsed);
+	double newTargetTimer;
+
 	Pursue mPursue;
 	Wander mWander;
 };

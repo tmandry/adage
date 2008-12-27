@@ -15,6 +15,7 @@ HEADERS += Game.h \
            actors/Ghost.h \
            actors/Person.h \
            actors/steering/Arrive.h \
+           actors/steering/AvoidWalls.h \
            actors/steering/Evade.h \
            actors/steering/Flee.h \
            actors/steering/Pursue.h \
@@ -47,11 +48,13 @@ SOURCES += Game.cpp \
            actors/Ghost.cpp \
            actors/Person.cpp \
            actors/steering/Arrive.cpp \
+           actors/steering/AvoidWalls.cpp \
            actors/steering/Evade.cpp \
            actors/steering/Flee.cpp \
            actors/steering/Pursue.cpp \
            actors/steering/Seek.cpp \
            actors/steering/Wander.cpp \
+           math/Segment.cpp \
            ui/Blueprint.cpp \
            ui/BlueprintWindow.cpp \
            ui/CommWindow.cpp \
