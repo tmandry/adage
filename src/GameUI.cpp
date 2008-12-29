@@ -12,6 +12,7 @@
 #include "world/Building.h"
 #include "actors/Person.h"
 #include "actors/Ghost.h"
+#include "actors/GhostBuster.h"
 #include "math/rand.h"
 #include <iostream>
 
@@ -25,8 +26,10 @@ GameUI::GameUI()
 
 	for (int i=0; i<50; ++i)
 		new Person(Math::Point(Math::randFloat(-100,100),Math::randFloat(-50,50)), mGame->world());
-	for (int i=0; i<3; ++i)
-		new Ghost(Math::Point(Math::randFloat(-40,40),Math::randFloat(-40,40)), mGame->world());
+	for (int i=0; i<6; ++i)
+		new Ghost(Math::Point(Math::randFloat(-70,70),Math::randFloat(-40,40)), mGame->world());
+	for (int i=0; i<6; ++i)
+		new GhostBuster(Math::Point(Math::randFloat(-100,100),Math::randFloat(-50,50)), mGame->world());
 
 	resize(930, 640);
 	setWindowTitle("Adage");

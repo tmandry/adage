@@ -36,25 +36,30 @@ class StaticCastIterator
 public:
 	StaticCastIterator(Iterator it): mIt(it) {}
 	virtual ~StaticCastIterator() {}
-	
+
 	Type operator*()
 	{
 		return static_cast<Type>(*mIt);
 	}
-	
+
+	Type operator->()
+	{
+		return static_cast<Type>(*mIt);
+	}
+
 	void operator++() { mIt++; }
 	void operator--() { mIt--; }
-	
+
 	void operator=(StaticCastIterator<Type,Iterator> rhs) { mIt = rhs.mIt; }
-	
+
 private:
 	friend bool operator==<>(StaticCastIterator<Type,Iterator> lhs, StaticCastIterator<Type,Iterator> rhs);
 	friend bool operator!=<>(StaticCastIterator<Type,Iterator> lhs, StaticCastIterator<Type,Iterator> rhs);
 	friend bool operator< <> (StaticCastIterator<Type,Iterator> lhs, StaticCastIterator<Type,Iterator> rhs);
 	friend StaticCastIterator<Type,Iterator> operator+<>(StaticCastIterator<Type,Iterator> lhs, unsigned int rhs);
 	friend StaticCastIterator<Type,Iterator> operator-<>(StaticCastIterator<Type,Iterator> lhs, unsigned int rhs);
-	friend unsigned int operator-<>(StaticCastIterator<Type,Iterator> lhs, StaticCastIterator<Type,Iterator> lhs); 
-	
+	friend unsigned int operator-<>(StaticCastIterator<Type,Iterator> lhs, StaticCastIterator<Type,Iterator> rhs);
+
 	Iterator mIt;
 };
 

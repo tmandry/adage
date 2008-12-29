@@ -10,16 +10,16 @@ class QTimer;
 class Game : public QObject
 {
 	Q_OBJECT
-	
+
 public:
 	Game();
 	virtual ~Game() { delete mWorld; }
-	
-	World* world() const { return mWorld; }
+
+	Pointer<World> world() const { return mWorld->world(); }
 
 private slots:
 	void updateWorld();
-	
+
 signals:
 	void worldUpdated();
 
@@ -27,7 +27,7 @@ private:
 	static const int fps = 50;
 
 	World* mWorld;
-	
+
 	//fires events every update
 	QTimer* mTimer;
 	//measures actual time elapsed between updates

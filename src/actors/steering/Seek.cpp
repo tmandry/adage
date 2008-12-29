@@ -1,7 +1,7 @@
 #include "Seek.h"
 #include <iostream>
 
-Seek::Seek(Actor* parent, Math::Point target)
+Seek::Seek(Pointer<Actor> parent, Math::Point target)
 	:	SteeringBehavior(parent, 1.0),
 		mTarget(target)
 {
@@ -10,6 +10,6 @@ Seek::Seek(Actor* parent, Math::Point target)
 Math::Vector Seek::calculate()
 {
 	Math::Vector desiredVelocity = (mTarget - parent()->pos()).normal() * parent()->maxSpeed();
-		
+
 	return desiredVelocity - parent()->velocity();
 }

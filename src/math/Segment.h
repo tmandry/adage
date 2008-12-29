@@ -16,15 +16,15 @@ struct Segment
 		{}
 	Segment()
 		{}
-	virtual ~Segment() {}
+	~Segment() {}
 
 	operator QLineF() const
 	{
 		return QLineF(a.x,a.y, b.x,b.y);
 	}
 
-	const bool operator==(const Segment& rhs) const {return (a==rhs.a && b==rhs.b) || (a==rhs.b && b==rhs.a);}
-	const bool operator!=(const Segment& rhs) const {return (a!=rhs.a || b!=rhs.b) && (a!=rhs.b || b!=rhs.a);}
+	bool operator==(const Segment& rhs) const {return (a==rhs.a && b==rhs.b) || (a==rhs.b && b==rhs.a);}
+	bool operator!=(const Segment& rhs) const {return (a!=rhs.a || b!=rhs.b) && (a!=rhs.b || b!=rhs.a);}
 };
 
 inline double length(const Segment& s) {return distance(s.a, s.b);}

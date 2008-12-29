@@ -8,6 +8,7 @@
 #include <utility>
 #include "Entity.h"
 #include "EntityList.h"
+#include "Pointer.h"
 
 //forward declaration
 class Game;
@@ -15,18 +16,18 @@ class Game;
 class World : public Entity
 {
 public:
-	typedef std::vector<Entity*> EntityVector;
+	typedef std::vector<Pointer<Entity> > EntityVector;
 	typedef std::map<std::string, EntityVector> EntityMap;
 
 	World(Game* game, std::string name="World");
 	virtual ~World();
-	
+
 	void update(double secsElapsed) { Entity::update(secsElapsed); }
 	void paint(QPainter* p) { Entity::paint(p); }
-	
-	void addEntity(std::string type, Entity* e) { mEntities[type].push_back(e); }
-	void removeEntity(std::string type, Entity* e);
-	
+
+	void addEntity(std::string type, Pointer<Entity> e) { assert(e != 0); mEntities[type].push_back(e); }
+	void removeEntity(std::string type, Pointer<Entity> e);
+
 	template<class E>
 	ConstEntityList<E> findEntities(std::string type) const
 	{
@@ -34,14 +35,15 @@ public:
 		assert(result != mEntities.end());
 		return ConstEntityList<E>(result->second);
 	}
-	
+
 	Game* game() const { return mGame; }
 
 private:
-	World* theWorld() { return this; }
+	virtual Pointer<World> theWorld() { return Pointer<World>(this); }
 
 	EntityMap mEntities;
 
 	Game* mGame;
+
 };
 #endif /*WORLD_H_*/

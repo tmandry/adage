@@ -11,9 +11,9 @@
 #include "math/convert.h"
 #include <cassert>
 
-Person::Person(Math::Point pos, Entity* parent, std::string name)
+Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	:	Actor(parent, name),
-		mWander(this, 0.5)
+		mWander(Pointer<Actor>::staticPointerCast(pointer()), 0.5)
 {
 	subclass("Person");
 
@@ -21,15 +21,15 @@ Person::Person(Math::Point pos, Entity* parent, std::string name)
 	setMaxSpeed(7.0);
 
 	addSteeringBehavior(&mWander);
-	addSteeringBehavior(new AvoidWalls(this));
+	addSteeringBehavior(new AvoidWalls(Pointer<Actor>::staticPointerCast(pointer())));
 
-	setView(new PersonView(this));
+	setView(new PersonView(Pointer<Actor>::staticPointerCast(pointer())));
 	setVisible(true);
 }
 
 void Person::updateEvent(double secsElapsed)
 {
-	ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
+	static ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
 
 	for (unsigned int i=0; i<mEvade.size(); ++i) {
 		remSteeringBehavior(mEvade[i]);
@@ -38,7 +38,7 @@ void Person::updateEvent(double secsElapsed)
 	mEvade.resize(ghosts.size());
 
 	for (unsigned int i = 0; i < ghosts.size(); ++i) {
-		mEvade[i] = new Evade(this, ghosts[i]);
+		mEvade[i] = new Evade(Pointer<Actor>::staticPointerCast(pointer()), ghosts[i]);
 		addSteeringBehavior(mEvade[i]);
 	}
 
@@ -46,7 +46,7 @@ void Person::updateEvent(double secsElapsed)
 }
 
 
-PersonView::PersonView(Actor* parent)
+PersonView::PersonView(Pointer<Actor> parent)
 	:	mParent(parent),
 		mColor(Qt::white)
 {}
@@ -69,7 +69,7 @@ void PersonView::paint(QPainter* p)
 
 	p->restore();
 
-	if (mParent->inherits("Ghost")) {
+	/*if (mParent->inherits("Ghost")) {
 		const MovingEntity* t = ((Ghost*)mParent)->mPursue.mTarget;
 		QRectF icon(
 			t->pos().x - 2.1, t->pos().y - 2.1,
@@ -79,5 +79,5 @@ void PersonView::paint(QPainter* p)
 		p->setPen(QPen(QBrush(Qt::red), 0.6));
 		p->setBrush(Qt::NoBrush);
 		p->drawEllipse(icon);
-	}
+	}*/
 }

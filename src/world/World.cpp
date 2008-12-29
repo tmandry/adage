@@ -1,9 +1,10 @@
 #include <algorithm>
 #include <utility>
 #include "World.h"
+#include "Game.h"
 
 World::World(Game* game, std::string name)
-	:	Entity(0, name),
+	:	Entity(Pointer<Entity>(), name),
 		mGame(game)
 {
 }
@@ -12,14 +13,14 @@ World::~World()
 {
 }
 
-void World::removeEntity(std::string type, Entity* e)
+void World::removeEntity(std::string type, Pointer<Entity> e)
 {
 	EntityVector& list(mEntities[type]);
-	
+
 	//faster way to remove an element since this is an unordered list
 	std::swap(
 		*( std::find(list.begin(), list.end(), e) ),
-		*( list.end() )
+		list.back()
 	);
 	list.pop_back();
 }

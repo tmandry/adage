@@ -7,13 +7,13 @@
 class Flee : public SteeringBehavior
 {
 public:
-	Flee(Actor* parent, Math::Point target=Math::Point(), double maxDistance=100.0);
+	Flee(Pointer<Actor> parent, Math::Point target=Math::Point(), double maxDistance=100.0);
 	virtual ~Flee() {}
-	
+
 	Math::Vector calculate();
-	
+
 	void setTarget(Math::Point target) { mTarget = target; }
-	
+
 private:
 	Math::Point mTarget;
 	double mMaxDistance;

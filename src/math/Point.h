@@ -11,24 +11,25 @@ namespace Math {
 struct Point
 {
 	double x,y;
-	
-	Point() {}
+
+	Point(): x(0), y(0) {}
 	Point(double X, double Y): x(X),y(Y) {}
 	explicit Point(const QPointF& p): x(p.x()),y(p.y()) {}
+	Point(const Point& p): x(p.x), y(p.y) {}
 	virtual ~Point() {}
-	
+
 	operator QPointF()
 	{
 		return QPointF(x,y);
 	}
-	
+
 	/*const Point& operator+= (const Vector& rhs)
 	{
 		x += rhs.x;
 		y += rhs.y;
 		return *this;
 	}
-	
+
 	const Point& operator-= (const Vector& rhs)
 	{
 		x -= rhs.x;
@@ -42,7 +43,7 @@ inline double distance(const Point& a, const Point& b)
 {
 	double distX = a.x - b.x;
 	double distY = a.y - b.y;
-	
+
 	return sqrt(distX*distX + distY*distY);
 }
 
@@ -51,7 +52,7 @@ inline double distanceSq(const Point& a, const Point& b)
 {
 	double distX = a.x - b.x;
 	double distY = a.y - b.y;
-	
+
 	return distX*distX + distY*distY;
 }
 

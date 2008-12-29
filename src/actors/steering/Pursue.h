@@ -7,16 +7,16 @@
 class Pursue : public SteeringBehavior
 {
 public:
-	Pursue(Actor* parent, const MovingEntity* target=0);
+	Pursue(Pointer<Actor> parent, const Pointer<MovingEntity> target=Pointer<MovingEntity>());
 	virtual ~Pursue() {}
-	
-	void setTarget(const MovingEntity* target) { mTarget = target; }
-	
+
+	void setTarget(const Pointer<const MovingEntity>& target) { mTarget = target; }
+
 	Math::Vector calculate();
-	
+
 private:
 	friend class PersonView;
-	MovingEntity const* mTarget;
+	Pointer<const MovingEntity> mTarget;
 	Seek mSeek;
 };
 

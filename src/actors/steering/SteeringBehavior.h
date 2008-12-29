@@ -7,30 +7,30 @@
 class SteeringBehavior
 {
 public:
-	SteeringBehavior(Actor* parent, double factor, bool on=true)
+	SteeringBehavior(Pointer<Actor> parent, double factor, bool on=true)
 		:	mParent(parent), mFactor(factor), mOn(on)
 	{
 		/*mParent->addSteeringBehavior(this);*/
 	}
-	
+
 	virtual ~SteeringBehavior()
 	{
 		/*mParent->delSteeringBehavior(this);*/
 	}
-	
+
 	virtual Math::Vector calculate() = 0;
-	
+
 	void on() { mOn = true; }
 	void off() { mOn = false; }
 	bool isOn() const { return mOn; }
-	
+
 	double factor() const { return mFactor; }
 
 protected:
-	Actor* parent() const { return mParent; }
+	Pointer<Actor> parent() const { return mParent; }
 
 private:
-	Actor* mParent;
+	Pointer<Actor> mParent;
 	double mFactor;
 	bool mOn;
 };

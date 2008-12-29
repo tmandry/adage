@@ -14,13 +14,13 @@
 class Person : public Actor
 {
 public:
-	Person(Math::Point pos, Entity* parent, std::string name="Person");
+	Person(Math::Point pos, Pointer<Entity> parent, std::string name="Person");
 	virtual ~Person() {}
-	
+
 private:
 	friend class PersonView;
 	virtual void updateEvent(double secsElapsed);
-	
+
 	std::vector<Evade*> mEvade;
 	Wander mWander;
 };
@@ -29,14 +29,14 @@ private:
 class PersonView : public View
 {
 public:
-	PersonView(Actor* parent);
+	PersonView(Pointer<Actor> parent);
 	~PersonView() {}
-	
+
 	void paint(QPainter* p);
 	void setColor(QColor color) { mColor = color; }
-	
+
 private:
-	Actor* mParent;
+	Pointer<Actor> mParent;
 	QColor mColor;
 };
 

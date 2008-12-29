@@ -1,7 +1,7 @@
 #include <cassert>
 #include "Pursue.h"
 
-Pursue::Pursue(Actor* parent, const MovingEntity* target)
+Pursue::Pursue(Pointer<Actor> parent, const Pointer<MovingEntity> target)
 	:	SteeringBehavior(parent, 1.0),
 		mTarget(target),
 		mSeek(parent)
@@ -10,10 +10,10 @@ Pursue::Pursue(Actor* parent, const MovingEntity* target)
 
 Math::Vector Pursue::calculate()
 {
-	assert(mTarget != 0);
-	
+	assert(mTarget);
+
 	Math::Vector toTarget = mTarget->pos() - parent()->pos();
-	
+
 	//if the target is ahead and almost directly facing the agent,
 	//we can seek directly to its position
 	if (
@@ -23,18 +23,18 @@ Math::Vector Pursue::calculate()
 		mSeek.setTarget(mTarget->pos());
 		return mSeek.calculate();
 	}
-	
+
 	//otherwise, we need to predict where they're going to be
-	
+
 	//affects how far to look ahead
 	static const double lookAheadFactor = 1.0;
-	
+
 	//lookahead time is proportional to the distance to the target,
 	//and inversely proportional to the sum of the agents' speeds
 	double lookAhead =
 		lookAheadFactor * toTarget.length() /
 		(parent()->maxSpeed() + mTarget->velocity().length());
-	
+
 	//now seek to predicted future position
 	mSeek.setTarget(mTarget->pos() + mTarget->velocity()*lookAhead);
 	return mSeek.calculate();

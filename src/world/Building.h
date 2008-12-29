@@ -9,9 +9,9 @@ class Wall;
 class Building : public Entity
 {
 public:
-	Building(Entity* parent, std::string name="Building");
+	Building(Pointer<Entity> parent, std::string name="Building");
 	virtual ~Building();
-	
+
 private:
 	std::vector<Wall*> mWalls;
 };

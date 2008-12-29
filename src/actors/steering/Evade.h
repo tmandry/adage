@@ -7,13 +7,13 @@
 class Evade : public SteeringBehavior
 {
 public:
-	Evade(Actor* parent, const MovingEntity* target=0);
+	Evade(Pointer<Actor> parent, const Pointer<MovingEntity> target=Pointer<MovingEntity>());
 	virtual ~Evade() {}
-	
+
 	Math::Vector calculate();
-	
+
 private:
-	const MovingEntity* mTarget;
+	const Pointer<MovingEntity> mTarget;
 	Flee mFlee;
 };
 

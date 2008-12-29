@@ -7,12 +7,18 @@ TARGET = adage
 CONFIG += debug
 DEPENDPATH += . math ui world
 INCLUDEPATH += . world math ui
+QMAKE_CXXFLAGS_DEBUG += -O0
+QMAKE_LFLAGS_DEBUG += -O0
+#QMAKE_CXXFLAGS_DEBUG += -pg
+#QMAKE_LFLAGS_DEBUG += -pg
 
 # Input
 HEADERS += Game.h \
            GameUI.h \
+           Pointer.h \
            actors/Actor.h \
            actors/Ghost.h \
+           actors/GhostBuster.h \
            actors/Person.h \
            actors/steering/Arrive.h \
            actors/steering/AvoidWalls.h \
@@ -46,6 +52,7 @@ SOURCES += Game.cpp \
            main.cpp \
            actors/Actor.cpp \
            actors/Ghost.cpp \
+           actors/GhostBuster.cpp \
            actors/Person.cpp \
            actors/steering/Arrive.cpp \
            actors/steering/AvoidWalls.cpp \

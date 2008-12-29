@@ -8,13 +8,13 @@
 class Seek : public SteeringBehavior
 {
 public:
-	Seek(Actor* parent, Math::Point target = Math::Point());
+	Seek(Pointer<Actor> parent, Math::Point target = Math::Point());
 	virtual ~Seek() {}
-	
+
 	void setTarget(Math::Point target) { mTarget = target; }
-	
+
 	Math::Vector calculate();
-	
+
 private:
 	Math::Point mTarget;
 };

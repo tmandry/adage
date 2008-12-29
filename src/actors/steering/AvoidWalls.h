@@ -12,7 +12,7 @@
 
 class AvoidWalls: public SteeringBehavior {
 public:
-	AvoidWalls(Actor* parent);
+	AvoidWalls(Pointer<Actor> parent);
 	virtual ~AvoidWalls();
 
 	Math::Vector calculate();

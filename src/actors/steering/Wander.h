@@ -6,14 +6,14 @@
 class Wander : public SteeringBehavior
 {
 public:
-	Wander(Actor* parent, double factor=1.0);
+	Wander(Pointer<Actor> parent, double factor=1.0);
 	virtual ~Wander() {}
-	
+
 	Math::Vector calculate();
-	
+
 
 	Math::Vector mWanderTarget;
-private:	
+private:
 	//parameters of the wander behavior
 	double mJitter;
 	double mRadius;

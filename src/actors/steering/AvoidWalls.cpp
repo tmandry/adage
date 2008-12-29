@@ -3,7 +3,7 @@
 #include "world/World.h"
 #include "world/Wall.h"
 
-AvoidWalls::AvoidWalls(Actor* parent)
+AvoidWalls::AvoidWalls(Pointer<Actor> parent)
 	:	SteeringBehavior(parent, 1.0)
 {
 
@@ -25,13 +25,13 @@ Math::Vector AvoidWalls::calculate()
 	feelers.push_back(Math::Segment(parent()->pos(), parent()->pos() + v3));
 
 	double closestDist = 9999;
-	const Wall* closestWall = 0;
+	Pointer<const Wall> closestWall;
 	Math::Segment closestFeeler;
 
-	ConstEntityList<Wall> walls = parent()->world()->findEntities<Wall>("Wall");
+	static ConstEntityList<Wall> walls = parent()->world()->findEntities<Wall>("Wall");
 
 	for (std::vector<Math::Segment>::iterator feeler = feelers.begin(); feeler < feelers.end(); ++feeler) {
-		for (int i = 0; i < walls.size(); ++i) {
+		for (unsigned int i = 0; i < walls.size(); ++i) {
 			Math::Point point;
 			double dist;
 			if (Math::segmentIntersection(*feeler, walls[i]->segment(), point, dist)) {
@@ -44,7 +44,7 @@ Math::Vector AvoidWalls::calculate()
 		}
 	}
 
-	if (closestWall != 0) {
+	if (closestWall) {
 		double overshoot = 3.0 - closestDist;
 
 		Math::Vector normal = (closestWall->segment().a - closestWall->segment().b).normal().perp();
