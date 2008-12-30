@@ -13,6 +13,7 @@
 
 class Person : public Actor
 {
+	ENTITY(Person)
 public:
 	Person(Math::Point pos, Pointer<Entity> parent, std::string name="Person");
 	virtual ~Person() {}
@@ -22,7 +23,7 @@ private:
 	virtual void updateEvent(double secsElapsed);
 
 	std::vector<Evade*> mEvade;
-	Wander mWander;
+	Wander* mWander;
 };
 
 

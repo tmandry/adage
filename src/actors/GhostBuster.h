@@ -17,6 +17,7 @@
 #include "steering/Pursue.h"
 
 class GhostBuster : public Actor {
+	ENTITY(GhostBuster)
 public:
 	GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string name = "GhostBuster");
 	virtual ~GhostBuster();
@@ -28,9 +29,11 @@ private:
 
 	void newTarget();
 
-	Wander mWander;
-	Pursue mPursue;
+	Wander* mWander;
+	Pursue* mPursue;
 	Pointer<Ghost> mTarget;
+
+	int mKillCount;
 };
 
 #endif /* GHOSTBUSTER_H_ */

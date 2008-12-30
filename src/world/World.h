@@ -33,6 +33,7 @@ public:
 	{
 		EntityMap::const_iterator result = mEntities.find(type);
 		assert(result != mEntities.end());
+		for (unsigned int i = 0; i < result->second.size(); ++i) assert(result->second[i] /*Not returning a deleted entity*/);
 		return ConstEntityList<E>(result->second);
 	}
 

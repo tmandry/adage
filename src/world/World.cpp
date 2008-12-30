@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <utility>
+#include <cassert>
 #include "World.h"
 #include "Game.h"
 
@@ -16,6 +17,7 @@ World::~World()
 void World::removeEntity(std::string type, Pointer<Entity> e)
 {
 	EntityVector& list(mEntities[type]);
+	assert(!list.empty());
 
 	//faster way to remove an element since this is an unordered list
 	std::swap(

@@ -6,9 +6,20 @@
 #include <set>
 #include <QPainter>
 #include <QObject>
+#include <cassert>
 #include "world/View.h"
 #include "math/Point.h"
 #include "Pointer.h"
+
+#define ENTITY(type) \
+	private: \
+	Pointer<type> _mThis; \
+	Pointer<type> pointer() const { assert(_mThis); return _mThis; } \
+	virtual void subclass(std::string t) \
+	{ \
+		_mThis = Pointer<type>(this); \
+		Entity::subclass( t ); \
+	}
 
 //forward declaration
 class World;
@@ -19,11 +30,9 @@ public:
 	typedef std::set<Pointer<Entity> > ChildList;
 
 protected:
-	//subclass must redefine constructor, and call subclass()
+	//subclasses MUST redefine constructor, and call subclass()
 	Entity(Pointer<Entity> parent, std::string name="Entity");
-	void subclass(std::string type);
-
-	virtual ~Entity();
+	virtual void subclass(std::string type);
 
 public:
 	bool inherits(std::string type) const;
@@ -38,11 +47,15 @@ public:
 
 	Pointer<Entity> parent() const { return mParent; }
 	Pointer<World> world() const { return mWorld; }
-	Pointer<Entity> pointer() { return mThis; }
+	/*template<class T>
+	Pointer<T> pointer() { return Pointer<T>::staticPointerCast(mThis); }*/
 
 	bool visible() const { return mVisible; }
 
 protected:
+	virtual ~Entity();
+	Pointer<Entity> pointer() { return mThis; }
+
 	friend void Pointer<Entity>::free() const;
 
 	void update(double secsElapsed);
@@ -55,7 +68,7 @@ protected:
 private:
 	virtual Pointer<World> theWorld() { return mWorld; }
 
-	void addChild(Pointer<Entity> child) { mChildren.insert(child); }
+	void addChild(Pointer<Entity> child) { assert(!removed()); mChildren.insert(child); }
 	void delChild(Pointer<Entity> child) { mChildren.erase(child); }
 
 	virtual void updateEvent(double /*secsElapsed*/) {}

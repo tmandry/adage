@@ -10,6 +10,7 @@
 
 class Wall : public Entity
 {
+	ENTITY(Wall)
 public:
 	typedef std::pair<Math::Vector, Math::Vector> NormalPair;
 

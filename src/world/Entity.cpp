@@ -3,6 +3,8 @@
 
 Entity::~Entity()
 {
+	assert(removed());
+
 	for (ChildList::iterator i=mChildren.begin(); i!=mChildren.end(); ++i)
 		(*i).free();
 
@@ -26,6 +28,9 @@ bool Entity::inherits(std::string type) const
 
 void Entity::remove()
 {
+	//if already scheduled for removal, do nothing
+	if (removed()) return;
+
 	mRemove = true;
 
 	//remove children
@@ -39,7 +44,7 @@ void Entity::remove()
 
 void Entity::update(double secsElapsed)
 {
-	this->updateEvent(secsElapsed);
+	if (!removed()) this->updateEvent(secsElapsed);
 
 	//update children
 	std::vector<Pointer<Entity> > deaths;

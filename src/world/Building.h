@@ -8,6 +8,7 @@ class Wall;
 
 class Building : public Entity
 {
+	ENTITY(Building)
 public:
 	Building(Pointer<Entity> parent, std::string name="Building");
 	virtual ~Building();

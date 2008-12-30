@@ -25,11 +25,11 @@ GameUI::GameUI()
 	new Building(mGame->world());
 
 	for (int i=0; i<50; ++i)
-		new Person(Math::Point(Math::randFloat(-100,100),Math::randFloat(-50,50)), mGame->world());
-	for (int i=0; i<6; ++i)
-		new Ghost(Math::Point(Math::randFloat(-70,70),Math::randFloat(-40,40)), mGame->world());
-	for (int i=0; i<6; ++i)
-		new GhostBuster(Math::Point(Math::randFloat(-100,100),Math::randFloat(-50,50)), mGame->world());
+		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
+	for (int i=0; i<8; ++i)
+		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());
+	for (int i=0; i<4; ++i)
+		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
 
 	resize(930, 640);
 	setWindowTitle("Adage");

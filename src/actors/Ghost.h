@@ -9,6 +9,7 @@
 
 class Ghost : public Actor
 {
+	ENTITY(Ghost)
 public:
 	Ghost(Math::Point pos, Pointer<Entity> parent, std::string name="Ghost");
 	virtual ~Ghost() {}
@@ -21,8 +22,8 @@ private:
 
 	void newTarget();
 
-	Pursue mPursue;
-	Wander mWander;
+	Pursue* mPursue;
+	Wander* mWander;
 	Pointer<Person> mTarget;
 };
 

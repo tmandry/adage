@@ -12,18 +12,18 @@
 #include <cassert>
 
 Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
-	:	Actor(parent, name),
-		mWander(Pointer<Actor>::staticPointerCast(pointer()), 0.5)
+	:	Actor(parent, name)
 {
 	subclass("Person");
 
 	setPos(pos);
 	setMaxSpeed(7.0);
 
-	addSteeringBehavior(&mWander);
-	addSteeringBehavior(new AvoidWalls(Pointer<Actor>::staticPointerCast(pointer())));
+	mWander = new Wander(pointer(), 0.5);
+	addSteeringBehavior(mWander);
+	addSteeringBehavior(new AvoidWalls(pointer()));
 
-	setView(new PersonView(Pointer<Actor>::staticPointerCast(pointer())));
+	setView(new PersonView(pointer()));
 	setVisible(true);
 }
 
@@ -38,7 +38,7 @@ void Person::updateEvent(double secsElapsed)
 	mEvade.resize(ghosts.size());
 
 	for (unsigned int i = 0; i < ghosts.size(); ++i) {
-		mEvade[i] = new Evade(Pointer<Actor>::staticPointerCast(pointer()), ghosts[i]);
+		mEvade[i] = new Evade(pointer(), ghosts[i]);
 		addSteeringBehavior(mEvade[i]);
 	}
 

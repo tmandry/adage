@@ -9,10 +9,9 @@ class MovingEntity : public Entity
 {
 protected:
 	MovingEntity(Pointer<Entity> parent, std::string name="Entity");
-
-public:
 	virtual ~MovingEntity() {}
 
+public:
 	unsigned int mass() const { return mMass; }
 	Math::Vector velocity() const { return mVelocity; }
 	Math::Vector heading() const { return mHeading; }

@@ -12,7 +12,7 @@ void Wall::init()
 	mNormals.first = temp.perpCW();
 	mNormals.second = temp.perpCCW();
 
-	setView(new WallView(Pointer<Wall>::staticPointerCast(pointer())));
+	setView(new WallView(pointer()));
 	setVisible(true);
 }
 
