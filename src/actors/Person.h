@@ -22,10 +22,14 @@ private:
 	friend class PersonView;
 	virtual void updateEvent(double secsElapsed);
 
+	double mUpdateTimer;
+
 	std::vector<Evade*> mEvade;
 	Wander* mWander;
 };
 
+
+class QPixmap;
 
 class PersonView : public View
 {

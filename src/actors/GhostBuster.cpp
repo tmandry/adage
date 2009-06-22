@@ -49,7 +49,7 @@ void GhostBuster::updateEvent(double secsElapsed)
 		mTarget->remove();
 		++mKillCount;
 
-		if (mKillCount % 5 == 0) { //new comrade
+		if (mKillCount % 3 == 0) { //new comrade
 			GhostBuster* comrade = new GhostBuster(mTarget->pos(), world());
 			comrade->setVelocity(mTarget->velocity());
 		}

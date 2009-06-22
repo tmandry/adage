@@ -2,19 +2,18 @@
 #define EVADE_H_
 
 #include "SteeringBehavior.h"
-#include "Flee.h"
 
 class Evade : public SteeringBehavior
 {
 public:
-	Evade(Pointer<Actor> parent, const Pointer<MovingEntity> target=Pointer<MovingEntity>());
+	Evade(Pointer<Actor> parent, const Pointer<MovingEntity> target=Pointer<MovingEntity>(), double maxDistance=100.0);
 	virtual ~Evade() {}
 
 	Math::Vector calculate();
 
 private:
 	const Pointer<MovingEntity> mTarget;
-	Flee mFlee;
+	double mMaxDistance;
 };
 
 #endif /*EVADE_H_*/

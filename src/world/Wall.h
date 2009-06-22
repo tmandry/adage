@@ -14,19 +14,17 @@ class Wall : public Entity
 public:
 	typedef std::pair<Math::Vector, Math::Vector> NormalPair;
 
-	Wall(Pointer<Entity> p, double x1,double y1, double x2,double y2): Entity(p,"Wall"), mA(x1,y1), mB(x2,y2) { init(); }
-	Wall(Pointer<Entity> p, Math::Point a, Math::Point b): Entity(p,"Wall"), mA(a),mB(b) { init(); }
+	Wall(Pointer<Entity> p, double x1,double y1, double x2,double y2): Entity(p,"Wall"), mSegment(Math::Point(x1,y1), Math::Point(x2,y2)) { init(); }
+	Wall(Pointer<Entity> p, Math::Point a, Math::Point b): Entity(p,"Wall"), mSegment(a,b) { init(); }
+
 	virtual ~Wall() {}
 
-	Math::Segment segment() const
-	{
-		return Math::Segment(mA, mB);
-	}
+	Math::Segment segment() const { return mSegment; }
 
 	//TODO: convenience functions that use existing functions to test for collision?
 
 private:
-	Math::Point mA, mB;
+	Math::Segment mSegment;
 	NormalPair mNormals;
 
 	void init();

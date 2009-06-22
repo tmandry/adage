@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Entity.h"
+#include "math/Point.h"
 
 class Wall;
 
@@ -12,6 +13,8 @@ class Building : public Entity
 public:
 	Building(Pointer<Entity> parent, std::string name="Building");
 	virtual ~Building();
+
+	void createWalls(const std::vector<Math::Point>& points);
 
 private:
 	std::vector<Wall*> mWalls;

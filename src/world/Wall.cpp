@@ -6,7 +6,7 @@ void Wall::init()
 {
 	subclass("Wall");
 
-	Math::Vector temp = mA-mB;
+	Math::Vector temp = mSegment.a-mSegment.b;
 	temp.normalize();
 
 	mNormals.first = temp.perpCW();

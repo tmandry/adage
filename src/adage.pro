@@ -43,6 +43,7 @@ HEADERS += Game.h \
            world/CellSpacePartition.h \
            world/Entity.h \
            world/EntityList.h \
+           world/Map.h \
            world/MovingEntity.h \
            world/View.h \
            world/Wall.h \
@@ -70,6 +71,7 @@ SOURCES += Game.cpp \
            world/Building.cpp \
            world/CellSpacePartition.cpp \
            world/Entity.cpp \
+           world/Map.cpp \
            world/MovingEntity.cpp \
            world/Wall.cpp \
            world/World.cpp

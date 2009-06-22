@@ -9,7 +9,7 @@
 #include "ui/ShellWindow.h"
 #include "ui/CommWindow.h"
 #include "ui/ShellInterface.h"
-#include "world/Building.h"
+#include "world/Map.h"
 #include "actors/Person.h"
 #include "actors/Ghost.h"
 #include "actors/GhostBuster.h"
@@ -22,7 +22,9 @@ GameUI::GameUI()
 	connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
 
 	//TEST GAME ENTITIES GO HERE
-	new Building(mGame->world());
+	Map* map = new Map(mGame->world());
+	map->open("building.txt");
+	map->load();
 
 	for (int i=0; i<50; ++i)
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
