@@ -41,12 +41,14 @@ void CellSpacePartition::partition()
 
 CellSpacePartition::Cell* CellSpacePartition::posToCell(Math::Point p)
 {
-	return &mCells[posToIdx(p)];
+	int idx = posToIdx(p);
+	if (idx < 0) return 0; else return &mCells[idx];
 }
 
 void CellSpacePartition::remove(Pointer<Entity> e, Math::Point oldPos)
 {
 	Cell* oldCell = posToCell(oldPos);
+	if (!oldCell) return;
 
 	//remove from old cell
 	std::vector<Pointer<Entity> >::iterator result = std::find(oldCell->members.begin(), oldCell->members.end(), e);
@@ -63,14 +65,16 @@ void CellSpacePartition::updatePos(Pointer<Entity> e, Math::Point oldPos, Math::
 	if (oldCell == newCell) return;
 
 	//remove from old cell
-	std::vector<Pointer<Entity> >::iterator result = std::find(oldCell->members.begin(), oldCell->members.end(), e);
-	if (result != oldCell->members.end()) {
-		std::swap(*result, oldCell->members.back());
-		oldCell->members.pop_back();
+	if (oldCell) {
+		std::vector<Pointer<Entity> >::iterator result = std::find(oldCell->members.begin(), oldCell->members.end(), e);
+		if (result != oldCell->members.end()) {
+			std::swap(*result, oldCell->members.back());
+			oldCell->members.pop_back();
+		}
 	}
 
 	//add to new one
-	newCell->members.push_back(e);
+	if (newCell) newCell->members.push_back(e);
 }
 
 void CellSpacePartition::findNeighbors(Math::Point p, double radius, std::string type)
@@ -144,8 +148,10 @@ Pointer<Entity> CellSpacePartition::findNearest(Math::Point p, std::string type,
 
 int CellSpacePartition::posToIdx(Math::Point p) const
 {
-	assert(p.x > mWorld->leftBound() && p.x < mWorld->rightBound());
-	assert(p.y > mWorld->topBound() && p.y < mWorld->bottomBound());
+	if (p.x < mWorld->leftBound() || p.x > mWorld->rightBound() ||
+		p.y < mWorld->topBound() || p.y > mWorld->bottomBound()
+	)
+		return -1;
 
 	int cellX = (int)floor((p.x - mWorld->leftBound()) / mCellSize);
 	int cellY = (int)floor((p.y - mWorld->topBound()) / mCellSize);

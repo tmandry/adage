@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <QColor>
+#include <QPixmap>
 #include "Actor.h"
 #include "steering/Arrive.h"
 #include "steering/Wander.h"
@@ -34,15 +35,16 @@ class QPixmap;
 class PersonView : public View
 {
 public:
-	PersonView(Pointer<Actor> parent);
+	PersonView(Pointer<Actor> parent, QColor color = Qt::white);
 	virtual ~PersonView() {}
 
 	void paint(QPainter* p);
-	void setColor(QColor color) { mColor = color; }
+	void setColor(QColor color);
 
 private:
 	Pointer<Actor> mParent;
 	QColor mColor;
+	QPixmap mPixmap;
 };
 
 #endif /*PERSON_H_*/

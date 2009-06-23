@@ -34,8 +34,8 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	addSteeringBehavior(new Separation(pointer(), "GhostBuster"));
 	addSteeringBehavior(mWander);
 
-	PersonView* view = new PersonView(pointer());
-	view->setColor(Qt::yellow);
+	PersonView* view = new PersonView(pointer(), Qt::yellow);
+	//view->setColor(Qt::yellow);
 	setView(view);
 	setVisible(true);
 
@@ -53,12 +53,12 @@ void GhostBuster::updateEvent(double secsElapsed)
 {
 	if (!mTarget && mHQ) mHQ->reassign(pointer());
 
-	if (mTarget && distanceSq(pos(), mTarget->pos()) < 3.0) {
+	if (mTarget && distanceSq(pos(), mTarget->pos()) < 25.0) {
 		//GHOST BUSTERS!!!
 		mTarget->remove();
 		++mKillCount;
 
-		if (mKillCount % 3 == 0) { //new comrade
+		if (mKillCount % 5 == 0) { //new comrade
 			GhostBuster* comrade = new GhostBuster(mTarget->pos(), world());
 			comrade->setVelocity(mTarget->velocity());
 		}

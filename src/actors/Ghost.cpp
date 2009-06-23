@@ -16,8 +16,8 @@ Ghost::Ghost(Math::Point pos, Pointer<Entity> parent, std::string name)
 	addSteeringBehavior(mPursue);
 	addSteeringBehavior(mWander);
 
-	PersonView* view = new PersonView(pointer());
-	view->setColor(Qt::green); // HULK SMASH!  -- 20070108 iank
+	PersonView* view = new PersonView(pointer(), Qt::green);
+	//view->setColor(Qt::green); // HULK SMASH!  -- 20070108 iank
 	setView(view);
 	setVisible(true);
 
@@ -29,7 +29,7 @@ void Ghost::updateEvent(double secsElapsed)
 	if (!mTarget) newTarget();
 
 	//check if we caught them
-	if (mTarget && distanceSq(pos(), mTarget->pos()) < 3.0) {
+	if (mTarget && distanceSq(pos(), mTarget->pos()) < 9.0) {
 		mTarget->remove();
 
 		Ghost* victim = new Ghost(mTarget->pos(), world());

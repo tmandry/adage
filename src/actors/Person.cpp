@@ -3,6 +3,7 @@
 #include <QColor>
 #include <QRectF>
 #include <QPointF>
+#include <QBitmap>
 #include "Person.h"
 #include "Ghost.h"
 #include "GhostBuster.h"
@@ -24,7 +25,7 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	addSteeringBehavior(mWander);
 	addSteeringBehavior(new AvoidWalls(pointer()));
 
-	setView(new PersonView(pointer()));
+	setView(new PersonView(pointer(), Qt::white));
 	setVisible(true);
 }
 
@@ -47,31 +48,56 @@ void Person::updateEvent(double secsElapsed)
 }
 
 
-PersonView::PersonView(Pointer<Actor> parent)
+PersonView::PersonView(Pointer<Actor> parent, QColor color)
 	:	mParent(parent),
-		mColor(Qt::white)
-{}
+		mPixmap(28, 20)
+{
+	setColor(color);
+}
+
+void PersonView::setColor(QColor color)
+{
+	mColor = color;
+
+	QBitmap mask(28, 20);
+	QPainter p;
+
+	static const QPoint points[] = {
+			QPoint(2,  2 ),
+			QPoint(26, 10),
+			QPoint(2,  18)
+	};
+
+	p.begin(&mPixmap);
+	p.setPen(mColor);
+	p.setBrush(QBrush(mColor));
+	p.drawConvexPolygon(points, 3);
+	p.end();
+
+	mask.clear();
+	p.begin(&mask);
+	p.setPen(Qt::color1);
+	p.setBrush(QBrush(Qt::color1));
+	p.drawConvexPolygon(points, 3);
+	p.end();
+	mPixmap.setMask(mask);
+}
 
 void PersonView::paint(QPainter* p)
 {
-	static const QPointF points[] = {
-			QPointF(-1.2, -0.8),
-			QPointF( 1.2,  0.0),
-			QPointF(-1.2,  0.8)
-	};
-
 	p->save();
 
-	p->translate(mParent->pos());
+	p->translate(mParent->pos().x, mParent->pos().y);
 	p->rotate( -Math::toDegrees(mParent->heading().absAngle()) );
-	p->setPen(mColor);
-	p->setBrush(QBrush(mColor));
-	p->drawConvexPolygon(points, 3);
+	p->scale(.13, .13);
+
+	p->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+	p->drawPixmap(-14, -10, mPixmap);
 
 	p->restore();
 
 	if (mParent->inherits("GhostBuster")) {
-		const ConstEntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
+		/*const ConstEntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
 
 		p->setBrush(Qt::NoBrush);
 		p->setPen(QPen(QBrush(Qt::yellow), 0.1));
@@ -81,7 +107,7 @@ void PersonView::paint(QPainter* p)
 		for (ConstEntityList<Ghost>::const_iterator t = targets.begin(); t != targets.end(); ++t) {
 			if (!*t) continue;
 			p->drawEllipse((*t)->pos(), 2.4, 2.4);
-		}
+		}*/
 
 		p->setPen(QPen(QBrush(Qt::red), 0));
 		Pointer<Ghost> target = ((Pointer<GhostBuster>)mParent)->mTarget;
