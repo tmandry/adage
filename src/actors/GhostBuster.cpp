@@ -9,6 +9,7 @@
 #include <iostream>
 #include "GhostBuster.h"
 #include "Person.h"
+#include "world/GhostBustersHQ.h"
 #include "world/World.h"
 #include "math/rand.h"
 #include "steering/AvoidWalls.h"
@@ -20,8 +21,11 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 {
 	subclass("GhostBuster");
 
+	ConstEntityList<GhostBustersHQ> hq = world()->findEntities<GhostBustersHQ>("GhostBustersHQ");
+	if (hq.size() != 0) mHQ = hq[0];
+
 	setPos(pos);
-	setMaxSpeed(9.5);
+	setMaxSpeed(10.0);
 
 	mWander = new Wander(pointer());
 	mPursue = new Pursue(pointer());
@@ -35,7 +39,7 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	setView(view);
 	setVisible(true);
 
-	newTarget();
+	if (mHQ) mHQ->reassign(pointer());
 }
 
 GhostBuster::~GhostBuster() {
@@ -44,7 +48,7 @@ GhostBuster::~GhostBuster() {
 
 void GhostBuster::updateEvent(double secsElapsed)
 {
-	if (!mTarget) newTarget();
+	if (!mTarget && mHQ) mHQ->reassign(pointer());
 
 	if (mTarget && distanceSq(pos(), mTarget->pos()) < 3.0) {
 		//GHOST BUSTERS!!!
@@ -56,31 +60,25 @@ void GhostBuster::updateEvent(double secsElapsed)
 			comrade->setVelocity(mTarget->velocity());
 		}
 
-		newTarget();
+		if (mHQ) {
+			mHQ->targetCaught(mTarget);
+			//request reassignment from GBHQ
+			mHQ->reassign(pointer());
+		}
 	}
 
 	assert(mTarget || (!mPursue->isOn()));
 	Actor::updateEvent(secsElapsed);
 }
 
-void GhostBuster::newTarget()
+void GhostBuster::setTarget(Pointer<Ghost> target)
 {
-	//pick a new random Ghost to pursue
-	mTarget = world()->findNearestEntity<Ghost>(pos(), "Ghost", 50);
-	//ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>(pos(), 50, "Ghost");
-	if (mTarget) {
-		mPursue->setTarget(mTarget);
-	} else {
-		ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
+	mTarget = target;
 
-		if (!ghosts.empty()) {
-			int idx = Math::randInt(0, ghosts.size()-1);
-			mTarget = ghosts[idx];
-			assert(mTarget);
-			mPursue->setTarget(mTarget);
-		} else {
-			mTarget.release();
-			mPursue->off();
-		}
+	if (target) {
+		mPursue->setTarget(target);
+		mPursue->on();
+	} else {
+		mPursue->off();
 	}
 }

@@ -9,6 +9,7 @@
 #include "ui/ShellWindow.h"
 #include "ui/CommWindow.h"
 #include "ui/ShellInterface.h"
+#include "world/GhostBustersHQ.h"
 #include "world/Map.h"
 #include "actors/Person.h"
 #include "actors/Ghost.h"
@@ -26,9 +27,11 @@ GameUI::GameUI()
 	map->open("building.txt");
 	map->load();
 
+	new GhostBustersHQ(mGame->world());
+
 	for (int i=0; i<50; ++i)
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
-	for (int i=0; i<8; ++i)
+	for (int i=0; i<12; ++i)
 		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());
 	for (int i=0; i<4; ++i)
 		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());

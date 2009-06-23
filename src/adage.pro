@@ -44,6 +44,7 @@ HEADERS += Game.h \
            world/CellSpacePartition.h \
            world/Entity.h \
            world/EntityList.h \
+           world/GhostBustersHQ.h \
            world/Map.h \
            world/MovingEntity.h \
            world/View.h \
@@ -73,6 +74,7 @@ SOURCES += Game.cpp \
            world/Building.cpp \
            world/CellSpacePartition.cpp \
            world/Entity.cpp \
+           world/GhostBustersHQ.cpp \
            world/Map.cpp \
            world/MovingEntity.cpp \
            world/Wall.cpp \

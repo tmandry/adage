@@ -16,18 +16,23 @@
 #include "steering/Wander.h"
 #include "steering/Pursue.h"
 
+class GhostBustersHQ;
+
 class GhostBuster : public Actor {
 	ENTITY(GhostBuster)
 public:
 	GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string name = "GhostBuster");
 	virtual ~GhostBuster();
 
+	void setTarget(Pointer<Ghost> target);
+	Pointer<Ghost> target() const { return mTarget; }
+
 private:
 	friend class PersonView;
 
 	virtual void updateEvent(double secsElapsed);
 
-	void newTarget();
+	Pointer<GhostBustersHQ> mHQ;
 
 	Wander* mWander;
 	Pursue* mPursue;

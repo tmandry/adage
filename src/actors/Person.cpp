@@ -71,20 +71,11 @@ void PersonView::paint(QPainter* p)
 	p->restore();
 
 	if (mParent->inherits("GhostBuster")) {
-		//Pointer<const MovingEntity> t = ((GhostBuster*)mParent.pointer())->mPursue->mTarget;
-		/*static ConstEntityList<Ghost> stTargets;
-		static int updateCounter = 0;
-
-		if (updateCounter == 0) {
-			stTargets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
-			updateCounter = 5;
-		} else --updateCounter;*/
-
 		const ConstEntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
 
 		p->setBrush(Qt::NoBrush);
 		p->setPen(QPen(QBrush(Qt::yellow), 0.1));
-		p->drawEllipse(mParent->pos(), 50, 50);
+		//p->drawEllipse(mParent->pos(), 50, 50);
 
 		p->setPen(QPen(QBrush(Qt::darkYellow), 0));
 		for (ConstEntityList<Ghost>::const_iterator t = targets.begin(); t != targets.end(); ++t) {
