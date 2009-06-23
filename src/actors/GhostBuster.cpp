@@ -12,6 +12,7 @@
 #include "world/World.h"
 #include "math/rand.h"
 #include "steering/AvoidWalls.h"
+#include "steering/Separation.h"
 
 GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string name)
 	:	Actor(parent, name),
@@ -26,6 +27,7 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	mPursue = new Pursue(pointer());
 	addSteeringBehavior(new AvoidWalls(pointer()));
 	addSteeringBehavior(mPursue);
+	addSteeringBehavior(new Separation(pointer(), "GhostBuster"));
 	addSteeringBehavior(mWander);
 
 	PersonView* view = new PersonView(pointer());

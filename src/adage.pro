@@ -26,6 +26,7 @@ HEADERS += Game.h \
            actors/steering/Flee.h \
            actors/steering/Pursue.h \
            actors/steering/Seek.h \
+           actors/steering/Separation.h \
            actors/steering/SteeringBehavior.h \
            actors/steering/Wander.h \
            detail/StaticCastIterator.h \
@@ -61,6 +62,7 @@ SOURCES += Game.cpp \
            actors/steering/Flee.cpp \
            actors/steering/Pursue.cpp \
            actors/steering/Seek.cpp \
+           actors/steering/Separation.cpp \
            actors/steering/Wander.cpp \
            math/Segment.cpp \
            ui/Blueprint.cpp \
