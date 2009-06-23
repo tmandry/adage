@@ -33,7 +33,11 @@ public:
 	//invalidated at next find operation
 	const std::vector<Pointer<Entity> >& result() const { return mResult; }
 
+	Pointer<Entity> findNearest(Math::Point p, std::string type, double maxDistance=Math::maxDouble);
+
 private:
+	int posToIdx(Math::Point p) const;
+
 	World* mWorld;
 
 	double mCellSize;

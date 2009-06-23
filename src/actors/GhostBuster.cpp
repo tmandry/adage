@@ -64,16 +64,21 @@ void GhostBuster::updateEvent(double secsElapsed)
 void GhostBuster::newTarget()
 {
 	//pick a new random Ghost to pursue
-	ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>(pos(), 50, "Ghost");
-	if (ghosts.empty()) ghosts = world()->findEntities<Ghost>("Ghost");
-
-	if (!ghosts.empty()) {
-		int idx = Math::randInt(0, ghosts.size()-1);
-		mTarget = ghosts[idx];
-		assert(mTarget);
+	mTarget = world()->findNearestEntity<Ghost>(pos(), "Ghost", 50);
+	//ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>(pos(), 50, "Ghost");
+	if (mTarget) {
 		mPursue->setTarget(mTarget);
 	} else {
-		mTarget.release();
-		mPursue->off();
+		ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
+
+		if (!ghosts.empty()) {
+			int idx = Math::randInt(0, ghosts.size()-1);
+			mTarget = ghosts[idx];
+			assert(mTarget);
+			mPursue->setTarget(mTarget);
+		} else {
+			mTarget.release();
+			mPursue->off();
+		}
 	}
 }

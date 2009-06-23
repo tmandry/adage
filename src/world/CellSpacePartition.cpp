@@ -4,6 +4,7 @@
 #include "CellSpacePartition.h"
 #include "world/World.h"
 #include "world/Entity.h"
+#include "math/const.h"
 
 CellSpacePartition::CellSpacePartition(World* parent)
 	:	mWorld(parent)
@@ -40,12 +41,7 @@ void CellSpacePartition::partition()
 
 CellSpacePartition::Cell* CellSpacePartition::posToCell(Math::Point p)
 {
-	assert(p.x > mWorld->leftBound() && p.x < mWorld->rightBound());
-	assert(p.y > mWorld->topBound() && p.y < mWorld->bottomBound());
-
-	int cellX = (int)floor((p.x - mWorld->leftBound()) / mCellSize);
-	int cellY = (int)floor((p.y - mWorld->topBound()) / mCellSize);
-	return &mCells[cellY*mNumHCells + cellX];
+	return &mCells[posToIdx(p)];
 }
 
 void CellSpacePartition::remove(Pointer<Entity> e, Math::Point oldPos)
@@ -92,4 +88,67 @@ void CellSpacePartition::findNeighbors(Math::Point p, double radius, std::string
 					mResult.push_back(i->members[j]);
 		}
 	}
+}
+
+inline void checkCell(Math::Point p, std::string type, int cell, Pointer<Entity>& nearest, double& nearestDistSq, std::vector<CellSpacePartition::Cell>& mCells)
+{
+	if (cell < 0 || cell > mCells.size()) return;
+
+	CellSpacePartition::Cell* c = &mCells[cell];
+
+	for (unsigned int i = 0; i < c->members.size(); ++i)
+		if (c->members[i]->inherits(type) && Math::distanceSq(c->members[i]->pos(), p) < nearestDistSq) {
+			nearest = c->members[i];
+			nearestDistSq = Math::distanceSq(c->members[i]->pos(), p);
+		}
+}
+
+Pointer<Entity> CellSpacePartition::findNearest(Math::Point p, std::string type, double maxDistance)
+{
+	int startCell = posToIdx(p);
+
+	int reach = 1; //how many cells out we will be searching, each iteration
+	int timesFound = 0; //will go 1 iteration past a find because a closer one could be found (ie if the first one is found in a corner)
+	Pointer<Entity> nearest;
+	double nearestDistSq = Math::maxDouble;
+
+	checkCell(p, type, startCell, nearest, maxDistance, mCells); //check home cell first
+	if (nearest) timesFound = 1;
+
+	do {
+		//start at top-left and go clockwise
+		int cell = startCell - reach - reach*mNumHCells; //tl
+		for (int i = 0; i < reach*2 + 1; ++i) { //top row
+			++cell;
+			checkCell(p, type, cell, nearest, nearestDistSq, mCells);
+		}
+		for (int i = 0; i < reach*2; ++i) { //right col
+			cell += mNumHCells;
+			checkCell(p, type, cell, nearest, nearestDistSq, mCells);
+		}
+		for (int i = 0; i < reach*2; ++i) { //bottom row
+			--cell;
+			checkCell(p, type, cell, nearest, nearestDistSq, mCells);
+		}
+		for (int i = 0; i < reach*2 - 1; ++i) { //left col
+			cell -= mNumHCells;
+			checkCell(p, type, cell, nearest, nearestDistSq, mCells);
+		}
+
+		if (nearest) ++timesFound;
+		++reach;
+	} while (timesFound < 3 && reach*mCellSize < maxDistance);
+
+	return nearest;
+}
+
+int CellSpacePartition::posToIdx(Math::Point p) const
+{
+	assert(p.x > mWorld->leftBound() && p.x < mWorld->rightBound());
+	assert(p.y > mWorld->topBound() && p.y < mWorld->bottomBound());
+
+	int cellX = (int)floor((p.x - mWorld->leftBound()) / mCellSize);
+	int cellY = (int)floor((p.y - mWorld->topBound()) / mCellSize);
+
+	return cellY*mNumHCells + cellX;
 }

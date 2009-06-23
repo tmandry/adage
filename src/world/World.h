@@ -10,6 +10,7 @@
 #include "EntityList.h"
 #include "Pointer.h"
 #include "world/CellSpacePartition.h"
+#include "math/const.h"
 
 //forward declaration
 class Game;
@@ -47,6 +48,12 @@ public:
 		mCellSpace.findNeighbors(p, radius, type);
 		for (unsigned int i = 0; i < mCellSpace.result().size(); ++i) assert(mCellSpace.result()[i] /*Not returning a deleted entity*/);
 		return ConstEntityList<E>(mCellSpace.result());
+	}
+
+	template<class E>
+	Pointer<E> findNearestEntity(Math::Point p, std::string type, double maxDistance = Math::maxDouble)
+	{
+		return (Pointer<E>)mCellSpace.findNearest(p, type, maxDistance);
 	}
 
 	Game* game() const { return mGame; }
