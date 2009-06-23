@@ -11,7 +11,7 @@ class SteeringBehavior;
 class Actor : public MovingEntity
 {
 public:
-	Actor(Pointer<Entity> parent, std::string name="Actor"): MovingEntity(parent, name) { subclass("Actor"); }
+	Actor(Pointer<Entity> parent, std::string name="Actor");
 	virtual ~Actor() {}
 
 	int health() const { return mHealth; }
@@ -30,6 +30,10 @@ private:
 
 	int mHealth;
 	SBList mSteering;
+
+	std::vector<Math::Vector> mHeadingList;
+	unsigned int mHeadingIt;
+	bool mHeadingListFull;
 };
 
 #endif /*ACTOR_H_*/

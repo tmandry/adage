@@ -20,10 +20,11 @@ Math::Vector AvoidWalls::calculate()
 	//std::vector<Math::Segment> feelers;
 
 	Math::Vector v;
+	double len;
 	switch (mCycle) {
-		case 0: v = parent()->heading() * 3.0; break;
-		case 1: v = (parent()->heading() + parent()->heading().perpCW()*1.155) / 1.46789; break;
-		case 2: v = (parent()->heading() + parent()->heading().perpCCW()*1.155) / 1.46789; break;
+		case 0: v = parent()->heading() * 5.0; len = 5.0; break;
+		case 1: v = (parent()->heading()*1.341 + parent()->heading().perpCW()*1.125); len = 1.75; break;
+		case 2: v = (parent()->heading()*1.341 + parent()->heading().perpCCW()*1.125); len = 1.75; break;
 		default: break;
 	}
 
@@ -49,7 +50,8 @@ Math::Vector AvoidWalls::calculate()
 	}
 
 	if (closestWall) {
-		double overshoot = 3.0 - closestDist;
+		//--mCycle;
+		double overshoot = len - closestDist;
 
 		Math::Vector normal = (closestWall->segment().a - closestWall->segment().b).normal().perp();
 		//normal must oppose feeler direction; if not, reverse it

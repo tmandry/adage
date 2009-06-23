@@ -8,7 +8,7 @@
 CellSpacePartition::CellSpacePartition(World* parent)
 	:	mWorld(parent)
 {
-	mCellSize = 10;
+	mCellSize = 20;
 }
 
 CellSpacePartition::~CellSpacePartition()
