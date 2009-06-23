@@ -15,7 +15,8 @@
 #include "math/Point.h"
 
 Map::Map(Pointer<World> parent, std::string filename)
-	:	mParent(parent)
+	:	mParent(parent),
+		mFile(0)
 {
 	if (!filename.empty()) open(filename);
 }
@@ -39,6 +40,15 @@ void Map::open(std::string filename)
 void Map::load()
 {
 	QString line;
+
+	//read to first non-comment/blank line
+	do { line = mFile->readLine().trimmed(); } while (line[0] == '#' || line.isEmpty());
+
+	//read in world boundaries first
+	double lb, tb, rb, bb;
+	QTextStream(&line) >> lb >> tb >> rb >> bb;
+	mParent->setBounds(lb, tb, rb, bb);
+
 	std::vector<Math::Point> points;
 	Building* building = new Building(mParent);
 
@@ -46,11 +56,10 @@ void Map::load()
 	bool usedBuilding = false;
 
 	while(true) {
-		line = mFile->readLine();
+		line = mFile->readLine().trimmed();
 		if (line[0] == '#') continue;
 
 		QTextStream stream(&line);
-		stream.skipWhiteSpace();
 
 		if (!stream.atEnd()) {
 			blanks = 0;

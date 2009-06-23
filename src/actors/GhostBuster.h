@@ -36,4 +36,12 @@ private:
 	int mKillCount;
 };
 
+/*class GBView : public PersonView {
+public:
+	GBView(Pointer<Actor> parent):
+	virtual ~GBView() {}
+
+	void paint(QPainter* p);
+};*/
+
 #endif /* GHOSTBUSTER_H_ */

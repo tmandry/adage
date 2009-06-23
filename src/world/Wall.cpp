@@ -18,6 +18,8 @@ void Wall::init()
 
 void WallView::paint(QPainter* p)
 {
+	if (!mParent->visible()) return;
+
 	QPen wallPen(Qt::white);
 	p->setPen(wallPen);
 

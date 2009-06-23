@@ -12,7 +12,7 @@ public:
 	explicit Pointer(T* const p) : mPtr(new T*(p)), mPtrRef(new int(1)) {}
 	Pointer(const Pointer<T>& p) : mPtr(p.mPtr), mPtrRef(p.mPtrRef) { if (mPtr) ++(*mPtrRef); }
 	template <class U>
-	Pointer(const Pointer<U>& p) : mPtrRef(p.mPtrRef) { mPtr = (T**)p.mPtr; if (mPtr) { T* temp(*p.mPtr); ++(*mPtrRef); } }
+	Pointer(const Pointer<U>& p) : mPtrRef(p.mPtrRef) { mPtr = (T**)(p.mPtr); if (mPtr) { T* temp(static_cast<T*>(*p.mPtr)); ++(*mPtrRef); } }
 
 	template <class U>
 	static Pointer<T> staticPointerCast(const Pointer<U>& p) { Pointer<T> ret; ret.mPtr = (T**)p.mPtr; ret.mPtrRef = p.mPtrRef; if (p.mPtr) { T* temp(static_cast<T*>(*p.mPtr)); ++(*ret.mPtrRef); } return ret; }

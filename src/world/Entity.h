@@ -39,7 +39,7 @@ public:
 	std::string name() const { return mName; }
 
 	//replace with region? or abstract intersects function?
-	void setPos(const Math::Point& loc) { mLoc = loc; }
+	inline void setPos(const Math::Point loc); //definition in World.h
 	Math::Point pos() const { return mLoc; }
 
 	void remove();
@@ -95,6 +95,7 @@ inline Entity::Entity(Pointer<Entity> parent, std::string name)
 	:	mParent(parent),
 		mThis(this),
 		mName(name),
+		mLoc(0,0),
 		mView(0),
 		mVisible(false),
 		mRemove(false)

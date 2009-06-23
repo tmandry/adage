@@ -5,6 +5,7 @@
 #include <QPointF>
 #include "Person.h"
 #include "Ghost.h"
+#include "GhostBuster.h"
 #include "world/World.h"
 #include "steering/Arrive.h"
 #include "steering/AvoidWalls.h"
@@ -69,15 +70,30 @@ void PersonView::paint(QPainter* p)
 
 	p->restore();
 
-	/*if (mParent->inherits("Ghost")) {
-		const MovingEntity* t = ((Ghost*)mParent)->mPursue.mTarget;
-		QRectF icon(
-			t->pos().x - 2.1, t->pos().y - 2.1,
-			4.2, 4.2
-		);
+	if (mParent->inherits("GhostBuster")) {
+		//Pointer<const MovingEntity> t = ((GhostBuster*)mParent.pointer())->mPursue->mTarget;
+		/*static ConstEntityList<Ghost> stTargets;
+		static int updateCounter = 0;
 
-		p->setPen(QPen(QBrush(Qt::red), 0.6));
+		if (updateCounter == 0) {
+			stTargets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
+			updateCounter = 5;
+		} else --updateCounter;*/
+
+		const ConstEntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
+
 		p->setBrush(Qt::NoBrush);
-		p->drawEllipse(icon);
-	}*/
+		p->setPen(QPen(QBrush(Qt::yellow), 0.1));
+		p->drawEllipse(mParent->pos(), 50, 50);
+
+		p->setPen(QPen(QBrush(Qt::darkYellow), 0));
+		for (ConstEntityList<Ghost>::const_iterator t = targets.begin(); t != targets.end(); ++t) {
+			if (!*t) continue;
+			p->drawEllipse((*t)->pos(), 2.4, 2.4);
+		}
+
+		p->setPen(QPen(QBrush(Qt::red), 0));
+		Pointer<Ghost> target = ((Pointer<GhostBuster>)mParent)->mTarget;
+		if (target) p->drawEllipse(target->pos(), 2.7, 2.7);
+	}
 }

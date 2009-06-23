@@ -9,9 +9,12 @@
 #include "Entity.h"
 #include "EntityList.h"
 #include "Pointer.h"
+#include "world/CellSpacePartition.h"
 
 //forward declaration
 class Game;
+class Wall;
+class Map;
 
 class World : public Entity
 {
@@ -37,14 +40,42 @@ public:
 		return ConstEntityList<E>(result->second);
 	}
 
+	//Note: Result invalidated upon next search
+	template<class E>
+	ConstEntityList<E> findEntities(Math::Point p, double radius, std::string type)
+	{
+		mCellSpace.findNeighbors(p, radius, type);
+		for (unsigned int i = 0; i < mCellSpace.result().size(); ++i) assert(mCellSpace.result()[i] /*Not returning a deleted entity*/);
+		return ConstEntityList<E>(mCellSpace.result());
+	}
+
 	Game* game() const { return mGame; }
 
+	double leftBound() const { return mLeftBound; }
+	double topBound() const { return mTopBound; }
+	double rightBound() const { return mRightBound; }
+	double bottomBound() const { return mBottomBound; }
+
+	void updatePos(Pointer<Entity> e, Math::Point oldPos, Math::Point newPos) { mCellSpace.updatePos(e, oldPos, newPos); }
+
 private:
+	friend class Map;
+	void setBounds(double left, double top, double right, double bottom);
+
 	virtual Pointer<World> theWorld() { return Pointer<World>(this); }
 
 	EntityMap mEntities;
-
 	Game* mGame;
+	std::vector<Wall*> mBoundaries;
+	double mLeftBound, mTopBound, mRightBound, mBottomBound;
 
+	CellSpacePartition mCellSpace;
 };
+
+inline void Entity::setPos(const Math::Point loc)
+{
+	world()->updatePos(pointer(), mLoc, loc);
+	mLoc = loc;
+}
+
 #endif /*WORLD_H_*/

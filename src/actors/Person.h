@@ -35,7 +35,7 @@ class PersonView : public View
 {
 public:
 	PersonView(Pointer<Actor> parent);
-	~PersonView() {}
+	virtual ~PersonView() {}
 
 	void paint(QPainter* p);
 	void setColor(QColor color) { mColor = color; }

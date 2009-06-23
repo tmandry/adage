@@ -14,31 +14,34 @@ public:
 
 	typedef unsigned int size_type;
 
-	EntityList(Container& vec): mVec(vec) {}
+	EntityList(Container& vec): mVec(&vec) {}
+	EntityList(): mVec(0) {}
 	//EntityList(const Container& vec): mVec(Container(vec)) {}
 	EntityList(const EntityList<Type, Container>& list): mVec(list.mVec) {}
 	~EntityList() {}
 
-	iterator begin() { return iterator(mVec.begin()); }
-	const_iterator begin() const { return const_iterator(mVec.begin()); }
-	iterator end() { return iterator(mVec.end()); }
-	const_iterator end() const { return const_iterator(mVec.end()); }
+	EntityList& operator=(const EntityList& rhs) { mVec = rhs.mVec; return *this; }
 
-	Pointer<Type> front() { return Pointer<Type>::staticPointerCast(mVec.front()); }
-	const Type& front() const { return Pointer<const Type>::staticPointerCast(mVec.front()); }
-	Pointer<Type> back() { return Pointer<Type>::staticPointerCast(mVec.back()); }
-	const Type& back() const { return Pointer<const Type>::staticPointerCast(mVec.back()); }
+	iterator begin() { return iterator(mVec->begin()); }
+	const_iterator begin() const { return const_iterator(mVec->begin()); }
+	iterator end() { return iterator(mVec->end()); }
+	const_iterator end() const { return const_iterator(mVec->end()); }
 
-	Pointer<Type> operator[](size_type idx) { return Pointer<Type>::staticPointerCast(mVec[idx]); }
-	const Pointer<Type> operator[](size_type idx) const { return Pointer<const Type>::staticPointerCast(mVec[idx]); }
+	Pointer<Type> front() { return Pointer<Type>::staticPointerCast(mVec->front()); }
+	const Type& front() const { return Pointer<const Type>::staticPointerCast(mVec->front()); }
+	Pointer<Type> back() { return Pointer<Type>::staticPointerCast(mVec->back()); }
+	const Type& back() const { return Pointer<const Type>::staticPointerCast(mVec->back()); }
 
-	size_type size() const { return mVec.size(); }
-	bool empty() const { return mVec.empty(); }
+	Pointer<Type> operator[](size_type idx) { return Pointer<Type>::staticPointerCast((*mVec)[idx]); }
+	const Pointer<Type> operator[](size_type idx) const { return Pointer<const Type>::staticPointerCast((*mVec)[idx]); }
 
-	iterator erase(iterator loc) { return typename Container::iterator(mVec.erase(loc)); }
+	size_type size() const { return mVec->size(); }
+	bool empty() const { return mVec->empty(); }
 
-private:
-	Container& mVec;
+	iterator erase(iterator loc) { return typename Container::iterator(mVec->erase(loc)); }
+
+protected:
+	Container* mVec;
 };
 
 //ConstEntityList - like EntityList, but holds a const reference to the vector
@@ -48,6 +51,9 @@ class ConstEntityList : public EntityList<Type, const std::vector<Pointer<Entity
 public:
 	//ConstEntityList(const std::vector<Pointer<Entity>>& vec) : EntityList<Type, const std::vector<Pointer<Entity>> >(vec) {}
 	ConstEntityList(const EntityList<Type, const std::vector<Pointer<Entity> > >& vec) : EntityList<Type, const std::vector<Pointer<Entity> > >(vec) {}
+	ConstEntityList() {}
+
+	ConstEntityList& operator=(const ConstEntityList& rhs) { EntityList<Type, const std::vector<Pointer<Entity> > >::mVec = rhs.mVec; return *this; }
 };
 
 #endif /*ENTITYLIST_H_*/
