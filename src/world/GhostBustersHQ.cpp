@@ -6,16 +6,29 @@
  */
 
 #include <vector>
+#include <QString>
 #include "GhostBustersHQ.h"
+#include "Game.h"
 #include "actors/GhostBuster.h"
 #include "math/rand.h"
 
 GhostBustersHQ::GhostBustersHQ(Pointer<Entity> parent)
-	:	Entity(parent)
+	:	Entity(parent, "GhostBustersHQ"),
+		mNextName("A")
 {
 	subclass("GhostBustersHQ");
 
 	mMaxAssignments = 2;
+
+	printComm("GhostBusters HQ ready.");
+}
+
+//GhostBuster agents register themselves to receive their name
+void GhostBustersHQ::newAgent(Pointer<GhostBuster> agent)
+{
+	printComm(("Agent <font color='yellow'>" + mNextName + "</font> registered.").c_str());
+	agent->setName(mNextName);
+	++mNextName[0];
 }
 
 //Reassigns a GhostBuster agent to a new target
@@ -72,10 +85,20 @@ void GhostBustersHQ::reassign(Pointer<GhostBuster> agent)
 	//Should have picked a Ghost by now if one is available, now assign it and record the assignment
 	agent->setTarget(target);
 	if (target) ++mGhostAssignments[target];
+
+	if (target) printComm(("Agent <font color='yellow'>" + agent->name() + "</font> reassigned.").c_str());
 }
 
-void GhostBustersHQ::targetCaught(Pointer<Ghost> target)
+void GhostBustersHQ::targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> target)
 {
 	//remove from map
 	mGhostAssignments.erase(target);
+
+	int numGs = world()->findEntities<Entity>("Ghost").size();
+	printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name().c_str()).arg(numGs));
+}
+
+QString GhostBustersHQ::formatComm(QString msg) const
+{
+	return "[<font color='#ffcc00'>GBHQ</font>] " + msg;
 }

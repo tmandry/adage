@@ -6,10 +6,12 @@
 #include <set>
 #include <QPainter>
 #include <QObject>
+#include <QString>
 #include <cassert>
 #include "world/View.h"
 #include "math/Point.h"
 #include "Pointer.h"
+#include "ui/CommWindow.h"
 
 #define ENTITY(type) \
 	private: \
@@ -36,6 +38,7 @@ protected:
 
 public:
 	bool inherits(std::string type) const;
+	void setName(std::string name) { mName = name; }
 	std::string name() const { return mName; }
 
 	//replace with region? or abstract intersects function?
@@ -65,6 +68,8 @@ protected:
 	void setView(View* view) { mView = view; }
 	View* view() const { return mView; }
 
+	inline void printComm(QString msg) const; //definition in World.h
+
 private:
 	virtual Pointer<World> theWorld() { return mWorld; }
 
@@ -72,6 +77,8 @@ private:
 	void delChild(Pointer<Entity> child) { mChildren.erase(child); }
 
 	virtual void updateEvent(double /*secsElapsed*/) {}
+
+	virtual QString formatComm(QString msg) const { return "[" + QString(mName.c_str()) + "] " + msg; }
 
 	std::vector<std::string> mSubclasses;
 

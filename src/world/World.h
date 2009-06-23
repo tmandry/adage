@@ -85,4 +85,6 @@ inline void Entity::setPos(const Math::Point loc)
 	mLoc = loc;
 }
 
+#include "Game.h"
+
 #endif /*WORLD_H_*/

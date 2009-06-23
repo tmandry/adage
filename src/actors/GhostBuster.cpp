@@ -39,7 +39,10 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	setView(view);
 	setVisible(true);
 
-	if (mHQ) mHQ->reassign(pointer());
+	if (mHQ){
+		mHQ->newAgent(pointer());
+		mHQ->reassign(pointer());
+	}
 }
 
 GhostBuster::~GhostBuster() {
@@ -61,7 +64,7 @@ void GhostBuster::updateEvent(double secsElapsed)
 		}
 
 		if (mHQ) {
-			mHQ->targetCaught(mTarget);
+			mHQ->targetCaught(pointer(), mTarget);
 			//request reassignment from GBHQ
 			mHQ->reassign(pointer());
 		}
