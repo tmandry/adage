@@ -21,8 +21,10 @@ HEADERS += Game.h \
            actors/Ghost.h \
            actors/GhostBuster.h \
            actors/Person.h \
+           actors/steering/Alignment.h \
            actors/steering/Arrive.h \
            actors/steering/AvoidWalls.h \
+           actors/steering/Cohesion.h \
            actors/steering/Evade.h \
            actors/steering/Flee.h \
            actors/steering/Pursue.h \
@@ -58,8 +60,10 @@ SOURCES += Game.cpp \
            actors/Ghost.cpp \
            actors/GhostBuster.cpp \
            actors/Person.cpp \
+           actors/steering/Alignment.cpp \
            actors/steering/Arrive.cpp \
            actors/steering/AvoidWalls.cpp \
+           actors/steering/Cohesion.cpp \
            actors/steering/Evade.cpp \
            actors/steering/Flee.cpp \
            actors/steering/Pursue.cpp \

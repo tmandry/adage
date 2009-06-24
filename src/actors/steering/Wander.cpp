@@ -25,5 +25,5 @@ Math::Vector Wander::calculate()
 	//map to world space
 	Math::Point targetWorld = parent()->toWorldSpace(targetLocal);
 
-	return targetWorld - parent()->pos();
+	return (targetWorld - parent()->pos()) * 1.5;
 }

@@ -9,8 +9,10 @@
 #include "world/Wall.h"
 #include "math/real.h"
 
+Blueprint* Blueprint::bp = 0;
+
 Blueprint::Blueprint(Game* game, QWidget* parent)
-	:	QWidget(parent),
+	:	QGLWidget(parent),
 		mGame(game),
 		mPanning(0,0),
 		mZoom(0.8),
@@ -18,6 +20,7 @@ Blueprint::Blueprint(Game* game, QWidget* parent)
 		mMovePressed(false)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	Blueprint::bp = this;
 }
 
 Blueprint::~Blueprint()
@@ -47,7 +50,8 @@ void Blueprint::goHome()
 void Blueprint::paintEvent(QPaintEvent* /*event*/)
 {
 	QPainter p(this);
-	p.setRenderHint(QPainter::Antialiasing);
+	p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform/* | QPainter::HighQualityAntialiasing*/);
+	p.eraseRect(0,0, width(), height());
 
 	//Calculate the area of the world being viewed, in meters
 	QRectF viewArea(

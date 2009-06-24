@@ -1,6 +1,7 @@
 #include <QTimer>
 #include <QTime>
 #include "Game.h"
+#include "ui/Blueprint.h"
 
 Game::Game(CommWindow* comm)
 	:	mWorld(new World(this)),
@@ -20,4 +21,5 @@ void Game::updateWorld()
 	mWorld->update(secsElapsed);
 
 	emit worldUpdated();
+	//Blueprint::bp->repaint();
 }

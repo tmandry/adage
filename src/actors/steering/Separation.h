@@ -13,15 +13,10 @@
 
 class Separation: public SteeringBehavior {
 public:
-	Separation(Pointer<Actor> parent, std::string targetType);
+	Separation(Pointer<Actor> parent);
 	virtual ~Separation() {}
 
-	void setTargetType(std::string targetType) { mTargetType = targetType; }
-
 	Math::Vector calculate();
-
-private:
-	std::string mTargetType;
 };
 
 #endif /* SEPARATION_H_ */

@@ -10,10 +10,12 @@
 
 class GameUI : public QMainWindow
 {
+	Q_OBJECT
+
 public:
 	GameUI();
 	~GameUI();
-	
+
 private:
 	Game* mGame;
 	BlueprintWindow* mBlueprint;

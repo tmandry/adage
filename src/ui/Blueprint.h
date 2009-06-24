@@ -8,11 +8,13 @@
 #include <QPoint>
 #include "Game.h"
 
-class Blueprint : public QWidget
+class Blueprint : public QGLWidget
 {
 	Q_OBJECT
 
 public:
+	static Blueprint* bp;
+
 	Blueprint(Game* game, QWidget* parent=0);
 	virtual ~Blueprint();
 

@@ -10,6 +10,9 @@
 #include "world/World.h"
 #include "steering/Arrive.h"
 #include "steering/AvoidWalls.h"
+#include "steering/Separation.h"
+#include "steering/Cohesion.h"
+#include "steering/Alignment.h"
 #include "math/convert.h"
 #include <cassert>
 
@@ -25,7 +28,13 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	mEvade = new Evade(pointer());
 	addSteeringBehavior(new AvoidWalls(pointer()));
 	addSteeringBehavior(mEvade);
+	addSteeringBehavior(new Separation(pointer()));
+	addSteeringBehavior(new Cohesion(pointer()));
+	//addSteeringBehavior(new Alignment(pointer()));
 	addSteeringBehavior(mWander);
+
+	setNeighborRadius(20.0);
+	setNeighborType("Person");
 
 	setView(new PersonView(pointer(), Qt::white));
 	setVisible(true);
@@ -96,7 +105,6 @@ void PersonView::paint(QPainter* p)
 	p->rotate( -Math::toDegrees(mParent->heading().absAngle()) );
 	p->scale(.13, .13);
 
-	p->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 	p->drawPixmap(-14, -10, mPixmap);
 
 	p->restore();
@@ -118,4 +126,12 @@ void PersonView::paint(QPainter* p)
 		Pointer<Ghost> target = ((Pointer<GhostBuster>)mParent)->mTarget;
 		if (target) p->drawEllipse(target->pos(), 2.7, 2.7);
 	}
+
+	/*if (mParent->inherits("Person")) {
+		Pointer<Ghost> target = ((Pointer<Person>)mParent)->mEvade->target();
+		if (target) {
+			p->setPen(QPen(QBrush(Qt::white), 0.01));
+			p->drawLine(mParent->pos(), target->pos());
+		}
+	}*/
 }

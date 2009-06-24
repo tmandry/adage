@@ -4,11 +4,24 @@
 
 Actor::Actor(Pointer<Entity> parent, std::string name)
 	:	MovingEntity(parent, name),
+		mNeighborRadius(20.0),
+		mNeighborType("Actor"),
+		mNeighborListValid(false),
 		mHeadingList(6, Math::Vector(0,0)),
 		mHeadingIt(0),
 		mHeadingListFull(false)
 {
 	subclass("Actor");
+}
+
+//Returns the neighbor list, meant to optimize steering behaviors that use this by only performing a search once per update
+ConstEntityList<Actor> Actor::neighbors()
+{
+	if (mNeighborListValid) return mNeighbors;
+
+	mNeighbors = world()->findEntities<Actor>(pos(), mNeighborRadius, mNeighborType);
+	mNeighborListValid = true;
+	return mNeighbors;
 }
 
 void Actor::addSteeringBehavior(SteeringBehavior* s)
@@ -29,6 +42,8 @@ void Actor::remSteeringBehavior(SteeringBehavior* s)
 
 void Actor::updateEvent(double secsElapsed)
 {
+	mNeighborListValid = false;
+
 	//combine steering forces: weighted truncated running sum (with prioritization)
 	Math::Vector steeringForce;
 
@@ -58,7 +73,7 @@ void Actor::updateEvent(double secsElapsed)
 	MovingEntity::updateEvent(secsElapsed);
 
 	//only update heading if traveling at a reasonable speed
-	if (velocity().lengthSq() > 0.0001) {
+	if (velocity().lengthSq() > 0.01) {
 		Math::Vector heading = velocity().normal();
 
 		mHeadingList[mHeadingIt] = heading;

@@ -48,7 +48,7 @@ GameUI::GameUI()
 	//connect(mBtnClose, SIGNAL(clicked()), this, SLOT(close()));
 
 	mGame = new Game(comm);
-	connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
+	//connect(mGame, SIGNAL(worldUpdated()), this, SLOT(update()));
 
 	//TEST GAME ENTITIES GO HERE
 	Map* map = new Map(mGame->world());
@@ -58,9 +58,9 @@ GameUI::GameUI()
 	new GhostBustersHQ(mGame->world());
 
 	for (int i=0; i<50; ++i)
-		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
+		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-80,90)), mGame->world());
 	for (int i=0; i<50; ++i)
-		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,270)), mGame->world());
+		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,260)), mGame->world());
 	for (int i=0; i<17; ++i)
 		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());
 	for (int i=0; i<17; ++i)
@@ -75,7 +75,7 @@ GameUI::GameUI()
 	mBlueprint = new BlueprintWindow(mGame);
 	setCentralWidget(mBlueprint);
 
-	connect(mGame, SIGNAL(worldUpdated()), mBlueprint, SLOT(update()));
+	connect(mGame, SIGNAL(worldUpdated()), mBlueprint->blueprint(), SLOT(repaint()));
 }
 
 GameUI::~GameUI()

@@ -1,7 +1,7 @@
 #include "Evade.h"
 
 Evade::Evade(Pointer<Actor>  parent, const Pointer<MovingEntity> target, double maxDistance)
-	:	SteeringBehavior(parent, 0.6), /*weight 0.1?*/
+	:	SteeringBehavior(parent, 0.8), /*weight 0.1?*/
 		mTarget(target),
 		mMaxDistance(maxDistance)
 {
@@ -24,7 +24,7 @@ Math::Vector Evade::calculate()
 	//and inversely proportional to the sum of the agents' speeds
 	double lookAhead =
 		lookAheadFactor * toTarget.lengthSq() /
-		(parent()->maxSpeed() + targetSpeed)*(parent()->maxSpeed() + targetSpeed);
+		((parent()->maxSpeed() + targetSpeed)*(parent()->maxSpeed() + targetSpeed));
 
 	//now flee from predicted position
 	Math::Point aim = mTarget->pos() + mTarget->velocity() * lookAhead;

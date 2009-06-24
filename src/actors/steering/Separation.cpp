@@ -8,14 +8,13 @@
 #include "Separation.h"
 #include "Pointer.h"
 
-Separation::Separation(Pointer<Actor> parent, std::string targetType)
-	:	SteeringBehavior(parent, 1.0),
-		mTargetType(targetType)
+Separation::Separation(Pointer<Actor> parent)
+	:	SteeringBehavior(parent, 0.5)
 {}
 
 Math::Vector Separation::calculate()
 {
-	ConstEntityList<Entity> neighbors = parent()->world()->findEntities<Entity>(parent()->pos(), 10, mTargetType);
+	ConstEntityList<Actor> neighbors = parent()->neighbors();
 
 	Math::Vector force;
 	for (unsigned int i = 0; i < neighbors.size(); ++i) {

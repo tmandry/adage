@@ -14,9 +14,6 @@
 
 namespace Math {
 
-//forward declaration
-struct Point;
-
 struct Vector {
 	double x,y;
 
@@ -24,7 +21,7 @@ struct Vector {
 	Vector(double X, double Y): x(X),y(Y) {}
 	explicit Vector(const Point& p): x(p.x),y(p.y) {} //convert from Point to Vector
 	virtual ~Vector() {}
-	
+
 	//zero the vector
 	void zero() {x = 0; y = 0;}
 
@@ -95,7 +92,7 @@ struct Vector {
 			*this *= max;
 		}
 	}
-	
+
 	//convert from Vector to Point
 	operator Point() const
 	{
@@ -130,6 +127,8 @@ struct Vector {
 		return *this;
 	}
 };
+
+inline Point::Point(const Vector& v): x(v.x),y(v.y) {}
 
 inline bool operator== (const Vector& lhs, const Vector& rhs)
 {

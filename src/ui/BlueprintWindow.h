@@ -12,11 +12,13 @@
 class BlueprintWindow : public QWidget
 {
 	Q_OBJECT
-	
+
 public:
 	BlueprintWindow(Game* game, QWidget* parent=0);
 	virtual ~BlueprintWindow();
-	
+
+	Blueprint* blueprint() const { return mBlueprint; }
+
 	virtual QSize sizeHint() const;
 
 public slots:

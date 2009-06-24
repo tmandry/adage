@@ -31,7 +31,7 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	mPursue = new Pursue(pointer());
 	addSteeringBehavior(new AvoidWalls(pointer()));
 	addSteeringBehavior(mPursue);
-	addSteeringBehavior(new Separation(pointer(), "GhostBuster"));
+	addSteeringBehavior(new Separation(pointer()));
 	addSteeringBehavior(mWander);
 
 	PersonView* view = new PersonView(pointer(), Qt::yellow);
