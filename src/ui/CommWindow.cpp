@@ -8,6 +8,7 @@
 CommWindow::CommWindow(QWidget* parent): QTextEdit(parent)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	setReadOnly(true);
 }
 
 CommWindow::~CommWindow()

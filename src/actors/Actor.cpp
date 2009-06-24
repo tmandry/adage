@@ -4,7 +4,7 @@
 
 Actor::Actor(Pointer<Entity> parent, std::string name)
 	:	MovingEntity(parent, name),
-		mHeadingList(5, Math::Vector(0,0)),
+		mHeadingList(6, Math::Vector(0,0)),
 		mHeadingIt(0),
 		mHeadingListFull(false)
 {

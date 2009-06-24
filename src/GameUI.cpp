@@ -59,15 +59,23 @@ GameUI::GameUI()
 
 	for (int i=0; i<50; ++i)
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
-	for (int i=0; i<20; ++i)
+	for (int i=0; i<50; ++i)
+		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,270)), mGame->world());
+	for (int i=0; i<17; ++i)
 		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());
+	for (int i=0; i<17; ++i)
+		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(180,380)), mGame->world());
 	for (int i=0; i<4; ++i)
 		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());
+	for (int i=0; i<4; ++i)
+		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,270)), mGame->world());
 
 
 	//
 	mBlueprint = new BlueprintWindow(mGame);
 	setCentralWidget(mBlueprint);
+
+	connect(mGame, SIGNAL(worldUpdated()), mBlueprint, SLOT(update()));
 }
 
 GameUI::~GameUI()

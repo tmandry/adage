@@ -22,8 +22,10 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	setMaxSpeed(7.0);
 
 	mWander = new Wander(pointer(), 0.5);
-	addSteeringBehavior(mWander);
+	mEvade = new Evade(pointer());
 	addSteeringBehavior(new AvoidWalls(pointer()));
+	addSteeringBehavior(mEvade);
+	addSteeringBehavior(mWander);
 
 	setView(new PersonView(pointer(), Qt::white));
 	setVisible(true);
@@ -31,7 +33,7 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 
 void Person::updateEvent(double secsElapsed)
 {
-	static ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
+	/*static ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
 
 	for (unsigned int i=0; i<mEvade.size(); ++i) {
 		remSteeringBehavior(mEvade[i]);
@@ -42,7 +44,10 @@ void Person::updateEvent(double secsElapsed)
 	for (unsigned int i = 0; i < ghosts.size(); ++i) {
 		mEvade[i] = new Evade(pointer(), ghosts[i]);
 		addSteeringBehavior(mEvade[i]);
-	}
+	}*/
+
+	Pointer<Ghost> ghost = world()->findNearestEntity<Ghost>(pos(), "Ghost", 75);
+	if (ghost) mEvade->setTarget(ghost);
 
 	Actor::updateEvent(secsElapsed);
 }
@@ -101,7 +106,7 @@ void PersonView::paint(QPainter* p)
 
 		p->setBrush(Qt::NoBrush);
 		p->setPen(QPen(QBrush(Qt::yellow), 0.1));
-		//p->drawEllipse(mParent->pos(), 50, 50);
+		p->drawEllipse(mParent->pos(), 50, 50);
 
 		p->setPen(QPen(QBrush(Qt::darkYellow), 0));
 		for (ConstEntityList<Ghost>::const_iterator t = targets.begin(); t != targets.end(); ++t) {

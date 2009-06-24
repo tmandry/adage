@@ -2,7 +2,7 @@
 #include "Pursue.h"
 
 Pursue::Pursue(Pointer<Actor> parent, const Pointer<MovingEntity> target)
-	:	SteeringBehavior(parent, 1.0),
+	:	SteeringBehavior(parent, 0.9),
 		mTarget(target),
 		mSeek(parent)
 {

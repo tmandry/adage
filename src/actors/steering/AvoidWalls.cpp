@@ -23,8 +23,8 @@ Math::Vector AvoidWalls::calculate()
 	double len;
 	switch (mCycle) {
 		case 0: v = parent()->heading() * 5.0; len = 5.0; break;
-		case 1: v = (parent()->heading()*1.341 + parent()->heading().perpCW()*1.125); len = 1.75; break;
-		case 2: v = (parent()->heading()*1.341 + parent()->heading().perpCCW()*1.125); len = 1.75; break;
+		case 1: v = (parent()->heading()*1.949 + parent()->heading().perpCW()*1.125); len = 2.25; break;
+		case 2: v = (parent()->heading()*1.949 + parent()->heading().perpCCW()*1.125); len = 2.25; break;
 		default: break;
 	}
 

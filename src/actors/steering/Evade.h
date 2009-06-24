@@ -9,10 +9,13 @@ public:
 	Evade(Pointer<Actor> parent, const Pointer<MovingEntity> target=Pointer<MovingEntity>(), double maxDistance=100.0);
 	virtual ~Evade() {}
 
+	void setTarget(Pointer<MovingEntity> target) { mTarget = target; }
+	Pointer<MovingEntity> target() const { return mTarget; }
+
 	Math::Vector calculate();
 
 private:
-	const Pointer<MovingEntity> mTarget;
+	Pointer<MovingEntity> mTarget;
 	double mMaxDistance;
 };
 

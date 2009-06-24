@@ -32,6 +32,7 @@ private:
 	GhostAssnMap mGhostAssignments;
 
 	int mMaxAssignments; //max # of agents that can be assigned to a Ghost
+	int mNumAgents;
 	std::string mNextName;
 };
 
