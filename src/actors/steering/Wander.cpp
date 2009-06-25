@@ -2,7 +2,7 @@
 #include "math/rand.h"
 
 Wander::Wander(Pointer<Actor> parent, double factor)
-	:	SteeringBehavior(parent, factor),
+	:	SteeringBehavior(parent, factor, 10),
 		mJitter(0.4),
 		mRadius(1.0),
 		mDistance(0.7)

@@ -48,11 +48,15 @@ HEADERS += Game.h \
            world/Entity.h \
            world/EntityList.h \
            world/GhostBustersHQ.h \
+           world/GhostTrap.h \
            world/Map.h \
            world/MovingEntity.h \
            world/View.h \
            world/Wall.h \
-           world/World.h
+           world/World.h \
+           world/trigger/LimitedLifetimeTrigger.h \
+           world/trigger/Trigger.h \
+           world/trigger/TriggerRegion.h
 SOURCES += Game.cpp \
            GameUI.cpp \
            main.cpp \
@@ -80,6 +84,7 @@ SOURCES += Game.cpp \
            world/CellSpacePartition.cpp \
            world/Entity.cpp \
            world/GhostBustersHQ.cpp \
+           world/GhostTrap.cpp \
            world/Map.cpp \
            world/MovingEntity.cpp \
            world/Wall.cpp \

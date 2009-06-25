@@ -1,7 +1,7 @@
 #include "Evade.h"
 
 Evade::Evade(Pointer<Actor>  parent, const Pointer<MovingEntity> target, double maxDistance)
-	:	SteeringBehavior(parent, 0.8), /*weight 0.1?*/
+	:	SteeringBehavior(parent, 0.4, 90), /*weight 0.1?*/
 		mTarget(target),
 		mMaxDistance(maxDistance)
 {

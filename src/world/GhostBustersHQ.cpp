@@ -29,7 +29,7 @@ void GhostBustersHQ::newAgent(Pointer<GhostBuster> agent)
 {
 	++mNumAgents;
 	printComm(QString("Agent <font color='yellow'>%1</font> registered. Now <font color='#eebb00'>%2</font> agents.").arg(mNextName.c_str()).arg(mNumAgents));
-	agent->setName(mNextName);
+	agent->setName("Agent " + mNextName);
 	++mNextName[0];
 }
 

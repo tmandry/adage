@@ -4,7 +4,7 @@
 #include "world/Wall.h"
 
 AvoidWalls::AvoidWalls(Pointer<Actor> parent)
-	:	SteeringBehavior(parent, 1.0),
+	:	SteeringBehavior(parent, 1.0, 100),
 		mCycle(0),
 		mResults(3)
 {

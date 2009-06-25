@@ -9,7 +9,7 @@ public:
 	enum Deceleration { slow = 3, normal = 2, fast = 1 };
 
 	Arrive(Pointer<Actor> parent, Math::Point target, Deceleration decel = normal)
-		:	SteeringBehavior(parent, 1.0),
+		:	SteeringBehavior(parent, 1.0, 80),
 			mTarget(target),
 			mDecel(decel)
 	{}

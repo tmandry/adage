@@ -1,7 +1,7 @@
 #include "Flee.h"
 
 Flee::Flee(Pointer<Actor> parent, Math::Point target, double maxDistance)
-	:	SteeringBehavior(parent, 1.0),
+	:	SteeringBehavior(parent, 1.0, 85),
 		mTarget(target),
 		mMaxDistance(maxDistance)
 {

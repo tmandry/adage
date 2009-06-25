@@ -130,7 +130,7 @@ void PersonView::paint(QPainter* p)
 	/*if (mParent->inherits("Person")) {
 		Pointer<Ghost> target = ((Pointer<Person>)mParent)->mEvade->target();
 		if (target) {
-			p->setPen(QPen(QBrush(Qt::white), 0.01));
+			p->setPen(QPen(QBrush(Qt::gray), 0.01));
 			p->drawLine(mParent->pos(), target->pos());
 		}
 	}*/

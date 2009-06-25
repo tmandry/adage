@@ -8,7 +8,7 @@
 #include "Alignment.h"
 
 Alignment::Alignment(Pointer<Actor> parent)
-	:	SteeringBehavior(parent, 0.5)
+	:	SteeringBehavior(parent, 0.5, 40)
 {
 }
 

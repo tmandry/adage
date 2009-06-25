@@ -7,8 +7,8 @@
 class SteeringBehavior
 {
 public:
-	SteeringBehavior(Pointer<Actor> parent, double factor, bool on=true)
-		:	mParent(parent), mFactor(factor), mOn(on)
+	SteeringBehavior(Pointer<Actor> parent, double factor, int priority, bool on=true)
+		:	mParent(parent), mFactor(factor), mPriority(priority), mOn(on)
 	{
 		/*mParent->addSteeringBehavior(this);*/
 	}
@@ -25,6 +25,7 @@ public:
 	bool isOn() const { return mOn; }
 
 	double factor() const { return mFactor; }
+	int priority() const { return mPriority; }
 
 protected:
 	Pointer<Actor> parent() const { return mParent; }
@@ -32,6 +33,7 @@ protected:
 private:
 	Pointer<Actor> mParent;
 	double mFactor;
+	int mPriority;
 	bool mOn;
 };
 
@@ -40,7 +42,7 @@ class SteeringBehaviorSort
 public:
     bool operator()(const SteeringBehavior* lhs, const SteeringBehavior* rhs)
     {
-        return lhs->factor() > rhs->factor();
+        return lhs->priority() > rhs->priority();
     }
 };
 

@@ -11,6 +11,7 @@
 #include "Person.h"
 #include "world/GhostBustersHQ.h"
 #include "world/World.h"
+#include "world/GhostTrap.h"
 #include "math/rand.h"
 #include "steering/AvoidWalls.h"
 #include "steering/Separation.h"
@@ -61,6 +62,11 @@ void GhostBuster::updateEvent(double secsElapsed)
 		if (mKillCount % 5 == 0) { //new comrade
 			GhostBuster* comrade = new GhostBuster(mTarget->pos(), world());
 			comrade->setVelocity(mTarget->velocity());
+		}
+
+		if (mKillCount % 3 == 0) { //new trap
+			new GhostTrap(world(), pos());
+			printComm("Ghost trap deployed.");
 		}
 
 		if (mHQ) {

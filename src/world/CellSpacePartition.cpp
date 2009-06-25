@@ -83,14 +83,15 @@ void CellSpacePartition::findNeighbors(Math::Point p, double radius, std::string
 
 	for (std::vector<Cell>::iterator i = mCells.begin(); i != mCells.end(); ++i) {
 		//check if cell falls in "square radius"
-		if ((i->right > p.x-radius || i->left < p.x+radius) &&
+		//TODO: BOGUS
+		/*if ((i->right > p.x-radius || i->left < p.x+radius) &&
 			(i->bottom < p.y+radius || i->top > p.y-radius)
-		) {
+		) {*/
 			//cell (may be) in neighborhood, check all members
 			for (unsigned int j = 0; j < i->members.size(); ++j)
 				if (i->members[j]->inherits(type) && Math::distanceSq(i->members[j]->pos(), p) < radius*radius)
 					mResult.push_back(i->members[j]);
-		}
+		//}
 	}
 }
 
@@ -112,7 +113,8 @@ Pointer<Entity> CellSpacePartition::findNearest(Math::Point p, std::string type,
 	int startCell = posToIdx(p);
 
 	int reach = 1; //how many cells out we will be searching, each iteration
-	int timesFound = 0; //will go 1 iteration past a find because a closer one could be found (ie if the first one is found in a corner)
+	int timesFound = 0; //will go n iterations past a find because a closer one could be found (ie if the first one is found in a corner)
+	int maxTimesFound = 2;
 	Pointer<Entity> nearest;
 	double nearestDistSq = Math::maxDouble;
 
@@ -121,7 +123,7 @@ Pointer<Entity> CellSpacePartition::findNearest(Math::Point p, std::string type,
 
 	do {
 		//start at top-left and go clockwise
-		int cell = startCell - reach - reach*mNumHCells; //tl
+		int cell = startCell - reach - reach*mNumHCells - 1; //tl
 		for (int i = 0; i < reach*2 + 1; ++i) { //top row
 			++cell;
 			checkCell(p, type, cell, nearest, nearestDistSq, mCells);
@@ -139,9 +141,12 @@ Pointer<Entity> CellSpacePartition::findNearest(Math::Point p, std::string type,
 			checkCell(p, type, cell, nearest, nearestDistSq, mCells);
 		}
 
-		if (nearest) ++timesFound;
+		if (nearest) {
+			++timesFound;
+			if (timesFound > 2) maxTimesFound = timesFound*2 - 2; //good estimate of how far to go (not perfect)
+		}
 		++reach;
-	} while (timesFound < 3 && reach*mCellSize < maxDistance);
+	} while (timesFound < maxTimesFound && reach*mCellSize < maxDistance);
 
 	return nearest;
 }

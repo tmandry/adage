@@ -9,7 +9,7 @@
 #include "Pointer.h"
 
 Separation::Separation(Pointer<Actor> parent)
-	:	SteeringBehavior(parent, 0.5)
+	:	SteeringBehavior(parent, 0.5, 70)
 {}
 
 Math::Vector Separation::calculate()

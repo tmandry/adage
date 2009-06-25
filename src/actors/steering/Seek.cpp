@@ -2,7 +2,7 @@
 #include <iostream>
 
 Seek::Seek(Pointer<Actor> parent, Math::Point target)
-	:	SteeringBehavior(parent, 1.0),
+	:	SteeringBehavior(parent, 1.0, 80),
 		mTarget(target)
 {
 }
