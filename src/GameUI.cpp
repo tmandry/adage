@@ -62,11 +62,9 @@ GameUI::GameUI()
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-80,90)), mGame->world());
 	for (int i=0; i<50; ++i)
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,260)), mGame->world());
-	for (int i=0; i<30; ++i)
+	for (int i=0; i<20; ++i)
 		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());
-	/*for (int i=0; i<3; ++i)
-		new GhostTrap(mGame->world(), Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)));*/
-	for (int i=0; i<17; ++i)
+	for (int i=0; i<20; ++i)
 		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(180,380)), mGame->world());
 	for (int i=0; i<4; ++i)
 		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(-90,90)), mGame->world());

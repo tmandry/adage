@@ -83,15 +83,28 @@ void CellSpacePartition::findNeighbors(Math::Point p, double radius, std::string
 
 	for (std::vector<Cell>::iterator i = mCells.begin(); i != mCells.end(); ++i) {
 		//check if cell falls in "square radius"
-		//TODO: BOGUS
-		/*if ((i->right > p.x-radius || i->left < p.x+radius) &&
-			(i->bottom < p.y+radius || i->top > p.y-radius)
-		) {*/
+		//this condition is TOTALLY NOT BOGUS
+		if (
+			//x part
+			(
+				//either one of the cell edges lies within the circle
+				((p.x-radius <= i->left && i->left <= p.x+radius) ||
+				(p.x-radius <= i->right && i->right <= p.x+radius))
+				|| //OR the circle is completely inside the cell
+				(i->left <= p.x-radius && p.x+radius <= i->right)
+			) && (
+			//AND y part. edges:
+				((p.y-radius <= i->top && i->top <= p.y+radius) ||
+				(p.y-radius <= i->bottom && i->bottom <= p.y+radius))
+				|| //OR circle is inside:
+				(i->top <= p.y-radius && p.y+radius <= i->bottom)
+			)
+		) {
 			//cell (may be) in neighborhood, check all members
 			for (unsigned int j = 0; j < i->members.size(); ++j)
 				if (i->members[j]->inherits(type) && Math::distanceSq(i->members[j]->pos(), p) < radius*radius)
 					mResult.push_back(i->members[j]);
-		//}
+		}
 	}
 }
 
