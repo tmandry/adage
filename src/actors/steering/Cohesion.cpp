@@ -8,7 +8,7 @@
 #include "Cohesion.h"
 
 Cohesion::Cohesion(Pointer<Actor> parent)
-	:	SteeringBehavior(parent, 0.35, 60)
+	:	SteeringBehavior(parent, 0.4, 60)
 {
 }
 

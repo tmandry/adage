@@ -2,7 +2,7 @@
 #include "actors/Ghost.h"
 
 DormantGhostPortal::DormantGhostPortal(Pointer<Entity> parent, Math::Point pos)
-	:	LimitedLifetimeTrigger(parent, 30.0)
+	:	LimitedLifetimeTrigger(parent, 35.0)
 {
 	subclass("DormantGhostPortal");
 

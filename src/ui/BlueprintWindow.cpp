@@ -9,26 +9,34 @@ BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	mBlueprint(new Blueprint(game))
 {
 	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-	
+
 	//TODO: make these icons instead of ugly text buttons!
 	mToolbar = new QToolBar(tr("Blueprint actions"), this);
 	mToolbar->addAction(tr("Home"), mBlueprint, SLOT(goHome()));
 	mToolbar->addSeparator();
 	mToolbar->addAction(tr("Zoom In"), this, SLOT(zoomIn()));
 	mToolbar->addAction(tr("Zoom Out"), this, SLOT(zoomOut()));
-	
+
+	mToolCombo = new QComboBox(this);
+	mToolCombo->insertItem(Blueprint::dormantPortal, QIcon(), "Dormant Portal");
+	mToolCombo->insertItem(Blueprint::portal, QIcon(), "Active Portal");
+	mToolCombo->insertItem(Blueprint::trap, QIcon(), "Ghost Trap");
+	mToolbar->addSeparator();
+	mToolbar->addWidget(mToolCombo);
+
 	mStatusBar = new QStatusBar;
 	mZoomLbl = new QLabel(QString::number(mBlueprint->zoom(), 'f', 2) + "x");
 	mStatusBar->addPermanentWidget(mZoomLbl);
-	
+
 	QVBoxLayout* layout = new QVBoxLayout;
 	layout->addWidget(mToolbar);
 	layout->addWidget(mBlueprint);
 	layout->addWidget(mStatusBar);
-	
+
 	setLayout(layout);
-	
+
 	connect(mBlueprint, SIGNAL(zoomChanged(float)), this, SLOT(zoomChanged(float)));
+	connect(mToolCombo, SIGNAL(activated(int)), mBlueprint, SLOT(setTool(int)));
 }
 
 BlueprintWindow::~BlueprintWindow()

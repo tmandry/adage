@@ -8,6 +8,9 @@
 #include "Game.h"
 #include "world/Wall.h"
 #include "math/real.h"
+#include "world/GhostPortal.h"
+#include "world/GhostTrap.h"
+#include "BlueprintWindow.h"
 
 Blueprint* Blueprint::bp = 0;
 
@@ -45,6 +48,11 @@ void Blueprint::goHome()
 {
 	mPanning = QPointF(0,0);
 	update();
+}
+
+void Blueprint::setTool(int tool)
+{
+	mTool = (ToolType)tool;
 }
 
 void Blueprint::paintEvent(QPaintEvent* /*event*/)
@@ -106,6 +114,9 @@ void Blueprint::mouseReleaseEvent(QMouseEvent* event)
 	case Qt::LeftButton:
 		mMovePressed = false;
 		break;
+	case Qt::RightButton:
+		placeTool(Math::Point(-mPanning + (-QPointF(width(),height()) / 2.0 + event->pos()) / scale()));
+		break;
 	default:
 		break;
 	}
@@ -120,6 +131,21 @@ void Blueprint::wheelEvent(QWheelEvent* event)
 		z += event->delta() / 1200.0; //about .1 per step
 
 		setZoom(z);
+	}
+}
+
+void Blueprint::placeTool(Math::Point pos)
+{
+	switch (mTool) {
+	case dormantPortal:
+		new DormantGhostPortal(mGame->world(), pos);
+		break;
+	case portal:
+		new GhostPortal(mGame->world(), pos);
+		break;
+	case trap:
+		new GhostTrap(mGame->world(), pos);
+		break;
 	}
 }
 

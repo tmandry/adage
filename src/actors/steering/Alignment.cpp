@@ -8,7 +8,7 @@
 #include "Alignment.h"
 
 Alignment::Alignment(Pointer<Actor> parent)
-	:	SteeringBehavior(parent, 0.5, 40)
+	:	SteeringBehavior(parent, 6.0, 40)
 {
 }
 
@@ -32,5 +32,5 @@ Math::Vector Alignment::calculate()
 	if (neighborCount == 0) return Math::Vector(0,0);
 
 	avgHeading /= neighborCount;
-	return (avgHeading - parent()->heading()).normal() * 3;
+	return (avgHeading - parent()->heading());
 }

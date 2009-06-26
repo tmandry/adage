@@ -24,6 +24,7 @@ public:
 	void off() { mOn = false; }
 	bool isOn() const { return mOn; }
 
+	void setFactor(double factor) { mFactor = factor; }
 	double factor() const { return mFactor; }
 	int priority() const { return mPriority; }
 

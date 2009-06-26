@@ -73,7 +73,7 @@ void Actor::updateEvent(double secsElapsed)
 	MovingEntity::updateEvent(secsElapsed);
 
 	//only update heading if traveling at a reasonable speed
-	if (velocity().lengthSq() > 0.1) {
+	if (velocity().lengthSq() > 4.0) {
 		Math::Vector heading = velocity().normal();
 
 		mHeadingList[mHeadingIt] = heading;

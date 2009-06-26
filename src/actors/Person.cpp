@@ -38,7 +38,7 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	//addSteeringBehavior(new Alignment(pointer()));
 	addSteeringBehavior(mWander);
 
-	setNeighborRadius(20.0);
+	setNeighborRadius(25.0);
 	setNeighborType("Person");
 
 	setView(new PersonView(pointer(), Qt::white));
@@ -70,11 +70,14 @@ void Person::updateEvent(double secsElapsed)
 		//find a place of relative safety.. a ghost trap
 		Pointer<Entity> trap = world()->findNearestEntity<Entity>(pos(), "GhostTrap", 40);
 		//don't go if we're already close by enough
-		if (trap && Math::distanceSq(trap->pos(), pos()) > 225) {
-			mFindSafety->setTarget(trap->pos());
-			mFindSafety->on();
-		} else {
-			mFindSafety->off();
+		mFindSafety->off();
+		if (trap) {
+			double distSq = Math::distanceSq(trap->pos(), pos());
+			if (distSq > 225) {
+				mFindSafety->setTarget(trap->pos());
+				mFindSafety->on();
+				mFindSafety->setFactor(0.8 * distSq/1200);
+			}
 		}
 	}
 

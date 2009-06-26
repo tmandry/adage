@@ -13,6 +13,12 @@ class Blueprint : public QGLWidget
 	Q_OBJECT
 
 public:
+	enum ToolType {
+		dormantPortal,
+		portal,
+		trap
+	};
+
 	static Blueprint* bp;
 
 	Blueprint(Game* game, QWidget* parent=0);
@@ -22,6 +28,7 @@ public:
 
 public slots:
 	void setZoom(float zoom);
+	void setTool(int tool);
 	//eventually will be used for returning the view to the main point of interest in the mission
 	void goHome();
 
@@ -39,6 +46,8 @@ protected:
 private:
 	enum { basePxPerMeter = 2 };
 
+	void placeTool(Math::Point pos);
+
 	//returns px per meter scale with zoom
 	inline float scale() const;
 	//returns grid line interval in meters
@@ -53,6 +62,8 @@ private:
 	bool mMovePressed;
 	QPointF mMovePanningStart;
 	QPoint mMoveMouseStart;
+
+	ToolType mTool;
 };
 
 #endif /*BLUEPRINT_H_*/

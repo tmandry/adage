@@ -9,7 +9,7 @@
 #include "Pointer.h"
 
 Separation::Separation(Pointer<Actor> parent)
-	:	SteeringBehavior(parent, 0.5, 70)
+	:	SteeringBehavior(parent, 2.5, 70)
 {}
 
 Math::Vector Separation::calculate()
@@ -22,7 +22,7 @@ Math::Vector Separation::calculate()
 			Math::Vector toNeighbor = parent()->pos() - neighbors[i]->pos();
 
 			//scale the force inversely proportional to neighbor's distance
-			force += (toNeighbor.normal()/toNeighbor.length()) * 5;
+			force += (toNeighbor.normal()/toNeighbor.length());
 		}
 	}
 

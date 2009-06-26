@@ -6,6 +6,7 @@
 #include <QSize>
 #include <QStatusBar>
 #include <QLabel>
+#include <QComboBox>
 #include "Game.h"
 #include "ui/Blueprint.h"
 
@@ -33,6 +34,7 @@ private:
 	Blueprint* mBlueprint;
 	QStatusBar* mStatusBar;
 	QLabel* mZoomLbl;
+	QComboBox* mToolCombo;
 };
 
 #endif /*BLUEPRINTWINDOW_H_*/
