@@ -26,6 +26,7 @@ private:
 	double mUpdateTimer;
 
 	//std::vector<Evade*> mEvade;
+	Arrive* mFindSafety;
 	Evade* mEvade;
 	Wander* mWander;
 };

@@ -38,7 +38,7 @@ void Ghost::updateEvent(double secsElapsed)
 		victim->setVelocity(mTarget->velocity());
 
 		++mKillCount;
-		if (mKillCount % 2 == 0) new DormantGhostPortal(world(), pos());
+		if (mKillCount % 3 == 0) new DormantGhostPortal(world(), pos());
 
 		newTarget();
 	}
@@ -54,7 +54,7 @@ void Ghost::newTarget()
 {
 	//pick a random person to pursue
 	ConstEntityList<Person> people = world()->findEntities<Person>(pos(), 35.0, "Person");
-	if (people.empty()) people = world()->findEntities<Person>("Person");
+	if (people.empty() || Math::randFloat(0, 1) < .5) people = world()->findEntities<Person>("Person");
 
 	if (!people.empty()) {
 		int idx = Math::randInt(0, people.size()-1);

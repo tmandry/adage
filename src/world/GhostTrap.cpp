@@ -8,6 +8,8 @@ GhostTrap::GhostTrap(Pointer<Entity> parent, Math::Point pos, std::string name)
 		mKillTimer(0),
 		mKillCount(0)
 {
+	subclass("GhostTrap");
+
 	setPos(pos);
 	setTriggerRegion(new TriggerRegionCircle(pos, 7));
 	mView = new CircleView(pos, 7, Qt::darkGreen, 0.5);

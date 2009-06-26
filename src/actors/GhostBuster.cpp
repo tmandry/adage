@@ -26,7 +26,7 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	if (hq.size() != 0) mHQ = hq[0];
 
 	setPos(pos);
-	setMaxSpeed(10.0);
+	setMaxSpeed(10.5);
 
 	mWander = new Wander(pointer());
 	mPursue = new Pursue(pointer());
@@ -59,12 +59,12 @@ void GhostBuster::updateEvent(double secsElapsed)
 		mTarget->remove();
 		++mKillCount;
 
-		if (mKillCount % 5 == 0) { //new comrade
+		if (mKillCount % 4 == 0) { //new comrade
 			GhostBuster* comrade = new GhostBuster(mTarget->pos(), world());
 			comrade->setVelocity(mTarget->velocity());
 		}
 
-		if ((mKillCount+1) % 4 == 0) { //new trap
+		if ((mKillCount+1) % 3 == 0) { //new trap
 			new GhostTrap(world(), pos());
 			printComm("Ghost trap deployed.");
 		}

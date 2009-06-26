@@ -14,10 +14,12 @@
 #include "steering/Cohesion.h"
 #include "steering/Alignment.h"
 #include "math/convert.h"
+#include "math/rand.h"
 #include <cassert>
 
 Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
-	:	Actor(parent, name)
+	:	Actor(parent, name),
+		mUpdateTimer(Math::randFloat(0, 0.5)) //keep from having a billion people update at once by adding a random offset
 {
 	subclass("Person");
 
@@ -26,7 +28,10 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 
 	mWander = new Wander(pointer(), 0.5);
 	mEvade = new Evade(pointer());
+	mFindSafety = new Arrive(pointer(), Math::Point(), Arrive::fast, 0.8, 91);
+	mFindSafety->off();
 	addSteeringBehavior(new AvoidWalls(pointer()));
+	addSteeringBehavior(mFindSafety);
 	addSteeringBehavior(mEvade);
 	addSteeringBehavior(new Separation(pointer()));
 	addSteeringBehavior(new Cohesion(pointer()));
@@ -55,8 +60,23 @@ void Person::updateEvent(double secsElapsed)
 		addSteeringBehavior(mEvade[i]);
 	}*/
 
-	Pointer<Ghost> ghost = world()->findNearestEntity<Ghost>(pos(), "Ghost", 75);
-	if (ghost) mEvade->setTarget(ghost);
+	const double targetUpdateInterval = 0.5; //seconds
+
+	mUpdateTimer += secsElapsed;
+	if (mUpdateTimer >= targetUpdateInterval) {
+		Pointer<Ghost> ghost = world()->findNearestEntity<Ghost>(pos(), "Ghost", 75);
+		if (ghost) mEvade->setTarget(ghost);
+
+		//find a place of relative safety.. a ghost trap
+		Pointer<Entity> trap = world()->findNearestEntity<Entity>(pos(), "GhostTrap", 40);
+		//don't go if we're already close by enough
+		if (trap && Math::distanceSq(trap->pos(), pos()) > 225) {
+			mFindSafety->setTarget(trap->pos());
+			mFindSafety->on();
+		} else {
+			mFindSafety->off();
+		}
+	}
 
 	Actor::updateEvent(secsElapsed);
 }
