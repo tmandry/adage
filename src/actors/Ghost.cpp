@@ -2,9 +2,11 @@
 #include "Person.h"
 #include "world/World.h"
 #include "math/rand.h"
+#include "world/GhostPortal.h"
 
 Ghost::Ghost(Math::Point pos, Pointer<Entity> parent, std::string name)
-	:	Actor(parent, name)
+	:	Actor(parent, name),
+		mKillCount(0)
 {
 	subclass("Ghost");
 
@@ -35,6 +37,9 @@ void Ghost::updateEvent(double secsElapsed)
 		Ghost* victim = new Ghost(mTarget->pos(), world());
 		victim->setVelocity(mTarget->velocity());
 
+		++mKillCount;
+		if (mKillCount % 2 == 0) new DormantGhostPortal(world(), pos());
+
 		newTarget();
 	}
 
@@ -48,7 +53,8 @@ void Ghost::updateEvent(double secsElapsed)
 void Ghost::newTarget()
 {
 	//pick a random person to pursue
-	ConstEntityList<Person> people = world()->findEntities<Person>("Person");
+	ConstEntityList<Person> people = world()->findEntities<Person>(pos(), 35.0, "Person");
+	if (people.empty()) people = world()->findEntities<Person>("Person");
 
 	if (!people.empty()) {
 		int idx = Math::randInt(0, people.size()-1);

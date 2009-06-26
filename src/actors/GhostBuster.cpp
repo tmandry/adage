@@ -64,7 +64,7 @@ void GhostBuster::updateEvent(double secsElapsed)
 			comrade->setVelocity(mTarget->velocity());
 		}
 
-		if (mKillCount % 3 == 0) { //new trap
+		if ((mKillCount+1) % 4 == 0) { //new trap
 			new GhostTrap(world(), pos());
 			printComm("Ghost trap deployed.");
 		}

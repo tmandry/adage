@@ -20,7 +20,7 @@
 
 GameUI::GameUI()
 {
-	resize(930, 640);
+	resize(1000, 800);
 	setWindowTitle("Adage");
 
 	/*mLayout = new QVBoxLayout(this);
@@ -58,9 +58,9 @@ GameUI::GameUI()
 
 	new GhostBustersHQ(mGame->world());
 
-	for (int i=0; i<50; ++i)
+	for (int i=0; i<60; ++i) //ghost food
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(-80,90)), mGame->world());
-	for (int i=0; i<50; ++i)
+	for (int i=0; i<60; ++i)
 		new Person(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,260)), mGame->world());
 	for (int i=0; i<20; ++i)
 		new Ghost(Math::Point(Math::randFloat(-100,100),Math::randFloat(-100,100)), mGame->world());

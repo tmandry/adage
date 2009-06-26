@@ -65,7 +65,7 @@ protected:
 	void paint(QPainter* p);
 
 	void setVisible(bool v) { mVisible = v; }
-	void setView(View* view) { mView = view; }
+	void setView(View* view) { if (mView) delete mView; mView = view; }
 	View* view() const { return mView; }
 
 	inline void printComm(QString msg) const; //definition in World.h
@@ -78,7 +78,7 @@ private:
 
 	virtual void updateEvent(double /*secsElapsed*/) {}
 
-	virtual QString formatComm(QString msg) const { return "[" + QString(mName.c_str()) + "] " + msg; }
+	virtual QString formatComm(QString msg) const { return /*"[" + QString(mName.c_str()) + "] " + */msg; }
 
 	std::vector<std::string> mSubclasses;
 

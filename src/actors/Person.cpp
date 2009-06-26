@@ -122,9 +122,9 @@ void PersonView::paint(QPainter* p)
 			p->drawEllipse((*t)->pos(), 2.4, 2.4);
 		}*/
 
-		p->setPen(QPen(QBrush(Qt::red), 0));
+		/*p->setPen(QPen(QBrush(Qt::red), 0));
 		Pointer<Ghost> target = ((Pointer<GhostBuster>)mParent)->mTarget;
-		if (target) p->drawEllipse(target->pos(), 2.7, 2.7);
+		if (target) p->drawEllipse(target->pos(), 2.7, 2.7);*/
 	}
 
 	/*if (mParent->inherits("Person")) {

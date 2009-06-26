@@ -1,10 +1,3 @@
-/*
- * GhostBustersHQ.cpp
- *
- *  Created on: Jun 23, 2009
- *      Author: tyler
- */
-
 #include <vector>
 #include <QString>
 #include "GhostBustersHQ.h"
@@ -97,7 +90,7 @@ void GhostBustersHQ::targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> tar
 	mGhostAssignments.erase(target);
 
 	int numGs = world()->findEntities<Entity>("Ghost").size();
-	printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name().c_str()).arg(numGs));
+	if (agent) printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name().c_str()).arg(numGs));
 	if (numGs == 0) {
 		int numCs = world()->findEntities<Entity>("Person").size();
 		printComm(QString("Mission accomplished! <font color='#0066ff'>%1</font> civilians saved by the Ghost Busters.").arg(numCs));

@@ -22,6 +22,8 @@ private:
 
 	void newTarget();
 
+	int mKillCount;
+
 	Pursue* mPursue;
 	Wander* mWander;
 	Pointer<Person> mTarget;

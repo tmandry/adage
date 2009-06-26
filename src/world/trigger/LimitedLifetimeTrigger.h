@@ -12,7 +12,7 @@
 
 class LimitedLifetimeTrigger : public Trigger {
 public:
-	LimitedLifetimeTrigger(double lifetime): mLifetime(lifetime) { subclass("LimitedLifetimeTrigger"); }
+	LimitedLifetimeTrigger(Pointer<Entity> parent, double lifetime, std::string name = "Trigger"): Trigger(parent, name), mLifetime(lifetime) { subclass("LimitedLifetimeTrigger"); }
 	virtual ~LimitedLifetimeTrigger() {}
 
 	virtual void act(Pointer<Entity> target) = 0;
@@ -22,6 +22,8 @@ public:
 		mLifetime -= secsElapsed;
 		if (mLifetime <= 0)
 			remove();
+
+		Trigger::updateEvent(secsElapsed);
 	}
 
 private:

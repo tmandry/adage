@@ -8,26 +8,25 @@
 #ifndef GHOSTTRAP_H_
 #define GHOSTTRAP_H_
 
-#include "trigger/Trigger.h"
+#include "trigger/LimitedLifetimeTrigger.h"
 #include "View.h"
 
-class GhostTrap: public Trigger {
+class GhostTrap: public LimitedLifetimeTrigger {
 public:
 	GhostTrap(Pointer<Entity> parent, Math::Point pos, std::string name = "GhostTrap");
 	virtual ~GhostTrap();
 
 	void act(Pointer<Entity> target);
-};
-
-class GhostTrapView : public View {
-public:
-	GhostTrapView(Math::Point pos, double radius): mPos(pos), mRadius(radius) {}
-
-	void paint(QPainter* p);
+	void updateEvent(double secsElapsed);
 
 private:
-	Math::Point mPos;
-	double mRadius;
+	void detonate();
+
+	CircleView* mView;
+
+	bool mDetonated;
+	double mKillTimer;
+	int mKillCount;
 };
 
 #endif /* GHOSTTRAP_H_ */
