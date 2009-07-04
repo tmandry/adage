@@ -48,44 +48,56 @@ ConvexPolygon::ConvexPolygon(const Point* start, const Point* end)
 		double aLineY = m*edge(i).a.x + c;
 		double bLineY = m*edge(i).b.x + c;
 
-		if (e.a.y < aLineY || e.b.y <= bLineY)
+		if (e.a.y <= aLineY || e.b.y <= bLineY)
 			mPointsLower.insert(e);
-		if (e.a.y >= aLineY || e.b.y > bLineY)
+		if (e.a.y >= aLineY || e.b.y >= bLineY)
 			mPointsUpper.insert(e);
 	}
 
-	//check for any two edges that share the same right point and purge one of them
-	EdgeSet::iterator first = mPointsUpper.begin();
-	EdgeSet::iterator second = first; ++second;
-	for (; second != mPointsUpper.end(); ++first, ++second) {
-		if (first->b == second->b) {
-			//purge the one with the lower a point
-			if (first->a.y < second->a.y) mPointsUpper.erase(first);
-			else mPointsUpper.erase(second);
-			break;
-		}
-	}
+	removeCommonPoints<std::less<double> >(mPointsUpper);
+	removeCommonPoints<std::greater<double> >(mPointsLower);
 
-	first = mPointsLower.begin();
-	second = first; ++second;
-	for (; second != mPointsLower.end(); ++first, ++second) {
-		if (first->b == second->b) {
-			//purge the one with the higher a point
-			if (first->a.y > second->a.y) mPointsLower.erase(first);
-			else mPointsLower.erase(second);
-			break;
-		}
-	}
-
-	/*cout << "Lower: ";
-	for (EdgeSet::iterator i = mPointsLower.begin(); i != mPointsLower.end(); ++i)
+	/*cout << "Upper: ";
+	for (EdgeSet::iterator i = mPointsUpper.begin(); i != mPointsUpper.end(); ++i)
 		cout << "(" << i->a.x <<","<< i->a.y <<")-("<< i->b.x <<","<< i->b.y <<")  ";
 	cout << endl;
 
-	cout << "Upper: ";
-	for (EdgeSet::iterator i = mPointsUpper.begin(); i != mPointsUpper.end(); ++i)
+	cout << "Lower: ";
+	for (EdgeSet::iterator i = mPointsLower.begin(); i != mPointsLower.end(); ++i)
 		cout << "(" << i->a.x <<","<< i->a.y <<")-("<< i->b.x <<","<< i->b.y <<")  ";
 	cout << endl;*/
+}
+
+//makes sure there aren't edges that have identical left or identical right points by picking one to remove (according to Op).
+template<class Op>
+void ConvexPolygon::removeCommonPoints(EdgeSet& points)
+{
+	Op op;
+
+	//The only places these common points can actually occur are at the ends of the set.
+
+	//First check the left end
+	EdgeSet::iterator first = points.begin();
+	EdgeSet::iterator second = first; ++second;
+	//there's a chance that the point conflicting with the first point might not be the second in the array,
+	//due to sorting; we have to search for it
+	for (; second != points.end(); ++second) {
+		if (first->a == second->a) {
+			//purge the one with the higher/lower right point
+			if (op(first->b.y, second->b.y)) points.erase(first);
+			else points.erase(second);
+			break;
+		}
+	}
+
+	//now check the right side
+	second = points.end(); --second;
+	first = second; --first;
+	if (first->b == second->b) {
+		//purge the one with the higher/lower left point
+		if (op(first->a.y, second->a.y)) points.erase(first);
+		else points.erase(second);
+	}
 }
 
 //assumes p.x is within the range of points

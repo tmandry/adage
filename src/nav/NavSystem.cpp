@@ -19,12 +19,8 @@ NavNode* NavSystem::pointToNode(Math::Point point)
 	return 0;
 }
 
-#include <iostream>
-using namespace std;
-
 bool NavSystem::findPath(NavPath& path, Math::Point start, Math::Point dest)
 {
-	cout << dest.x << " " << dest.y << endl;
 	NavNode* startNode = pointToNode(start);
 	NavNode* destNode = pointToNode(dest);
 	if (!startNode || !destNode) return false;

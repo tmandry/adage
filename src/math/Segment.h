@@ -20,6 +20,13 @@ struct Segment
 
 	Point midpoint() const { return Point((a.x+b.x)/2.0, (a.y+b.y)/2.0); }
 
+	enum PointRelation {
+		left,
+		right,
+		on
+	};
+	PointRelation classifyPoint(Point p) const;
+
 	operator QLineF() const
 	{
 		return QLineF(a.x,a.y, b.x,b.y);

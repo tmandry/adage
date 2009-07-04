@@ -1,3 +1,4 @@
+#include <cassert>
 #include "Segment.h"
 
 namespace Math {
@@ -24,6 +25,49 @@ bool segmentIntersection(Segment s1, Segment s2, Point& intersection, double& aL
 		return true;
 	} else
 		return false;
+}
+
+Segment::PointRelation Segment::classifyPoint(Math::Point p) const
+{
+	//first deal with horizontal & vertical special cases
+	//vertical
+	if (a.x == b.x) {
+		if (b.y > a.y) { //going up
+			if (p.x > a.x) return right;
+			else if (p.x < a.x) return left;
+			else return on;
+		}
+
+		assert(a.x != b.y);
+		//going down
+		if (p.x < a.x) return right;
+		else if (p.x > a.x) return left;
+		else return on;
+	}
+
+	//horizontal -- note these reflect the INVERTED y-axis
+	if (a.y == b.y) {
+		if (b.x > a.x) { //going right
+			if (p.y > a.y) return right;
+			else if (p.y < a.y) return left;
+			else return on;
+		}
+
+		//going left
+		if (p.y < a.y) return right;
+		else if (p.y > a.y) return left;
+		else return on;
+	}
+
+	//not horizontal or vertical
+	double m = (b.y - a.y) / (b.x - a.x);
+	double c = a.y - m*a.x;
+
+	//mx - y + c: Result is + if right side, - if left side, 0 if on line
+	double result = m*p.x - p.y + c;
+	if (result < 0) return left;
+	else if (result > 0) return right;
+	else return on;
 }
 
 } //namespace Math

@@ -8,7 +8,7 @@
 #include <QPoint>
 #include "Game.h"
 
-class Blueprint : public QGLWidget
+class Blueprint : public QWidget
 {
 	Q_OBJECT
 
@@ -16,7 +16,8 @@ public:
 	enum ToolType {
 		dormantPortal,
 		portal,
-		trap
+		trap,
+		nav
 	};
 
 	Blueprint(Game* game, QWidget* parent=0);

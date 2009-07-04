@@ -62,6 +62,10 @@ private:
 		in,
 		out
 	};
+
+	template<class Op>
+	static void removeCommonPoints(EdgeSet& points);
+
 	static inline Result rayTest(Point p, const EdgeSet& points);
 };
 

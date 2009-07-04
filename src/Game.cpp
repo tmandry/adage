@@ -2,6 +2,7 @@
 #include <QTime>
 #include "Game.h"
 #include "ui/Blueprint.h"
+#include "actors/Navigator.h"
 
 Game::Game(CommWindow* comm)
 	:	mWorld(new World(this)),
@@ -22,4 +23,9 @@ void Game::updateWorld()
 
 	emit worldUpdated();
 	//Blueprint::bp->repaint();
+}
+
+void Game::navigate(QPointF point)
+{
+	if (mNavvy) mNavvy->goTo(Math::Point(point));
 }

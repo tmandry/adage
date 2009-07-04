@@ -17,6 +17,14 @@ public:
 	void process(AStar* aStar);
 	void discover(AStar* aStar, NavNode* caller, float arrivalCost);
 
+	enum LineRelation {
+		exits, //goes through the cell
+		endsInside, //point b is inside the cell
+		none //line and cell don't even cross
+	};
+	//Determines the relationship between a path from line.a to line.b and this cell.
+	LineRelation classifyLine(const Math::Segment& line, int& side, Math::Point& intersection) const;
+
 	float costToNode() const { return mArrivalCost + mHeuristic; }
 	int arrivalEdge() const { return mArrivalEdge; }
 	NavNode* link(int idx) const { return mLinks[idx]; }

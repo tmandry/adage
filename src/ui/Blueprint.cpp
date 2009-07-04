@@ -14,7 +14,7 @@
 #include "BlueprintWindow.h"
 
 Blueprint::Blueprint(Game* game, QWidget* parent)
-	:	QGLWidget(parent),
+	:	QWidget(parent),
 		mGame(game),
 		mPanning(0,0),
 		mZoom(0.8),
@@ -165,6 +165,8 @@ void Blueprint::placeTool(Math::Point pos)
 	case trap:
 		new GhostTrap(mGame->world(), pos);
 		break;
+	case nav:
+		mGame->navigate(pos);
 	}
 }
 

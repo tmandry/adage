@@ -8,6 +8,7 @@
 #include "Navigator.h"
 #include "steering/Seek.h"
 #include "Person.h"
+#include "nav/NavSystem.h"
 
 Navigator::Navigator(Pointer<Entity> parent, std::string name)
 	:	Actor(parent, name),
@@ -18,7 +19,7 @@ Navigator::Navigator(Pointer<Entity> parent, std::string name)
 	mSeek->off();
 	addSteeringBehavior(mSeek);
 
-	setMaxSpeed(15.0);
+	setMaxSpeed(20.0);
 
 	setView(new PersonView(pointer(), QColor(46, 210, 255)));
 	setVisible(true);
@@ -29,12 +30,13 @@ Navigator::~Navigator()
 	if (mSeek) delete mSeek;
 }
 
-#include <iostream>
-using namespace std;
-
 bool Navigator::goTo(Math::Point dest)
 {
-	cout << "*** " << dest.x << " " << dest.y << endl;
+	Math::Point intersect;
+	int side;
+	NavSystem::NodeIterator node = world()->navSystem()->nodesBegin(); ++node;
+	/*cout << NavNode::endsInside <<" "<< NavNode::exits <<" "<< NavNode::none << endl;;
+	cout << node->classifyLine(Math::Segment(pos(), dest), side, intersect) << endl;*/
 
 	if (world()->findPath(mPath, pos(), dest)) {
 		mWaypoint = -1;

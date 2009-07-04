@@ -62,3 +62,33 @@ void NavNode::discover(AStar* aStar, NavNode* caller, float arrivalCost)
 	}
 	//if the cell is closed, we do nothing.
 }
+
+NavNode::LineRelation NavNode::classifyLine(const Math::Segment& line, int& side, Math::Point& intersection) const
+{
+	/*//check if the line terminates inside the cell
+	if (this->contains(line.b))
+		return endsInside;*/
+
+	int numInsideLines = 0; //keep track of how many sides the endpoint is "inside"
+
+	//check if it exits the cell
+	for (unsigned int i = 0; i < points().size(); ++i) {
+		if (edge(i).classifyPoint(line.b) != Math::Segment::right) { //if it ends on the outside side
+			if (edge(i).classifyPoint(line.a) != Math::Segment::left) { //and starts on the inside side
+				//check for intersection
+				double dummy;
+				if (Math::segmentIntersection(line, edge(i), intersection, dummy)) {
+					side = i;
+					return exits;
+				}
+			}
+		} else { //ends on the inside side
+			++numInsideLines;
+		}
+	}
+
+	if (numInsideLines == points().size()) //if it is inside every side
+		return endsInside;
+
+	return none;
+}

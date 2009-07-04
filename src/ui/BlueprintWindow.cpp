@@ -22,6 +22,7 @@ BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	mToolCombo->insertItem(Blueprint::dormantPortal, QIcon(), "Dormant Portal");
 	mToolCombo->insertItem(Blueprint::portal, QIcon(), "Active Portal");
 	mToolCombo->insertItem(Blueprint::trap, QIcon(), "Ghost Trap");
+	mToolCombo->insertItem(Blueprint::nav, QIcon(), "Navigate!");
 	mToolCombo->setCurrentIndex(-1);
 	mToolbar->addSeparator();
 	mToolbar->addWidget(mToolCombo);

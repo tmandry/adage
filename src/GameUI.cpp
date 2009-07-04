@@ -73,9 +73,7 @@ GameUI::GameUI()
 		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,270)), mGame->world());
 
 	Navigator* navvy = new Navigator(mGame->world());
-	Math::Point target(0, -150);
-	Math::Point target2(target);
-	navvy->goTo(target2);
+	mGame->setNavvy(navvy);
 
 	mBlueprint = new BlueprintWindow(mGame);
 	setCentralWidget(mBlueprint);

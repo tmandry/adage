@@ -3,10 +3,12 @@
 
 #include <QObject>
 #include <QTime>
+#include <QPoint>
 #include "ui/CommWindow.h"
 #include "world/World.h"
 
 class QTimer;
+class Navigator;
 
 class Game : public QObject
 {
@@ -18,6 +20,11 @@ public:
 
 	Pointer<World> world() const { return mWorld->world(); }
 	Pointer<CommWindow> comm() const { return mComm; }
+
+	void setNavvy(Navigator* n) { mNavvy = n; }
+
+public slots:
+	void navigate(QPointF point);
 
 private slots:
 	void updateWorld();
@@ -35,6 +42,8 @@ private:
 	QTimer* mTimer;
 	//measures actual time elapsed between updates
 	QTime mElapsed;
+
+	Navigator* mNavvy;
 };
 
 inline void Entity::printComm(QString msg) const
