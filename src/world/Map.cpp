@@ -13,6 +13,7 @@
 #include "Map.h"
 #include "world/Building.h"
 #include "math/Point.h"
+#include "nav/NavSystem.h"
 
 Map::Map(Pointer<World> parent, std::string filename)
 	:	mParent(parent),
@@ -40,7 +41,6 @@ void Map::open(std::string filename)
 void Map::load()
 {
 	QString line;
-
 	//read to first non-comment/blank line
 	do { line = mFile->readLine().trimmed(); } while (line[0] == '#' || line.isEmpty());
 
@@ -49,6 +49,81 @@ void Map::load()
 	QTextStream(&line) >> lb >> tb >> rb >> bb;
 	mParent->setBounds(lb, tb, rb, bb);
 
+	readNavMesh();
+	readBuildings();
+
+	mFile->close();
+}
+
+void Map::readNavMesh()
+{
+	NavSystem* nav = new NavSystem;
+
+	QString line;
+	//read to first non-blank line
+	do { line = mFile->readLine().trimmed(); } while (line.isEmpty());
+
+	//read in nav nodes (polygons) until the first blank
+	Math::Point* points = new Math::Point[100];
+	while (!line.isEmpty()) {
+		if (line[0] != '#') {
+			//Every node has an id which is used later in the file, these must start at 1 and go up by 1 in order.
+			int id;
+			double x, y;
+			QTextStream stream(&line);
+
+			//Read in points
+			stream >> id;
+			int i = 0;
+			while (!stream.atEnd()) {
+				stream >> x;
+				assert(!stream.atEnd());
+				stream >> y;
+
+				points[i++] = Math::Point(x,y);
+				assert(i < 100);
+			}
+
+			//add it and check the id
+			int actualId = nav->addNode(points, points+i);
+			assert(id == actualId); //TODO better way of handling
+		}
+		line = mFile->readLine().trimmed();
+	}
+
+	delete[] points;
+
+
+	//Next part is links - first the linking node id and then the ids of all the nodes it's linked to,
+	//in order according to how the edges were ordered in the previous section.
+	//Use 0 if there is no link.
+
+	//read to first non-blank line
+	do { line = mFile->readLine().trimmed(); } while (line.isEmpty());
+
+	while (!line.isEmpty()) {
+		if (line[0] != '#') {
+			QTextStream stream(&line);
+			int sourceId, destId;
+			int link = 1;
+			stream >> sourceId;
+
+			while (!stream.atEnd()) {
+				stream >> destId;
+				if (destId != 0) nav->setLink(sourceId, link, destId);
+				++link;
+			}
+		}
+		line = mFile->readLine().trimmed();
+	}
+
+	//NavMesh is complete, assign it to the World
+	mParent->setNavSystem(nav);
+}
+
+void Map::readBuildings()
+{
+	QString line;
 	std::vector<Math::Point> points;
 	Building* building = new Building(mParent);
 

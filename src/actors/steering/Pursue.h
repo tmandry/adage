@@ -7,7 +7,7 @@
 class Pursue : public SteeringBehavior
 {
 public:
-	Pursue(Pointer<Actor> parent, const Pointer<MovingEntity> target=Pointer<MovingEntity>());
+	Pursue(Pointer<Actor> parent, float factor=0.9, const Pointer<MovingEntity> target=Pointer<MovingEntity>());
 	virtual ~Pursue() {}
 
 	void setTarget(const Pointer<const MovingEntity>& target) { mTarget = target; }

@@ -11,11 +11,13 @@
 #include "Pointer.h"
 #include "world/CellSpacePartition.h"
 #include "math/const.h"
+#include "nav/NavPath.h"
 
 //forward declaration
 class Game;
 class Wall;
 class Map;
+class NavSystem;
 
 class World : public Entity
 {
@@ -56,6 +58,8 @@ public:
 		return (Pointer<E>)mCellSpace.findNearest(p, type, maxDistance);
 	}
 
+	bool findPath(NavPath& path, Math::Point start, Math::Point dest);
+
 	Game* game() const { return mGame; }
 
 	double leftBound() const { return mLeftBound; }
@@ -64,6 +68,9 @@ public:
 	double bottomBound() const { return mBottomBound; }
 
 	void updatePos(Pointer<Entity> e, Math::Point oldPos, Math::Point newPos) { mCellSpace.updatePos(e, oldPos, newPos); }
+
+	void setNavSystem(NavSystem* nav);
+	NavSystem* navSystem() { return mNav; }
 
 private:
 	friend class Map;
@@ -77,6 +84,7 @@ private:
 	double mLeftBound, mTopBound, mRightBound, mBottomBound;
 
 	CellSpacePartition mCellSpace;
+	NavSystem* mNav;
 };
 
 inline void Entity::setPos(const Math::Point loc)

@@ -18,6 +18,8 @@ struct Segment
 		{}
 	~Segment() {}
 
+	Point midpoint() const { return Point((a.x+b.x)/2.0, (a.y+b.y)/2.0); }
+
 	operator QLineF() const
 	{
 		return QLineF(a.x,a.y, b.x,b.y);

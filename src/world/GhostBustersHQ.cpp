@@ -80,8 +80,6 @@ void GhostBustersHQ::reassign(Pointer<GhostBuster> agent)
 	//Should have picked a Ghost by now if one is available, now assign it and record the assignment
 	agent->setTarget(target);
 	if (target) ++mGhostAssignments[target];
-
-	//if (target) printComm(("Agent <font color='yellow'>" + agent->name() + "</font> reassigned.").c_str());
 }
 
 void GhostBustersHQ::targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> target)

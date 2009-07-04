@@ -12,6 +12,7 @@ public:
 	virtual ~Seek() {}
 
 	void setTarget(Math::Point target) { mTarget = target; }
+	Math::Point target() const { return mTarget; }
 
 	Math::Vector calculate();
 

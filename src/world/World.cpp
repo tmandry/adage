@@ -4,16 +4,19 @@
 #include "World.h"
 #include "Game.h"
 #include "world/Wall.h"
+#include "nav/NavSystem.h"
 
 World::World(Game* game, std::string name)
 	:	Entity(Pointer<Entity>(), name),
 		mGame(game),
-		mCellSpace(this)
+		mCellSpace(this),
+		mNav()
 {
 }
 
 World::~World()
 {
+	if (mNav) delete mNav;
 }
 
 void World::removeEntity(std::string type, Pointer<Entity> e)
@@ -48,4 +51,16 @@ void World::setBounds(double left, double top, double right, double bottom)
 	mBoundaries.push_back( new Wall(pointer(), right,bottom, right,top, false) );
 
 	mCellSpace.partition();
+}
+
+bool World::findPath(NavPath& path, Math::Point start, Math::Point dest)
+{
+	if (mNav) return mNav->findPath(path, start, dest);
+	else return false;
+}
+
+void World::setNavSystem(NavSystem* nav)
+{
+	assert(mNav == 0);
+	mNav = nav;
 }

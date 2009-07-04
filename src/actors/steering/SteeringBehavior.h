@@ -7,6 +7,15 @@
 class SteeringBehavior
 {
 public:
+	class Sort
+	{
+	public:
+	    bool operator()(const SteeringBehavior* lhs, const SteeringBehavior* rhs)
+	    {
+	        return lhs->priority() > rhs->priority();
+	    }
+	};
+
 	SteeringBehavior(Pointer<Actor> parent, double factor, int priority, bool on=true)
 		:	mParent(parent), mFactor(factor), mPriority(priority), mOn(on)
 	{
@@ -36,15 +45,6 @@ private:
 	double mFactor;
 	int mPriority;
 	bool mOn;
-};
-
-class SteeringBehaviorSort
-{
-public:
-    bool operator()(const SteeringBehavior* lhs, const SteeringBehavior* rhs)
-    {
-        return lhs->priority() > rhs->priority();
-    }
 };
 
 #endif /*STEERINGBEHAVIOR_H_*/

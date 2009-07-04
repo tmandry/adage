@@ -1,4 +1,5 @@
 #include <QPainter>
+#include <QPainterPath>
 #include <QBrush>
 #include <QColor>
 #include <QRectF>
@@ -7,6 +8,7 @@
 #include "Person.h"
 #include "Ghost.h"
 #include "GhostBuster.h"
+#include "Navigator.h"
 #include "world/World.h"
 #include "steering/Arrive.h"
 #include "steering/AvoidWalls.h"
@@ -122,17 +124,37 @@ void PersonView::setColor(QColor color)
 
 void PersonView::paint(QPainter* p)
 {
+	if (mParent->inherits("Navigator")) {
+		//paint their path
+		Pointer<Navigator> parent = (Pointer<Navigator>)mParent;
+		NavPath& path = parent->mPath;
+
+		if (parent->mPath.start != parent->mPath.end) {
+			QPainterPath diagram;
+
+			diagram.moveTo(path.start);
+			for (unsigned int i = 0; i < path.waypoints.size(); ++i)
+				diagram.lineTo(path.waypoints[i].destination);
+			diagram.lineTo(path.end);
+
+			p->setPen(Qt::white);
+			p->drawPath(diagram);
+		}
+	}
+
 	p->save();
 
 	p->translate(mParent->pos().x, mParent->pos().y);
 	p->rotate( -Math::toDegrees(mParent->heading().absAngle()) );
 	p->scale(.13, .13);
 
+	if (mParent->inherits("Navigator")) p->scale(2.0, 2.0);
+
 	p->drawPixmap(-14, -10, mPixmap);
 
 	p->restore();
 
-	if (mParent->inherits("GhostBuster")) {
+	//if (mParent->inherits("GhostBuster")) {
 		/*const ConstEntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
 
 		p->setBrush(Qt::NoBrush);
@@ -148,7 +170,7 @@ void PersonView::paint(QPainter* p)
 		/*p->setPen(QPen(QBrush(Qt::red), 0));
 		Pointer<Ghost> target = ((Pointer<GhostBuster>)mParent)->mTarget;
 		if (target) p->drawEllipse(target->pos(), 2.7, 2.7);*/
-	}
+	//}
 
 	/*if (mParent->inherits("Person")) {
 		Pointer<Ghost> target = ((Pointer<Person>)mParent)->mEvade->target();

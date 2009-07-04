@@ -28,7 +28,7 @@ void Actor::addSteeringBehavior(SteeringBehavior* s)
 {
 	//insert s at the last possible position without breaking the sorting
 	mSteering.insert(
-		std::upper_bound(mSteering.begin(), mSteering.end(), s, SteeringBehaviorSort()),
+		std::upper_bound(mSteering.begin(), mSteering.end(), s, SteeringBehavior::Sort()),
 		s
 	);
 }
@@ -75,6 +75,7 @@ void Actor::updateEvent(double secsElapsed)
 	//only update heading if traveling at a reasonable speed
 	if (velocity().lengthSq() > 4.0) {
 		Math::Vector heading = velocity().normal();
+		assert(heading.x != 0 || heading.y != 0);
 
 		mHeadingList[mHeadingIt] = heading;
 		if (++mHeadingIt >= mHeadingList.size()) { mHeadingIt = 0; mHeadingListFull = true; }

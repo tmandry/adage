@@ -10,9 +10,8 @@
 #include "math/real.h"
 #include "world/GhostPortal.h"
 #include "world/GhostTrap.h"
+#include "nav/NavSystem.h"
 #include "BlueprintWindow.h"
-
-Blueprint* Blueprint::bp = 0;
 
 Blueprint::Blueprint(Game* game, QWidget* parent)
 	:	QGLWidget(parent),
@@ -20,10 +19,10 @@ Blueprint::Blueprint(Game* game, QWidget* parent)
 		mPanning(0,0),
 		mZoom(0.8),
 		mGridRes(50),
-		mMovePressed(false)
+		mMovePressed(false),
+		mShowNavmesh(false)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	Blueprint::bp = this;
 }
 
 Blueprint::~Blueprint()
@@ -55,6 +54,12 @@ void Blueprint::setTool(int tool)
 	mTool = (ToolType)tool;
 }
 
+void Blueprint::setShowNavmesh(int show)
+{
+	if (show) mShowNavmesh = true;
+	else mShowNavmesh = false;
+}
+
 void Blueprint::paintEvent(QPaintEvent* /*event*/)
 {
 	QPainter p(this);
@@ -80,6 +85,20 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 		p.drawLine(QPointF(viewArea.left(), y), QPointF(viewArea.right(), y));
 
 	mGame->world()->paint(&p);
+
+	if (mShowNavmesh) {
+		//draw the navmesh for debugging/development purposes
+		NavSystem* nav = mGame->world()->navSystem();
+		for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i) {
+			for (unsigned int e = 0; e < i->points().size(); ++e) {
+				//draw linked edges in gray, unlinked ones in dark red
+				if (i->link(e) != 0) p.setPen(QPen(Qt::gray, 0.1));
+				else p.setPen(QPen(Qt::darkRed, 0.2));
+
+				p.drawLine(i->edge(e));
+			}
+		}
+	}
 }
 
 void Blueprint::mousePressEvent(QMouseEvent* event)

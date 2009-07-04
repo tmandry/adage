@@ -19,8 +19,6 @@ public:
 		trap
 	};
 
-	static Blueprint* bp;
-
 	Blueprint(Game* game, QWidget* parent=0);
 	virtual ~Blueprint();
 
@@ -29,6 +27,7 @@ public:
 public slots:
 	void setZoom(float zoom);
 	void setTool(int tool);
+	void setShowNavmesh(int show);
 	//eventually will be used for returning the view to the main point of interest in the mission
 	void goHome();
 
@@ -64,6 +63,7 @@ private:
 	QPoint mMoveMouseStart;
 
 	ToolType mTool;
+	bool mShowNavmesh;
 };
 
 #endif /*BLUEPRINT_H_*/

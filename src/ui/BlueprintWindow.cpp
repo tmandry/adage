@@ -1,6 +1,7 @@
 #include <QAction>
 #include <QVBoxLayout>
 #include <QSizePolicy>
+#include <QCheckBox>
 #include <QString>
 #include "ui/BlueprintWindow.h"
 
@@ -21,8 +22,12 @@ BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	mToolCombo->insertItem(Blueprint::dormantPortal, QIcon(), "Dormant Portal");
 	mToolCombo->insertItem(Blueprint::portal, QIcon(), "Active Portal");
 	mToolCombo->insertItem(Blueprint::trap, QIcon(), "Ghost Trap");
+	mToolCombo->setCurrentIndex(-1);
 	mToolbar->addSeparator();
 	mToolbar->addWidget(mToolCombo);
+
+	QCheckBox* showNavmesh = new QCheckBox("&Navmesh", this);
+	mToolbar->addWidget(showNavmesh);
 
 	mStatusBar = new QStatusBar;
 	mZoomLbl = new QLabel(QString::number(mBlueprint->zoom(), 'f', 2) + "x");
@@ -37,6 +42,7 @@ BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 
 	connect(mBlueprint, SIGNAL(zoomChanged(float)), this, SLOT(zoomChanged(float)));
 	connect(mToolCombo, SIGNAL(activated(int)), mBlueprint, SLOT(setTool(int)));
+	connect(showNavmesh, SIGNAL(stateChanged(int)), mBlueprint, SLOT(setShowNavmesh(int)));
 }
 
 BlueprintWindow::~BlueprintWindow()

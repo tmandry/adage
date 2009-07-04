@@ -1,10 +1,3 @@
-/*
- * TriggerRegion.h
- *
- *  Created on: Jun 25, 2009
- *      Author: tyler
- */
-
 #ifndef TRIGGERREGION_H_
 #define TRIGGERREGION_H_
 

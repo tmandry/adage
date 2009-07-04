@@ -6,6 +6,9 @@
 
 #include "math/real.h"
 
+#include <iostream>
+using namespace std;
+
 namespace Math {
 
 struct Vector;
@@ -18,7 +21,7 @@ struct Point
 	Point(double X, double Y): x(X),y(Y) {}
 	explicit Point(const QPointF& p): x(p.x()),y(p.y()) {}
 	explicit inline Point(const Vector& v); //definition in Vector.h
-	Point(const Point& p): x(p.x), y(p.y) {}
+	Point(const Point& p) { x = p.x; y = p.y; }
 	virtual ~Point() {}
 
 	operator QPointF()

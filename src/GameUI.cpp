@@ -15,6 +15,7 @@
 #include "actors/Person.h"
 #include "actors/Ghost.h"
 #include "actors/GhostBuster.h"
+#include "actors/Navigator.h"
 #include "math/rand.h"
 #include <iostream>
 
@@ -71,9 +72,11 @@ GameUI::GameUI()
 	for (int i=0; i<4; ++i)
 		new GhostBuster(Math::Point(Math::randFloat(-75,75),Math::randFloat(190,270)), mGame->world());
 
+	Navigator* navvy = new Navigator(mGame->world());
+	Math::Point target(0, -150);
+	Math::Point target2(target);
+	navvy->goTo(target2);
 
-
-	//
 	mBlueprint = new BlueprintWindow(mGame);
 	setCentralWidget(mBlueprint);
 

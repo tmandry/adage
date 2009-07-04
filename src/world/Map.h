@@ -24,6 +24,9 @@ public:
 	void load();
 
 private:
+	void readNavMesh();
+	void readBuildings();
+
 	Pointer<World> mParent;
 	QFile* mFile;
 };

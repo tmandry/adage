@@ -29,7 +29,7 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	setMaxSpeed(10.5);
 
 	mWander = new Wander(pointer());
-	mPursue = new Pursue(pointer());
+	mPursue = new Pursue(pointer(), 1.0);
 	addSteeringBehavior(new AvoidWalls(pointer()));
 	addSteeringBehavior(mPursue);
 	addSteeringBehavior(new Separation(pointer()));

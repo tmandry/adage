@@ -8,8 +8,8 @@ CONFIG += debug
 QT += opengl
 DEPENDPATH += . math ui world
 INCLUDEPATH += . world math ui
-QMAKE_CXXFLAGS_DEBUG += -O0
-QMAKE_LFLAGS_DEBUG += -O0
+QMAKE_CXXFLAGS_DEBUG += -O0 -ggdb
+QMAKE_LFLAGS_DEBUG += -O0 -ggdb
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
@@ -20,6 +20,7 @@ HEADERS += Game.h \
            actors/Actor.h \
            actors/Ghost.h \
            actors/GhostBuster.h \
+           actors/Navigator.h \
            actors/Person.h \
            actors/steering/Alignment.h \
            actors/steering/Arrive.h \
@@ -35,9 +36,13 @@ HEADERS += Game.h \
            detail/StaticCastIterator.h \
            math/const.h \
            math/Point.h \
+           math/Polygon.h \
            math/real.h \
            math/Segment.h \
            math/Vector.h \
+           nav/AStar.h \
+           nav/NavNode.h \
+           nav/NavSystem.h \
            ui/Blueprint.h \
            ui/BlueprintWindow.h \
            ui/CommWindow.h \
@@ -64,6 +69,7 @@ SOURCES += Game.cpp \
            actors/Actor.cpp \
            actors/Ghost.cpp \
            actors/GhostBuster.cpp \
+           actors/Navigator.cpp \
            actors/Person.cpp \
            actors/steering/Alignment.cpp \
            actors/steering/Arrive.cpp \
@@ -75,7 +81,11 @@ SOURCES += Game.cpp \
            actors/steering/Seek.cpp \
            actors/steering/Separation.cpp \
            actors/steering/Wander.cpp \
+           math/Polygon.cpp \
            math/Segment.cpp \
+           nav/AStar.cpp \
+           nav/NavNode.cpp \
+           nav/NavSystem.cpp \
            ui/Blueprint.cpp \
            ui/BlueprintWindow.cpp \
            ui/CommWindow.cpp \

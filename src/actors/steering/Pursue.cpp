@@ -1,8 +1,8 @@
 #include <cassert>
 #include "Pursue.h"
 
-Pursue::Pursue(Pointer<Actor> parent, const Pointer<MovingEntity> target)
-	:	SteeringBehavior(parent, 0.9, 90),
+Pursue::Pursue(Pointer<Actor> parent, float factor, const Pointer<MovingEntity> target)
+	:	SteeringBehavior(parent, factor, 90),
 		mTarget(target),
 		mSeek(parent)
 {
