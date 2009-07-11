@@ -23,7 +23,8 @@ struct Segment
 	enum PointRelation {
 		left,
 		right,
-		on
+		on,
+		inLine
 	};
 	PointRelation classifyPoint(Point p) const;
 

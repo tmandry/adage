@@ -32,15 +32,15 @@ Navigator::~Navigator()
 
 bool Navigator::goTo(Math::Point dest)
 {
-	Math::Point intersect;
+	/*Math::Point intersect;
 	int side;
 	NavSystem::NodeIterator node = world()->navSystem()->nodesBegin(); ++node;
-	/*cout << NavNode::endsInside <<" "<< NavNode::exits <<" "<< NavNode::none << endl;;
+	cout << NavNode::endsInside <<" "<< NavNode::exits <<" "<< NavNode::none << endl;;
 	cout << node->classifyLine(Math::Segment(pos(), dest), side, intersect) << endl;*/
 
 	if (world()->findPath(mPath, pos(), dest)) {
-		mWaypoint = -1;
-		nextWaypoint();
+		mEdge = -1;
+		nextEdge();
 		return true;
 	}
 	else return false;
@@ -51,22 +51,22 @@ void Navigator::updateEvent(double secsElapsed)
 	if (mSeek->isOn()) {
 		//test to see if we've arrived at the waypoint
 		if (distanceSq(pos(), mSeek->target()) < 1.0)
-			nextWaypoint();
+			nextEdge();
 	}
 
 	Actor::updateEvent(secsElapsed);
 }
 
-void Navigator::nextWaypoint()
+void Navigator::nextEdge()
 {
-	++mWaypoint;
+	++mEdge;
 
-	if (mWaypoint < mPath.waypoints.size()) {
-		mSeek->setTarget(mPath.waypoints[mWaypoint].destination);
+	if (mEdge < mPath.edges.size()) {
+		mSeek->setTarget(mPath.edges[mEdge].end);
 		mSeek->on();
 	} else {
 		//if we're one over the last waypoint, we need to navigate to the final destination
-		if (mWaypoint == mPath.waypoints.size()) {
+		if (mEdge == mPath.edges.size()) {
 			mSeek->setTarget(mPath.end);
 			mSeek->on();
 		} else { //otherwise, we've already reached that and we're done

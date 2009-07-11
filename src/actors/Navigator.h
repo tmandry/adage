@@ -18,10 +18,10 @@ private:
 	friend class PersonView;
 
 	virtual void updateEvent(double secsElapsed);
-	void nextWaypoint();
+	void nextEdge();
 
 	NavPath mPath;
-	unsigned int mWaypoint;
+	unsigned int mEdge;
 	Seek* mSeek;
 };
 

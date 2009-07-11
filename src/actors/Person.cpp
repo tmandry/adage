@@ -133,8 +133,8 @@ void PersonView::paint(QPainter* p)
 			QPainterPath diagram;
 
 			diagram.moveTo(path.start);
-			for (unsigned int i = 0; i < path.waypoints.size(); ++i)
-				diagram.lineTo(path.waypoints[i].destination);
+			for (unsigned int i = 0; i < path.edges.size(); ++i)
+				diagram.lineTo(path.edges[i].end);
 			diagram.lineTo(path.end);
 
 			p->setPen(Qt::white);

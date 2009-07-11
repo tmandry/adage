@@ -73,7 +73,12 @@ NavNode::LineRelation NavNode::classifyLine(const Math::Segment& line, int& side
 
 	//check if it exits the cell
 	for (unsigned int i = 0; i < points().size(); ++i) {
-		if (edge(i).classifyPoint(line.b) != Math::Segment::right) { //if it ends on the outside side
+		Math::Segment::PointRelation bResult = edge(i).classifyPoint(line.b);
+
+		//if b is ON the line we say it ends inside
+		if (bResult == Math::Segment::on) return endsInside;
+
+		if (bResult != Math::Segment::right) { //if it ends on the outside side
 			if (edge(i).classifyPoint(line.a) != Math::Segment::left) { //and starts on the inside side
 				//check for intersection
 				double dummy;

@@ -19,11 +19,14 @@ public:
 	NavNode* pointToNode(Math::Point point);
 
 	bool findPath(NavPath& path, Math::Point start, Math::Point dest);
+	bool isLineOfSight(Math::Point start, const NavNode* startNode, Math::Point dest, const NavNode* destNode) const;
 
 	NodeIterator nodesBegin() { return mNodes.begin(); }
 	NodeIterator nodesEnd() { return mNodes.end(); }
 
 private:
+	void smoothPath(NavPath& path) const;
+
 	AStar mAStar;
 	std::vector<NavNode> mNodes;
 };

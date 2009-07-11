@@ -25,5 +25,55 @@ bool NavSystem::findPath(NavPath& path, Math::Point start, Math::Point dest)
 	NavNode* destNode = pointToNode(dest);
 	if (!startNode || !destNode) return false;
 
-	return mAStar.findPath(path, startNode, start, destNode, dest);
+	bool result = mAStar.findPath(path, startNode, start, destNode, dest);
+	if (result) smoothPath(path);
+	return result;
+}
+
+bool NavSystem::isLineOfSight(Math::Point start, const NavNode* startNode, Math::Point dest, const NavNode* destNode) const
+{
+	Math::Segment line = Math::Segment(start, dest);
+	const NavNode* node = startNode;
+	NavNode::LineRelation result;
+
+	//run until we reach the destination
+	do {
+		int side;
+		Math::Point intersection;
+		result = node->classifyLine(line, side, intersection);
+
+		if (result == NavNode::exits) {
+			node = node->link(side);
+			//if node is an actual node, continue; if it is 0, we have hit a solid wall and this is not a LoS
+			if (!node) return false;
+		} else if (result == NavNode::none) {
+			assert(!"NavNode::classifyLine returned no relation");
+		}
+	} while (node != destNode && result != NavNode::endsInside);
+
+	//we made it
+	return true;
+}
+
+void NavSystem::smoothPath(NavPath& path) const
+{
+	std::vector<NavEdge>::iterator e1, e2;
+	e1 = path.edges.begin();
+	e2 = e1 + 1;
+
+	while (e2 < path.edges.end()) {
+		//see if there is an extraneous edge
+		if (isLineOfSight(e1->start, e1->startNode, e2->end, e2->endNode)) {
+			//combine the edges and advance only the second iterator
+			e1->end = e2->end;
+			e1->endNode = e2->endNode;
+			path.edges.erase(e2);
+
+			e2 = e1 + 1;
+		} else {
+			//advance both iterators
+			e1++;
+			e2 = e1 + 1;
+		}
+	}
 }

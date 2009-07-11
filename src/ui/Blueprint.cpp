@@ -14,7 +14,7 @@
 #include "BlueprintWindow.h"
 
 Blueprint::Blueprint(Game* game, QWidget* parent)
-	:	QWidget(parent),
+	:	QGLWidget(parent),
 		mGame(game),
 		mPanning(0,0),
 		mZoom(0.8),

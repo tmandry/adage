@@ -4,11 +4,15 @@
 
 #include "NavNode.h"
 
-struct NavWayPoint
+struct NavEdge
 {
-	NavWayPoint(NavNode* Node, Math::Point Destination): node(Node), destination(Destination) {}
-	NavNode* node;
-	Math::Point destination;
+	NavEdge(NavNode* StartNode, Math::Point Start, NavNode* EndNode, Math::Point End): startNode(StartNode), start(Start), endNode(EndNode), end(End) {}
+	NavNode* startNode;
+	Math::Point start;
+	NavNode* endNode;
+	Math::Point end;
+
+	//any extra edge traversal information can go here!
 };
 
 struct NavPath
@@ -17,9 +21,9 @@ struct NavPath
 	NavNode* startNode;
 	Math::Point end;
 	NavNode* endNode;
-	std::vector<NavWayPoint> waypoints;
+	std::vector<NavEdge> edges;
 
-	void addWayPoint(NavNode* node, Math::Point dest) { waypoints.push_back(NavWayPoint(node, dest)); }
+	void addEdge(NavNode* startNode, Math::Point start, NavNode* endNode, Math::Point end) { edges.push_back(NavEdge(startNode, start, endNode, end)); }
 };
 
 #endif /* NAVPATH_H_ */

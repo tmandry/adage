@@ -8,7 +8,7 @@
 #include <QPoint>
 #include "Game.h"
 
-class Blueprint : public QWidget
+class Blueprint : public QGLWidget
 {
 	Q_OBJECT
 

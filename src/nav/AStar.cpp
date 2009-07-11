@@ -34,7 +34,7 @@ bool AStar::findPath(NavPath& path, NavNode* startNode, Math::Point startPos, Na
 //Builds a waypoint list based on the path found
 void AStar::buildPath(NavPath& path, NavNode* startNode, Math::Point startPos, NavNode* endNode, Math::Point endPos)
 {
-	path.waypoints.clear();
+	path.edges.clear();
 	path.start = startPos;
 	path.startNode = startNode;
 	path.end = endPos;
@@ -42,13 +42,20 @@ void AStar::buildPath(NavPath& path, NavNode* startNode, Math::Point startPos, N
 
 	//step through each linked node from startNode to endNode
 	NavNode* node = startNode;
+	Math::Point pos = startPos;
 	while (node && node != endNode) {
 		int edge = node->arrivalEdge();
+		NavNode* nextNode = node->link(edge);
+		Math::Point nextPos = node->edge(edge).midpoint();
 
-		path.addWayPoint(node, node->edge(edge).midpoint());
+		path.addEdge(node, pos, nextNode, nextPos);
 		//continue on..
-		node = node->link(edge);
+		node = nextNode;
+		pos = nextPos;
 	}
+
+	//final edge
+	path.addEdge(node, pos, node, endPos);
 }
 
 float AStar::computeHeuristic(NavNode* node) const
