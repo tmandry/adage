@@ -32,6 +32,8 @@ private:
 
 	virtual void updateEvent(double secsElapsed);
 
+	PersonView* mView;
+
 	Pointer<GhostBustersHQ> mHQ;
 
 	Wander* mWander;

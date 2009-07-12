@@ -42,11 +42,15 @@ public:
 
 	void paint(QPainter* p);
 	void setColor(QColor color);
+	void setNameColor(QColor color) { mNameColor = color; }
+	void showName(bool show = true) { mShowName = show; }
 
 private:
 	Pointer<Actor> mParent;
 	QColor mColor;
+	QColor mNameColor;
 	QPixmap mPixmap;
+	bool mShowName;
 };
 
 #endif /*PERSON_H_*/

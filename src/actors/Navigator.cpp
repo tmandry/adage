@@ -11,11 +11,11 @@
 #include "nav/NavSystem.h"
 
 Navigator::Navigator(Pointer<Entity> parent, std::string name)
-	:	Actor(parent, name),
-		mSeek(new Seek(pointer()))
+	:	Actor(parent, name)
 {
 	subclass("Navigator");
 
+	mSeek = new Seek(pointer());
 	mSeek->off();
 	addSteeringBehavior(mSeek);
 

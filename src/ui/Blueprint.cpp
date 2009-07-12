@@ -20,7 +20,8 @@ Blueprint::Blueprint(Game* game, QWidget* parent)
 		mZoom(0.8),
 		mGridRes(50),
 		mMovePressed(false),
-		mShowNavmesh(false)
+		mShowNavmesh(false),
+		mFont("Arial", 3)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
@@ -84,6 +85,7 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 	for (int y=(int)Math::floorTo(viewArea.top(), mGridRes); y<=(int)viewArea.bottom(); y += mGridRes)
 		p.drawLine(QPointF(viewArea.left(), y), QPointF(viewArea.right(), y));
 
+	p.setFont(mFont);
 	mGame->world()->paint(&p);
 
 	if (mShowNavmesh) {

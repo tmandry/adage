@@ -1,10 +1,3 @@
-/*
- * GhostBuster.cpp
- *
- *  Created on: Dec 27, 2008
- *      Author: tyler
- */
-
 #include <cassert>
 #include <iostream>
 #include "GhostBuster.h"
@@ -35,9 +28,9 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	addSteeringBehavior(new Separation(pointer()));
 	addSteeringBehavior(mWander);
 
-	PersonView* view = new PersonView(pointer(), Qt::yellow);
-	//view->setColor(Qt::yellow);
-	setView(view);
+	mView = new PersonView(pointer(), Qt::yellow);
+	mView->setNameColor(QColor(255, 250, 120));
+	setView(mView);
 	setVisible(true);
 
 	if (mHQ){
@@ -46,8 +39,8 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	}
 }
 
-GhostBuster::~GhostBuster() {
-	// TODO Auto-generated destructor stub
+GhostBuster::~GhostBuster()
+{
 }
 
 void GhostBuster::updateEvent(double secsElapsed)
@@ -87,7 +80,9 @@ void GhostBuster::setTarget(Pointer<Ghost> target)
 	if (target) {
 		mPursue->setTarget(target);
 		mPursue->on();
+		mView->showName(true);
 	} else {
 		mPursue->off();
+		//mView->showName(false);
 	}
 }

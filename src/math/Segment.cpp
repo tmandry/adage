@@ -41,7 +41,7 @@ Segment::PointRelation Segment::classifyPoint(Math::Point p) const
 			else return inLine;
 		}
 
-		assert(a.x != b.y);
+		assert(a.y != b.y);
 		//going down
 		if (p.x < a.x) return right;
 		else if (p.x > a.x) return left;

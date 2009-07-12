@@ -8,6 +8,7 @@ class Seek;
 
 class Navigator: public Actor
 {
+	ENTITY(Navigator)
 public:
 	Navigator(Pointer<Entity> parent, std::string name = "Navigator");
 	virtual ~Navigator();

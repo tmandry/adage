@@ -89,7 +89,9 @@ void Person::updateEvent(double secsElapsed)
 
 PersonView::PersonView(Pointer<Actor> parent, QColor color)
 	:	mParent(parent),
-		mPixmap(28, 20)
+		mPixmap(28, 20),
+		mShowName(false),
+		mNameColor(color)
 {
 	setColor(color);
 }
@@ -137,7 +139,7 @@ void PersonView::paint(QPainter* p)
 				diagram.lineTo(path.edges[i].end);
 			diagram.lineTo(path.end);
 
-			p->setPen(Qt::white);
+			p->setPen(Qt::gray);
 			p->drawPath(diagram);
 		}
 	}
@@ -145,8 +147,13 @@ void PersonView::paint(QPainter* p)
 	p->save();
 
 	p->translate(mParent->pos().x, mParent->pos().y);
-	p->rotate( -Math::toDegrees(mParent->heading().absAngle()) );
+	if (mShowName) {
+		p->setPen(mNameColor);
+		p->drawText(QPointF(-1.3, -3), QString(mParent->name().c_str()));
+	}
+
 	p->scale(.13, .13);
+	p->rotate( -Math::toDegrees(mParent->heading().absAngle()) );
 
 	if (mParent->inherits("Navigator")) p->scale(2.0, 2.0);
 

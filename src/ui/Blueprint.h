@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QPoint>
+#include <QFont>
 #include "Game.h"
 
 class Blueprint : public QGLWidget
@@ -65,6 +66,8 @@ private:
 
 	ToolType mTool;
 	bool mShowNavmesh;
+
+	QFont mFont;
 };
 
 #endif /*BLUEPRINT_H_*/
