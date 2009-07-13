@@ -1,21 +1,22 @@
 #include "NavSystem.h"
 
-int NavSystem::addNode(Math::Point* begin, Math::Point* end)
+NavNode* NavSystem::addNode(Math::Point* begin, Math::Point* end)
 {
-	mNodes.push_back(NavNode(begin, end));
-	return mNodes.size();
+	NavNode* node = new NavNode(begin, end);
+	mNodes.push_back(node);
+	return node;
 }
 
 void NavSystem::setLink(int from, int edge, int to)
 {
 	assert(from > 0 && edge > 0 && to > 0);
-	mNodes.at(from-1).setLink(edge-1, &mNodes.at(to-1));
+	mNodes.at(from-1)->setLink(edge-1, mNodes.at(to-1));
 }
 
 NavNode* NavSystem::pointToNode(Math::Point point)
 {
 	for (unsigned int i = 0; i < mNodes.size(); ++i)
-		if (mNodes[i].contains(point)) return &mNodes[i];
+		if (mNodes[i]->contains(point)) return mNodes[i];
 	return 0;
 }
 

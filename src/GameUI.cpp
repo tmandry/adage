@@ -54,7 +54,7 @@ GameUI::GameUI()
 
 	//TEST GAME ENTITIES GO HERE
 	Map* map = new Map(mGame->world());
-	map->open("building.txt");
+	map->open("map.map");
 	map->load();
 
 	new GhostBustersHQ(mGame->world());

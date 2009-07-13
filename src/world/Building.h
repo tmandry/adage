@@ -14,7 +14,7 @@ public:
 	Building(Pointer<Entity> parent, std::string name="Building");
 	virtual ~Building();
 
-	void createWalls(const std::vector<Math::Point>& points);
+	void createWalls(const Math::Point* begin, const Math::Point* end);
 
 private:
 	std::vector<Wall*> mWalls;

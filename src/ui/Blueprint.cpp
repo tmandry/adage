@@ -88,16 +88,16 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 	p.setFont(mFont);
 	mGame->world()->paint(&p);
 
-	if (mShowNavmesh) {
+	NavSystem* nav = mGame->world()->navSystem();
+	if (mShowNavmesh && nav) {
 		//draw the navmesh for debugging/development purposes
-		NavSystem* nav = mGame->world()->navSystem();
 		for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i) {
-			for (unsigned int e = 0; e < i->points().size(); ++e) {
+			for (unsigned int e = 0; e < (*i)->points().size(); ++e) {
 				//draw linked edges in gray, unlinked ones in dark red
-				if (i->link(e) != 0) p.setPen(QPen(Qt::gray, 0.1));
+				if ((*i)->link(e) != 0) p.setPen(QPen(Qt::gray, 0.1));
 				else p.setPen(QPen(Qt::darkRed, 0.2));
 
-				p.drawLine(i->edge(e));
+				p.drawLine((*i)->edge(e));
 			}
 		}
 	}

@@ -9,12 +9,12 @@
 class NavSystem
 {
 public:
-	typedef std::vector<NavNode>::iterator NodeIterator;
+	typedef std::vector<NavNode*>::iterator NodeIterator;
 
 	NavSystem() {}
 	virtual ~NavSystem() {}
 
-	int addNode(Math::Point* begin, Math::Point* end);
+	NavNode* addNode(Math::Point* begin, Math::Point* end);
 	void setLink(int from, int edge, int to);
 	NavNode* pointToNode(Math::Point point);
 
@@ -28,7 +28,7 @@ private:
 	void smoothPath(NavPath& path) const;
 
 	AStar mAStar;
-	std::vector<NavNode> mNodes;
+	std::vector<NavNode*> mNodes;
 };
 
 #endif /* NAVSYSTEM_H_ */

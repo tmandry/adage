@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET = adage
 CONFIG += debug
-QT += opengl
+QT += opengl xml
 DEPENDPATH += . math ui world
 INCLUDEPATH += . world math ui
 QMAKE_CXXFLAGS_DEBUG += -O0 -ggdb
