@@ -15,6 +15,7 @@ public:
 	virtual ~Building();
 
 	void createWalls(const Math::Point* begin, const Math::Point* end);
+	const std::vector<Wall*>& walls() const { return mWalls; }
 
 private:
 	std::vector<Wall*> mWalls;

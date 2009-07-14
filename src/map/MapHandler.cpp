@@ -1,65 +1,22 @@
-/*
- * Map.cpp
- *
- *  Created on: Jun 21, 2009
- *      Author: tyler
- */
-
-#include <vector>
-#include <string>
-#include <iostream>
-#include <QFile>
-#include <QTextStream>
-#include <QString>
-#include <QtXml>
-#include "Map.h"
-#include "world/Building.h"
-#include "math/Point.h"
+#include "MapHandler.h"
 #include "nav/NavSystem.h"
+#include "world/Building.h"
+#include "world/World.h"
 
-Map::Map(Pointer<World> parent, std::string filename)
-	:	mParent(parent),
-		mFile(0),
+MapHandler::MapHandler(Pointer<World> world)
+	:	mWorld(world),
 		mNav(0),
 		mBuilding(0)
 {
-	if (!filename.empty()) open(filename);
-
 	mInMap = mInNavmesh = mInNode = mInLinkList = mInBuilding = mInWall = false;
 	mPoints = new Math::Point[100];
 }
 
-Map::~Map() {
-	if (mFile) delete mFile;
+MapHandler::~MapHandler() {
 	delete[] mPoints;
 }
 
-void Map::open(std::string filename)
-{
-	if (mFile) {
-		delete mFile;
-		mFile = 0;
-	}
-
-	mFile = new QFile( filename.c_str() );
-	bool result = mFile->open(QIODevice::ReadOnly | QIODevice::Text);
-	assert(result); //TODO error handling
-
-
-}
-
-void Map::load()
-{
-	QXmlSimpleReader reader;
-	reader.setContentHandler(this);
-	reader.setErrorHandler(this);
-
-	reader.parse(QXmlInputSource(mFile));
-
-	mFile->close();
-}
-
-bool Map::startElement(const QString& /*namespaceURI*/, const QString& /*localName*/, const QString& name, const QXmlAttributes& attributes)
+bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*localName*/, const QString& name, const QXmlAttributes& attributes)
 {
 	if (!mInMap && name != "map") {
 		mErrorStr = QObject::tr("The file is not a map file.");
@@ -85,7 +42,7 @@ bool Map::startElement(const QString& /*namespaceURI*/, const QString& /*localNa
 				attr(attributes, "bottom", bottom)
 		)) return false;
 
-		mParent->setBounds(left, top, right, bottom);
+		mWorld->setBounds(left, top, right, bottom);
 		return true;
 	} else if (name == "navmesh") {
 		if (mNav) {
@@ -103,7 +60,7 @@ bool Map::startElement(const QString& /*namespaceURI*/, const QString& /*localNa
 		}
 
 		mInBuilding = true;
-		mBuilding = new Building(mParent);
+		mBuilding = new Building(mWorld);
 		return true;
 	}
 
@@ -233,7 +190,7 @@ bool Map::startElement(const QString& /*namespaceURI*/, const QString& /*localNa
 	return false;
 }
 
-bool Map::endElement(const QString& /*namespaceURI*/, const QString& /*localName*/, const QString& name)
+bool MapHandler::endElement(const QString& /*namespaceURI*/, const QString& /*localName*/, const QString& name)
 {
 	if (name == "node") {
 		if (mNodes.find(mNodeId) != mNodes.end()) {
@@ -251,7 +208,7 @@ bool Map::endElement(const QString& /*namespaceURI*/, const QString& /*localName
 		return true;
 	} else if (name == "navmesh") {
 		//Navmesh is complete; assign it to world
-		mParent->setNavSystem(mNav);
+		mWorld->setNavSystem(mNav);
 		mInNavmesh = false;
 		return true;
 	} else if (name == "wall") {
@@ -272,12 +229,12 @@ bool Map::endElement(const QString& /*namespaceURI*/, const QString& /*localName
 	return true;
 }
 
-QString Map::errorString() const
+QString MapHandler::errorString() const
 {
 	return mErrorStr;
 }
 
-bool Map::attr(const QXmlAttributes& attributes, QString name, double& a)
+bool MapHandler::attr(const QXmlAttributes& attributes, QString name, double& a)
 {
 	QString value = attributes.value(name);
 	if (value.isEmpty()) {
@@ -296,7 +253,7 @@ bool Map::attr(const QXmlAttributes& attributes, QString name, double& a)
 	return true;
 }
 
-bool Map::fatalError(const QXmlParseException &exception)
+bool MapHandler::fatalError(const QXmlParseException &exception)
 {
 	std::cerr << QObject::tr("Parse error at line %1, column %2:\n%3").arg(exception.lineNumber()).arg(exception.columnNumber()).arg(exception.message()).toStdString() << std::endl;
 	return false;

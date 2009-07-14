@@ -1,32 +1,22 @@
-/*
- * Map.h
- *
- *  Created on: Jun 21, 2009
- *      Author: tyler
- */
+#ifndef MAPHANDLER_H_
+#define MAPHANDLER_H_
 
-#ifndef MAP_H_
-#define MAP_H_
-
-#include <string>
 #include <map>
-#include <QXmlDefaultHandler>
+#include <QtXml>
+#include <QString>
+#include "math/Point.h"
 #include "Pointer.h"
-#include "World.h"
 
-class QFile;
-class QTextStream;
 class NavSystem;
 class Building;
+class NavNode;
+class World;
 
-class Map : public QXmlDefaultHandler
+class MapHandler : public QXmlDefaultHandler
 {
 public:
-	Map(Pointer<World> parent, std::string filename = "");
-	virtual ~Map();
-
-	void open(std::string filename);
-	void load();
+	MapHandler(Pointer<World> world);
+	virtual ~MapHandler();
 
 	bool startElement(const QString& namespaceURI, const QString& localName, const QString& name, const QXmlAttributes& attributes);
 	bool endElement(const QString& namespaceURI, const QString& localName, const QString& name);
@@ -36,8 +26,7 @@ public:
 private:
 	bool attr(const QXmlAttributes& attributes, QString name, double& a);
 
-	Pointer<World> mParent;
-	QFile* mFile;
+	Pointer<World> mWorld;
 
 	bool mInMap;
 	bool mInNavmesh;
@@ -61,4 +50,4 @@ private:
 	QString mErrorStr;
 };
 
-#endif /* MAP_H_ */
+#endif /* MAPHANDLER_H_ */

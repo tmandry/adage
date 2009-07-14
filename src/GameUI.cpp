@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QDockWidget>
+#include <QFile>
 #include "GameUI.h"
 #include "Game.h"
 #include "ui/BlueprintWindow.h"
@@ -10,7 +11,7 @@
 #include "ui/CommWindow.h"
 #include "ui/ShellInterface.h"
 #include "world/GhostBustersHQ.h"
-#include "world/Map.h"
+#include "map/Map.h"
 #include "world/GhostTrap.h"
 #include "actors/Person.h"
 #include "actors/Ghost.h"
@@ -54,8 +55,15 @@ GameUI::GameUI()
 
 	//TEST GAME ENTITIES GO HERE
 	Map* map = new Map(mGame->world());
-	map->open("map.map");
-	map->load();
+	QFile* file = new QFile("map.map");
+	bool result = file->open(QIODevice::ReadOnly | QIODevice::Text);
+	assert(result); //TODO error handling
+	map->load(file);
+
+	QFile* outFile = new QFile("map-out.map");
+	result = outFile->open(QIODevice::WriteOnly | QIODevice::Text);
+	assert(result);
+	map->save(outFile);
 
 	new GhostBustersHQ(mGame->world());
 

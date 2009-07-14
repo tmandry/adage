@@ -73,7 +73,7 @@ public:
 	NavSystem* navSystem() { return mNav; }
 
 private:
-	friend class Map;
+	friend class MapHandler;
 	void setBounds(double left, double top, double right, double bottom);
 
 	virtual Pointer<World> theWorld() { return Pointer<World>(this); }

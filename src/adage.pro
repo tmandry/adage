@@ -34,6 +34,9 @@ HEADERS += Game.h \
            actors/steering/SteeringBehavior.h \
            actors/steering/Wander.h \
            detail/StaticCastIterator.h \
+           map/Map.h \
+           map/MapGenerator.h \
+           map/MapHandler.h \
            math/const.h \
            math/Point.h \
            math/Polygon.h \
@@ -55,7 +58,6 @@ HEADERS += Game.h \
            world/GhostBustersHQ.h \
            world/GhostPortal.h \
            world/GhostTrap.h \
-           world/Map.h \
            world/MovingEntity.h \
            world/View.h \
            world/Wall.h \
@@ -81,6 +83,9 @@ SOURCES += Game.cpp \
            actors/steering/Seek.cpp \
            actors/steering/Separation.cpp \
            actors/steering/Wander.cpp \
+           map/Map.cpp \
+           map/MapGenerator.cpp \
+           map/MapHandler.cpp \
            math/Polygon.cpp \
            math/Segment.cpp \
            nav/AStar.cpp \
@@ -97,7 +102,6 @@ SOURCES += Game.cpp \
            world/GhostBustersHQ.cpp \
            world/GhostPortal.cpp \
            world/GhostTrap.cpp \
-           world/Map.cpp \
            world/MovingEntity.cpp \
            world/View.cpp \
            world/Wall.cpp \
