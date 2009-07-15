@@ -1,3 +1,5 @@
+#include "Entity.h"
+
 #ifndef WORLD_H_
 #define WORLD_H_
 
@@ -6,15 +8,14 @@
 #include <vector>
 #include <cassert>
 #include <utility>
-#include "Entity.h"
 #include "EntityList.h"
 #include "Pointer.h"
+#include "world/GameBase.h"
 #include "world/CellSpacePartition.h"
 #include "math/const.h"
 #include "nav/NavPath.h"
 
 //forward declaration
-class Game;
 class Wall;
 class Map;
 class NavSystem;
@@ -25,7 +26,7 @@ public:
 	typedef std::vector<Pointer<Entity> > EntityVector;
 	typedef std::map<std::string, EntityVector> EntityMap;
 
-	World(Game* game, std::string name="World");
+	World(GameBase* game, std::string name="World");
 	virtual ~World();
 
 	void update(double secsElapsed) { Entity::update(secsElapsed); }
@@ -60,7 +61,7 @@ public:
 
 	bool findPath(NavPath& path, Math::Point start, Math::Point dest);
 
-	Game* game() const { return mGame; }
+	GameBase* game() const { return mGame; }
 
 	double leftBound() const { return mLeftBound; }
 	double topBound() const { return mTopBound; }
@@ -79,7 +80,7 @@ private:
 	virtual Pointer<World> theWorld() { return Pointer<World>(this); }
 
 	EntityMap mEntities;
-	Game* mGame;
+	GameBase* mGame;
 	std::vector<Wall*> mBoundaries;
 	double mLeftBound, mTopBound, mRightBound, mBottomBound;
 
@@ -92,7 +93,5 @@ inline void Entity::setPos(const Math::Point loc)
 	world()->updatePos(pointer(), mLoc, loc);
 	mLoc = loc;
 }
-
-#include "Game.h"
 
 #endif /*WORLD_H_*/

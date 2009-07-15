@@ -8,7 +8,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include "Game.h"
-#include "ui/Blueprint.h"
+#include "GameBlueprint.h"
 
 class BlueprintWindow : public QWidget
 {
@@ -31,7 +31,7 @@ private:
 	static const float zoomInterval = 0.3;
 
 	QToolBar* mToolbar;
-	Blueprint* mBlueprint;
+	GameBlueprint* mBlueprint;
 	QStatusBar* mStatusBar;
 	QLabel* mZoomLbl;
 	QComboBox* mToolCombo;

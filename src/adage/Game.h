@@ -4,22 +4,22 @@
 #include <QObject>
 #include <QTime>
 #include <QPoint>
-#include "ui/CommWindow.h"
+#include "CommWindow.h"
 #include "world/World.h"
+#include "world/GameBase.h"
 
 class QTimer;
 class Navigator;
 
-class Game : public QObject
+class Game : public QObject, public GameBase
 {
 	Q_OBJECT
 
 public:
 	Game(CommWindow* comm);
-	virtual ~Game() { delete mWorld; }
 
-	Pointer<World> world() const { return mWorld->world(); }
 	Pointer<CommWindow> comm() const { return mComm; }
+	void log(QString msg) { mComm->log(msg); }
 
 	void setNavvy(Navigator* n) { mNavvy = n; }
 
@@ -35,7 +35,6 @@ signals:
 private:
 	static const int fps = 50;
 
-	World* mWorld;
 	Pointer<CommWindow> mComm;
 
 	//fires events every update
@@ -45,10 +44,5 @@ private:
 
 	Navigator* mNavvy;
 };
-
-inline void Entity::printComm(QString msg) const
-{
-	world()->game()->comm()->log(formatComm(msg));
-}
 
 #endif /*GAME_H_*/

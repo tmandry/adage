@@ -1,12 +1,12 @@
 #include <QTimer>
 #include <QTime>
 #include "Game.h"
-#include "ui/Blueprint.h"
+#include "Blueprint.h"
 #include "actors/Navigator.h"
+#include "world/World.h"
 
 Game::Game(CommWindow* comm)
-	:	mWorld(new World(this)),
-		mComm(comm)
+	:	mComm(comm)
 {
 	mTimer = new QTimer(this);
 	connect(mTimer, SIGNAL(timeout()), this, SLOT(updateWorld()));
@@ -19,7 +19,7 @@ Game::Game(CommWindow* comm)
 void Game::updateWorld()
 {
 	double secsElapsed = mElapsed.restart() / 1000.0;
-	mWorld->update(secsElapsed);
+	world()->update(secsElapsed);
 
 	emit worldUpdated();
 	//Blueprint::bp->repaint();

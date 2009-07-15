@@ -3,11 +3,11 @@
 #include <QSizePolicy>
 #include <QCheckBox>
 #include <QString>
-#include "ui/BlueprintWindow.h"
+#include "BlueprintWindow.h"
 
 BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	QWidget(parent),
-	mBlueprint(new Blueprint(game))
+	mBlueprint(new GameBlueprint(game))
 {
 	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
@@ -19,10 +19,10 @@ BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	mToolbar->addAction(tr("Zoom Out"), this, SLOT(zoomOut()));
 
 	mToolCombo = new QComboBox(this);
-	mToolCombo->insertItem(Blueprint::dormantPortal, QIcon(), "Dormant Portal");
-	mToolCombo->insertItem(Blueprint::portal, QIcon(), "Active Portal");
-	mToolCombo->insertItem(Blueprint::trap, QIcon(), "Ghost Trap");
-	mToolCombo->insertItem(Blueprint::nav, QIcon(), "Navigate!");
+	mToolCombo->insertItem(GameBlueprint::dormantPortal, QIcon(), "Dormant Portal");
+	mToolCombo->insertItem(GameBlueprint::portal, QIcon(), "Active Portal");
+	mToolCombo->insertItem(GameBlueprint::trap, QIcon(), "Ghost Trap");
+	mToolCombo->insertItem(GameBlueprint::nav, QIcon(), "Navigate!");
 	mToolCombo->setCurrentIndex(-1);
 	mToolbar->addSeparator();
 	mToolbar->addWidget(mToolCombo);

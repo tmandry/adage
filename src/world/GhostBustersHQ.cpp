@@ -1,7 +1,7 @@
 #include <vector>
 #include <QString>
 #include "GhostBustersHQ.h"
-#include "Game.h"
+#include "world/GameBase.h"
 #include "actors/GhostBuster.h"
 #include "math/rand.h"
 

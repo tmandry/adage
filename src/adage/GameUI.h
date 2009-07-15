@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include "Game.h"
-#include "ui/BlueprintWindow.h"
+#include "BlueprintWindow.h"
 
 class GameUI : public QMainWindow
 {

@@ -7,31 +7,23 @@
 #include <QWheelEvent>
 #include <QPoint>
 #include <QFont>
-#include "Game.h"
+#include "world/GameBase.h"
+#include "math/Point.h"
 
 class Blueprint : public QGLWidget
 {
 	Q_OBJECT
 
 public:
-	enum ToolType {
-		dormantPortal,
-		portal,
-		trap,
-		nav
-	};
 
-	Blueprint(Game* game, QWidget* parent=0);
+	Blueprint(GameBase* game, QWidget* parent=0);
 	virtual ~Blueprint();
 
 	float zoom() const { return mZoom; }
 
 public slots:
 	void setZoom(float zoom);
-	void setTool(int tool);
 	void setShowNavmesh(int show);
-	//eventually will be used for returning the view to the main point of interest in the mission
-	void goHome();
 
 signals:
 	void zoomChanged(float zoom);
@@ -39,22 +31,22 @@ signals:
 protected:
 	void paintEvent(QPaintEvent* event);
 
-	void mousePressEvent(QMouseEvent* event);
-	void mouseMoveEvent(QMouseEvent* event);
-	void mouseReleaseEvent(QMouseEvent* event);
-	void wheelEvent(QWheelEvent* event);
+	virtual void mousePressEvent(QMouseEvent* event);
+	virtual void mouseMoveEvent(QMouseEvent* event);
+	virtual void mouseReleaseEvent(QMouseEvent* event);
+	virtual void wheelEvent(QWheelEvent* event);
+
+	//returns px per meter scale with zoom
+	float scale() const { return basePxPerMeter * mZoom; }
+	//returns grid line interval in meters
+	int gridResolution() const;
+	QPointF panning() const { return mPanning; }
+	void setPanning(QPointF panning) { mPanning = panning; }
 
 private:
 	enum { basePxPerMeter = 2 };
 
-	void placeTool(Math::Point pos);
-
-	//returns px per meter scale with zoom
-	inline float scale() const;
-	//returns grid line interval in meters
-	int gridResolution() const;
-
-	Game* mGame;
+	GameBase* mGame;
 
 	QPointF mPanning;
 	float mZoom;
@@ -64,7 +56,6 @@ private:
 	QPointF mMovePanningStart;
 	QPoint mMoveMouseStart;
 
-	ToolType mTool;
 	bool mShowNavmesh;
 
 	QFont mFont;

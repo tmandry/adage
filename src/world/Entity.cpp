@@ -67,3 +67,8 @@ void Entity::paint(QPainter* p)
 		if ((*i)->visible())
 			(*i)->paint(p);
 }
+
+QString Entity::formatComm(QString msg) const
+{
+	return /*"[" + QString(mName.c_str()) + "] " + */msg;
+}

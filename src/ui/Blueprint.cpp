@@ -5,15 +5,14 @@
 #include <QSize>
 #include <QSizePolicy>
 #include "Blueprint.h"
-#include "Game.h"
+#include "world/GameBase.h"
 #include "world/Wall.h"
 #include "math/real.h"
 #include "world/GhostPortal.h"
 #include "world/GhostTrap.h"
 #include "nav/NavSystem.h"
-#include "BlueprintWindow.h"
 
-Blueprint::Blueprint(Game* game, QWidget* parent)
+Blueprint::Blueprint(GameBase* game, QWidget* parent)
 	:	QGLWidget(parent),
 		mGame(game),
 		mPanning(0,0),
@@ -42,17 +41,6 @@ void Blueprint::setZoom(float zoom)
 
 	emit zoomChanged(zoom);
 	update();
-}
-
-void Blueprint::goHome()
-{
-	mPanning = QPointF(0,0);
-	update();
-}
-
-void Blueprint::setTool(int tool)
-{
-	mTool = (ToolType)tool;
 }
 
 void Blueprint::setShowNavmesh(int show)
@@ -135,9 +123,6 @@ void Blueprint::mouseReleaseEvent(QMouseEvent* event)
 	case Qt::LeftButton:
 		mMovePressed = false;
 		break;
-	case Qt::RightButton:
-		placeTool(Math::Point(-mPanning + (-QPointF(width(),height()) / 2.0 + event->pos()) / scale()));
-		break;
 	default:
 		break;
 	}
@@ -155,30 +140,7 @@ void Blueprint::wheelEvent(QWheelEvent* event)
 	}
 }
 
-void Blueprint::placeTool(Math::Point pos)
-{
-	switch (mTool) {
-	case dormantPortal:
-		new DormantGhostPortal(mGame->world(), pos);
-		break;
-	case portal:
-		new GhostPortal(mGame->world(), pos);
-		break;
-	case trap:
-		new GhostTrap(mGame->world(), pos);
-		break;
-	case nav:
-		mGame->navigate(pos);
-	}
-}
-
-inline float Blueprint::scale() const
-{
-	return basePxPerMeter * mZoom;
-}
-
 int Blueprint::gridResolution() const
 {
-
 	return 10;
 }

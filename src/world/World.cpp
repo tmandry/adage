@@ -2,11 +2,11 @@
 #include <utility>
 #include <cassert>
 #include "World.h"
-#include "Game.h"
+#include "GameBase.h"
 #include "world/Wall.h"
 #include "nav/NavSystem.h"
 
-World::World(Game* game, std::string name)
+World::World(GameBase* game, std::string name)
 	:	Entity(Pointer<Entity>(), name),
 		mGame(game),
 		mCellSpace(this),

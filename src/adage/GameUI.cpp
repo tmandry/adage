@@ -6,10 +6,10 @@
 #include <QFile>
 #include "GameUI.h"
 #include "Game.h"
-#include "ui/BlueprintWindow.h"
-#include "ui/ShellWindow.h"
-#include "ui/CommWindow.h"
-#include "ui/ShellInterface.h"
+#include "BlueprintWindow.h"
+#include "ShellWindow.h"
+#include "CommWindow.h"
+#include "ShellInterface.h"
 #include "world/GhostBustersHQ.h"
 #include "map/Map.h"
 #include "world/GhostTrap.h"
@@ -24,18 +24,6 @@ GameUI::GameUI()
 {
 	resize(1000, 800);
 	setWindowTitle("Adage");
-
-	/*mLayout = new QVBoxLayout(this);
-
-	QHBoxLayout* horizLayout = new QHBoxLayout();
-
-	mButton = new QPushButton("Push me");
-	horizLayout->addWidget(mButton, 0, Qt::AlignLeft);
-
-	mBtnClose = new QPushButton("Close");
-	horizLayout->addWidget(mBtnClose, 0, Qt::AlignRight);
-
-	mLayout->addLayout(horizLayout);*/
 
 	QDockWidget *dock = new QDockWidget(tr("Shell"), this);
 	ShellWindow *shell = new ShellWindow(dock);
@@ -55,7 +43,7 @@ GameUI::GameUI()
 
 	//TEST GAME ENTITIES GO HERE
 	Map* map = new Map(mGame->world());
-	QFile* file = new QFile("map.map");
+	QFile* file = new QFile("data/map.map");
 	bool result = file->open(QIODevice::ReadOnly | QIODevice::Text);
 	assert(result); //TODO error handling
 	map->load(file);

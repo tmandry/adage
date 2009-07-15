@@ -1,16 +1,14 @@
 project(adage)
-cmake_minimum_required(VERSION 2.4.0)
-if(COMMAND cmake_policy)
-	cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
-
-find_package(Qt4 REQUIRED)
-
 #FILES
 set(adage_SRCS
-   Game.cpp
-   GameUI.cpp
-   main.cpp
+   adage/Game.cpp
+   adage/GameUI.cpp
+   adage/main.cpp
+   adage/GameBlueprint.cpp
+   adage/BlueprintWindow.cpp
+   adage/CommWindow.cpp
+   adage/ShellInterface.cpp
+   adage/ShellWindow.cpp
    actors/Actor.cpp
    actors/Ghost.cpp
    actors/GhostBuster.cpp
@@ -35,13 +33,10 @@ set(adage_SRCS
    nav/NavNode.cpp
    nav/NavSystem.cpp
    ui/Blueprint.cpp
-   ui/BlueprintWindow.cpp
-   ui/CommWindow.cpp
-   ui/ShellInterface.cpp
-   ui/ShellWindow.cpp
    world/Building.cpp
    world/CellSpacePartition.cpp
    world/Entity.cpp
+   world/GameBase.cpp
    world/GhostBustersHQ.cpp
    world/GhostPortal.cpp
    world/GhostTrap.cpp
@@ -52,12 +47,13 @@ set(adage_SRCS
 )
 
 set(adage_MOC_HDRS
-	Game.h
-	GameUI.h
+	adage/Game.h
+	adage/GameUI.h
+	adage/GameBlueprint.h
+	adage/BlueprintWindow.h
+	adage/CommWindow.h
+	adage/ShellInterface.h
 	ui/Blueprint.h
-	ui/BlueprintWindow.h
-	ui/CommWindow.h
-	ui/ShellInterface.h
 )
 
 #moc these files

@@ -11,7 +11,7 @@
 #include "world/View.h"
 #include "math/Point.h"
 #include "Pointer.h"
-#include "ui/CommWindow.h"
+#include "world/GameBase.h"
 
 #define ENTITY(type) \
 	private: \
@@ -68,7 +68,7 @@ protected:
 	void setView(View* view) { if (mView) delete mView; mView = view; }
 	View* view() const { return mView; }
 
-	inline void printComm(QString msg) const; //definition in World.h
+	inline void printComm(QString msg) const; //definition below
 
 private:
 	virtual Pointer<World> theWorld() { return mWorld; }
@@ -78,7 +78,7 @@ private:
 
 	virtual void updateEvent(double /*secsElapsed*/) {}
 
-	virtual QString formatComm(QString msg) const { return /*"[" + QString(mName.c_str()) + "] " + */msg; }
+	virtual QString formatComm(QString msg) const;
 
 	std::vector<std::string> mSubclasses;
 
@@ -113,6 +113,11 @@ inline Entity::Entity(Pointer<Entity> parent, std::string name)
 	} else {
 		mWorld = Pointer<World>::staticPointerCast(Pointer<Entity>(this));
 	}
+}
+
+inline void Entity::printComm(QString msg) const
+{
+	world()->game()->log(formatComm(msg));
 }
 
 #endif /*ENTITY_H_*/
