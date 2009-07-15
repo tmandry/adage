@@ -36,6 +36,7 @@ bool MapGenerator::write(QIODevice* device)
 	out << "\n";
 	for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i)
 		generateLinkList(*i, 1);
+
 	out << "</navmesh>\n\n";
 
 	//generate buildings

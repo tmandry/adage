@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include "Pointer.h"
-#include "World.h"
+#include "world/World.h"
 
 class QFile;
 
