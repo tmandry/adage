@@ -19,6 +19,8 @@ public:
 	Blueprint(GameBase* game, QWidget* parent=0);
 	virtual ~Blueprint();
 
+	void setGame(GameBase* game) { mGame = game; }
+
 	float zoom() const { return mZoom; }
 
 public slots:

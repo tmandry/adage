@@ -1,7 +1,7 @@
 #include <QTimer>
 #include <QTime>
 #include "Game.h"
-#include "Blueprint.h"
+#include "GameBlueprint.h"
 #include "actors/Navigator.h"
 #include "world/World.h"
 

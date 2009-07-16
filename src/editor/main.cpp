@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QFile>
-#include "GameUI.h"
+#include "EditorUI.h"
 #include "math/rand.h"
 
 int main(int argc, char **argv)
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 
 	Math::initRand();
 
-	GameUI* ui = new GameUI();
+	EditorUI* ui = new EditorUI();
 	ui->show();
 
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
