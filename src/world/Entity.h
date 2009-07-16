@@ -44,12 +44,14 @@ public:
 	//replace with region? or abstract intersects function?
 	inline void setPos(const Math::Point loc); //definition in World.h
 	Math::Point pos() const { return mLoc; }
+	bool movable() const { return mMovable; }
 
 	void remove();
 	bool removed() { return mRemove; }
 
 	Pointer<Entity> parent() const { return mParent; }
 	Pointer<World> world() const { return mWorld; }
+	View* view() const { return mView; }
 	/*template<class T>
 	Pointer<T> pointer() { return Pointer<T>::staticPointerCast(mThis); }*/
 
@@ -65,8 +67,8 @@ protected:
 	void paint(QPainter* p);
 
 	void setVisible(bool v) { mVisible = v; }
+	void setMovable(bool m) { mMovable = m; }
 	void setView(View* view) { if (mView) delete mView; mView = view; }
-	View* view() const { return mView; }
 
 	inline void printComm(QString msg) const; //definition below
 
@@ -92,6 +94,7 @@ private:
 
 	View* mView;
 	bool mVisible;
+	bool mMovable;
 
 	bool mRemove;
 };
@@ -105,11 +108,13 @@ inline Entity::Entity(Pointer<Entity> parent, std::string name)
 		mLoc(0,0),
 		mView(0),
 		mVisible(false),
+		mMovable(true),
 		mRemove(false)
 {
 	if (parent) {
 		parent->addChild(mThis);
 		mWorld = parent->theWorld();
+		subclass("Entity");
 	} else {
 		mWorld = Pointer<World>::staticPointerCast(Pointer<Entity>(this));
 	}

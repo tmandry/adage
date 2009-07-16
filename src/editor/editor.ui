@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>879</width>
+    <height>707</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -25,7 +25,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>879</width>
      <height>23</height>
     </rect>
    </property>
@@ -39,9 +39,47 @@
     <addaction name="actSave"/>
     <addaction name="actSaveAs"/>
    </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actShowNavmesh"/>
+    <addaction name="separator"/>
+    <addaction name="actShowComm"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menu_View"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actShowNavmesh"/>
+   <addaction name="separator"/>
+   <addaction name="actPopulate"/>
+   <addaction name="actReset"/>
+   <addaction name="separator"/>
+   <addaction name="actStartStop"/>
+  </widget>
+  <widget class="QDockWidget" name="CommDock">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>Comm</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
   <action name="actOpen">
    <property name="text">
     <string>&amp;Open...</string>
@@ -71,7 +109,89 @@
     <string>Ctrl+N</string>
    </property>
   </action>
+  <action name="actShowNavmesh">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Nav&amp;mesh</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actPopulate">
+   <property name="text">
+    <string>Populate</string>
+   </property>
+   <property name="toolTip">
+    <string>Randomly populate world with actors for testing</string>
+   </property>
+  </action>
+  <action name="actReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset world back to saved-file state</string>
+   </property>
+  </action>
+  <action name="actStartStop">
+   <property name="text">
+    <string>Start</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
+  </action>
+  <action name="actShowComm">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Comm Window</string>
+   </property>
+  </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actShowComm</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>CommDock</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>691</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>691</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CommDock</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>actShowComm</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>691</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

@@ -1,15 +1,20 @@
 set(editor_SRCS
+	EditorBlueprint.cpp
 	EditorGame.cpp
 	EditorUI.cpp
 	main.cpp
    ../math/Polygon.cpp
    ../math/Segment.cpp
    ../ui/Blueprint.cpp
+   ../ui/CommWindow.cpp
 )
 
 set(editor_MOC_HDRS
+	EditorBlueprint.h
+	EditorGame.h
 	EditorUI.h
 	../ui/Blueprint.h
+	../ui/CommWindow.h
 )
 
 set(editor_UIS

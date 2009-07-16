@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "BlueprintWindow.h"
 #include "ShellWindow.h"
-#include "CommWindow.h"
+#include "ui/CommWindow.h"
 #include "ShellInterface.h"
 #include "world/GhostBustersHQ.h"
 #include "map/Map.h"
@@ -48,10 +48,10 @@ GameUI::GameUI()
 	assert(result); //TODO error handling
 	map->load(file);
 
-	QFile* outFile = new QFile("map-out.map");
-	result = outFile->open(QIODevice::WriteOnly | QIODevice::Text);
+	/*QFile* outFile = new QFile("map-out.map");
+	result = outFile->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
 	assert(result);
-	map->save(outFile);
+	map->save(outFile);*/
 
 	new GhostBustersHQ(mGame->world());
 

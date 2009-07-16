@@ -4,18 +4,23 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QFile>
+#include <QButtonGroup>
 #include "EditorGame.h"
 #include "ui_editor.h"
+#include "EditorBlueprint.h"
 
 class EditorUI : public QMainWindow, private Ui::Editor
 {
 	Q_OBJECT
 public:
+
 	EditorUI();
 	virtual ~EditorUI();
 
-	EditorGame* mGame;
-	QFile* mFile;
+public slots:
+	void populate();
+	void reset();
+	void startStop();
 
 private slots:
 	void New();
@@ -24,7 +29,13 @@ private slots:
 	void saveAs();
 
 private:
-	bool openFile(QString filename);
+	//bool openFile(QString filename, QFlags<Qt::OpenModeFlag> flags);
+
+	QButtonGroup* toolSelect;
+
+	EditorGame* mGame;
+	EditorBlueprint* mBp;
+	QFile* mFile;
 };
 
 #endif /* EDITORUI_H_ */

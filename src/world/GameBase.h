@@ -15,6 +15,8 @@ public:
 	Pointer<World> world() const { return mWorld; }
 	virtual void log(QString msg) =0;
 
+	void resetWorld();
+
 private:
 	Pointer<World> mWorld;
 };

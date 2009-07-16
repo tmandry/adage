@@ -187,3 +187,11 @@ void PersonView::paint(QPainter* p)
 		}
 	}*/
 }
+
+bool PersonView::clickHit(Math::Point point) const
+{
+	//approximate with a circle
+	const double radius = 3.2;
+
+	return (Math::distanceSq(point, mParent->pos()) < radius*radius);
+}

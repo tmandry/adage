@@ -26,6 +26,7 @@ public:
 public slots:
 	void setZoom(float zoom);
 	void setShowNavmesh(int show);
+	void setShowNavmesh(bool show);
 
 signals:
 	void zoomChanged(float zoom);
@@ -44,6 +45,9 @@ protected:
 	int gridResolution() const;
 	QPointF panning() const { return mPanning; }
 	void setPanning(QPointF panning) { mPanning = panning; }
+	GameBase* game() const { return mGame; }
+
+	Math::Point screenToWorld(QPointF point) const;
 
 private:
 	enum { basePxPerMeter = 2 };

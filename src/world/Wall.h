@@ -40,6 +40,7 @@ public:
 	~WallView() {}
 
 	void paint(QPainter* p);
+	bool clickHit(Math::Point point) const;
 
 private:
 	Pointer<Wall> mParent;

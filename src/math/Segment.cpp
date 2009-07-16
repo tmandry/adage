@@ -79,4 +79,28 @@ Segment::PointRelation Segment::classifyPoint(Math::Point p) const
 	else return inLine;
 }
 
+double Segment::pointDistance(Math::Point p) const
+{
+	//http://www.codeguru.com/forum/printthread.php?t=194400
+
+	if (a == b) return distance(a, p);
+
+	//r is between 0 and 1 if the closest point on the line is within the segment
+	double rNumerator = (p.x-a.x)*(b.x-a.x) + (p.y-a.y)*(b.y-a.y);
+	double rDenominator = (b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y);
+	double r = rNumerator / rDenominator;
+
+	if (r >= 0 && r <= 1) {
+		//the closest point is within the segment (as opposed to on the same line but outside the segment's endpoints).
+		//complete the point-line distance formula
+		return fabs((a.y-p.y)*(b.x-a.x) - (a.x-p.x)*(b.y-a.y) / rDenominator) * sqrt(rDenominator);
+	} else {
+		//the closest point on the line is outside the segment, so the closest point on the segment is one of the endpoints.
+		double sqDistA = distanceSq(a, p);
+		double sqDistB = distanceSq(b, p);
+
+		return sqrt(std::min(sqDistA, sqDistB)); //return the closer endpoint
+	}
+}
+
 } //namespace Math

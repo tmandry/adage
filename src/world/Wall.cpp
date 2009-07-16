@@ -25,3 +25,8 @@ void WallView::paint(QPainter* p)
 
 	p->drawLine(mParent->segment());
 }
+
+bool WallView::clickHit(Math::Point point) const
+{
+	return (mParent->segment().pointDistance(point) < 3.0);
+}

@@ -12,7 +12,7 @@ GhostTrap::GhostTrap(Pointer<Entity> parent, Math::Point pos, std::string name)
 
 	setPos(pos);
 	setTriggerRegion(new TriggerRegionCircle(pos, 7));
-	mView = new CircleView(pos, 7, Qt::darkGreen, 0.5);
+	mView = new CircleView(pointer(), 7, Qt::darkGreen, 0.5);
 	setView(mView);
 	setVisible(true);
 }
@@ -71,7 +71,7 @@ void GhostTrap::updateEvent(double secsElapsed)
 
 void GhostTrap::detonate()
 {
-	mView = new CircleView(pos(), mView->radius(), Qt::white, 1.0);
+	mView = new CircleView(pointer(), mView->radius(), Qt::white, 1.0);
 	setView(mView);
 	mDetonated = true;
 }

@@ -10,3 +10,9 @@ GameBase::GameBase()
 GameBase::~GameBase()
 {
 }
+
+void GameBase::resetWorld()
+{
+	World* w = new World(this);
+	mWorld = w->world();
+}

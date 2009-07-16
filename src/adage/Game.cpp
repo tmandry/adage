@@ -22,7 +22,6 @@ void Game::updateWorld()
 	world()->update(secsElapsed);
 
 	emit worldUpdated();
-	//Blueprint::bp->repaint();
 }
 
 void Game::navigate(QPointF point)

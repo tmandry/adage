@@ -47,6 +47,13 @@ void Blueprint::setShowNavmesh(int show)
 {
 	if (show) mShowNavmesh = true;
 	else mShowNavmesh = false;
+	update();
+}
+
+void Blueprint::setShowNavmesh(bool show)
+{
+	mShowNavmesh = show;
+	update();
 }
 
 void Blueprint::paintEvent(QPaintEvent* /*event*/)
@@ -145,4 +152,9 @@ void Blueprint::wheelEvent(QWheelEvent* event)
 int Blueprint::gridResolution() const
 {
 	return 10;
+}
+
+Math::Point Blueprint::screenToWorld(QPointF point) const
+{
+	return Math::Point(-panning() + (-QPointF(width(),height()) / 2.0 + point) / scale());
 }

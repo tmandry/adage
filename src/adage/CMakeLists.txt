@@ -4,12 +4,12 @@ set(adage_SRCS
    main.cpp
    GameBlueprint.cpp
    BlueprintWindow.cpp
-   CommWindow.cpp
    ShellInterface.cpp
    ShellWindow.cpp
    ../math/Polygon.cpp
    ../math/Segment.cpp
    ../ui/Blueprint.cpp
+   ../ui/CommWindow.cpp
 )
 
 set(adage_MOC_HDRS
@@ -17,9 +17,9 @@ set(adage_MOC_HDRS
 	GameUI.h
 	GameBlueprint.h
 	BlueprintWindow.h
-	CommWindow.h
 	ShellInterface.h
 	../ui/Blueprint.h
+	../ui/CommWindow.h
 )
 
 #moc these files

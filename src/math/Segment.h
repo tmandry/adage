@@ -27,6 +27,7 @@ struct Segment
 		inLine
 	};
 	PointRelation classifyPoint(Point p) const;
+	double pointDistance(Point p) const;
 
 	operator QLineF() const
 	{

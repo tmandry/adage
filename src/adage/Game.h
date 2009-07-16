@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTime>
 #include <QPoint>
-#include "CommWindow.h"
+#include "ui/CommWindow.h"
 #include "world/World.h"
 #include "world/GameBase.h"
 

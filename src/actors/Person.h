@@ -45,6 +45,8 @@ public:
 	void setNameColor(QColor color) { mNameColor = color; }
 	void showName(bool show = true) { mShowName = show; }
 
+	bool clickHit(Math::Point point) const;
+
 private:
 	Pointer<Actor> mParent;
 	QColor mColor;

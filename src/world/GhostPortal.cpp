@@ -8,7 +8,7 @@ DormantGhostPortal::DormantGhostPortal(Pointer<Entity> parent, Math::Point pos)
 
 	setPos(pos);
 	setTriggerRegion(new TriggerRegionCircle(pos, 3.5));
-	setView(new CircleView(pos, 3.5, Qt::gray, 0.3));
+	setView(new CircleView(pointer(), 3.5, Qt::gray, 0.3));
 	setVisible(true);
 
 	printComm("Portal created, lying dormant...");
@@ -36,7 +36,7 @@ GhostPortal::GhostPortal(Pointer<Entity> parent, Math::Point pos)
 	subclass("Portal");
 
 	setPos(pos);
-	setView(new CircleView(pos, 5.0, Qt::red, 1.5));
+	setView(new CircleView(pointer(), 5.0, Qt::red, 1.5));
 	setVisible(true);
 }
 

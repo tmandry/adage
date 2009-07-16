@@ -22,7 +22,7 @@ void GameBlueprint::mouseReleaseEvent(QMouseEvent* event)
 {
 	switch (event->button()) {
 	case Qt::RightButton:
-		placeTool(Math::Point(-panning() + (-QPointF(width(),height()) / 2.0 + event->pos()) / scale()));
+		placeTool(screenToWorld(event->pos()));
 		break;
 	default:
 		Blueprint::mouseReleaseEvent(event);
