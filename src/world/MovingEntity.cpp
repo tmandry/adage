@@ -4,7 +4,7 @@
 
 MovingEntity::MovingEntity(Pointer<Entity> parent, std::string name)
 	:	Entity(parent,name), mMass(1), mHeading(1,0), mMaxSpeed(9.0), mMaxForce(27.0)
-{ subclass("MovingEntity"); }
+{ subclass(); }
 
 void MovingEntity::updateEvent(double secsElapsed)
 {

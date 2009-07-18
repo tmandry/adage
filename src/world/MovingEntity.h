@@ -7,6 +7,7 @@
 
 class MovingEntity : public Entity
 {
+	ENTITY(MovingEntity)
 protected:
 	MovingEntity(Pointer<Entity> parent, std::string name="Entity");
 	virtual ~MovingEntity() {}

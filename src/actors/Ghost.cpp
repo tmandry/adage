@@ -8,7 +8,7 @@ Ghost::Ghost(Math::Point pos, Pointer<Entity> parent, std::string name)
 	:	Actor(parent, name),
 		mKillCount(0)
 {
-	subclass("Ghost");
+	subclass();
 
 	setPos(pos);
 	setMaxSpeed(9.0);
@@ -38,7 +38,7 @@ void Ghost::updateEvent(double secsElapsed)
 		victim->setVelocity(mTarget->velocity());
 
 		++mKillCount;
-		if (mKillCount % 3 == 0) new DormantGhostPortal(world(), pos());
+		if (mKillCount % 3 == 0) new DormantGhostPortal(pos(), world());
 
 		newTarget();
 	}
@@ -53,8 +53,8 @@ void Ghost::updateEvent(double secsElapsed)
 void Ghost::newTarget()
 {
 	//pick a random person to pursue
-	ConstEntityList<Person> people = world()->findEntities<Person>(pos(), 35.0, "Person");
-	if (people.empty() || Math::randFloat(0, 1) < .5) people = world()->findEntities<Person>("Person");
+	EntityList<Person> people = world()->findEntities<Person>(pos(), 35.0);
+	if (people.empty() || Math::randFloat(0, 1) < .5) people = world()->findEntities<Person>();
 
 	if (!people.empty()) {
 		int idx = Math::randInt(0, people.size()-1);

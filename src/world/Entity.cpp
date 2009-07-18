@@ -12,18 +12,16 @@ Entity::~Entity()
 	if (mView) delete mView;
 }
 
-void Entity::subclass(std::string type)
+void Entity::subclass()
 {
-	mSubclasses.push_back(type);
+	QString type = this->_className();
+	mSubclasses.insert(type);
 	world()->addEntity(type, mThis);
 }
 
-bool Entity::inherits(std::string type) const
+bool Entity::_inherits(QString type) const
 {
-	for (unsigned int i=0; i<mSubclasses.size(); ++i)
-		if (mSubclasses[i] == type) return true;
-
-	return false;
+	return mSubclasses.contains(type);
 }
 
 void Entity::remove()
@@ -38,8 +36,8 @@ void Entity::remove()
 		(*i)->remove();
 
 	//wipe away every trace..
-	for (unsigned int i=0; i<mSubclasses.size(); ++i)
-		world()->removeEntity(mSubclasses[i], mThis);
+	foreach (QString className, mSubclasses)
+		world()->removeEntity(className, mThis);
 }
 
 void Entity::update(double secsElapsed)

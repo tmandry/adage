@@ -14,11 +14,11 @@ Separation::Separation(Pointer<Actor> parent)
 
 Math::Vector Separation::calculate()
 {
-	ConstEntityList<Actor> neighbors = parent()->neighbors();
+	EntityList<Actor> neighbors = parent()->neighbors();
 
 	Math::Vector force;
 	for (unsigned int i = 0; i < neighbors.size(); ++i) {
-		if (neighbors[i].pointer() != parent().pointer()) {
+		if (neighbors[i] && neighbors[i].pointer() != parent().pointer()) {
 			Math::Vector toNeighbor = parent()->pos() - neighbors[i]->pos();
 
 			//scale the force inversely proportional to neighbor's distance

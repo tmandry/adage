@@ -4,49 +4,79 @@
 	background-color: black;
 }
 
-QPushButton, QToolButton {
-background: QRadialGradient(cx:1, cy:0.5, radius:1.8, fx:.95, fy:0.6, stop:0 #5a5af4, stop:1 #1c1cb5);
-border-width: 2px;
-border-style: outset;
-border-color: #22b;
-border-radius: 4px;
-font-size: 14px;
-color: white;
-padding: 3px;
+QPushButton {
+	background: QRadialGradient(cx:1, cy:0.5, radius:1.8, fx:.95, fy:0.6, stop:0 #5a5af4, stop:1 #1c1cb5);
+	border-width: 2px;
+	border-style: outset;
+	border-color: #22b;
+	border-radius: 4px;
+	font-size: 14px;
+	color: white;
+	padding: 3px;
+	min-width: 4em;
 }
 
-QPushButton { min-width: 4em; }
+QPushButton:hover {
+	background: QRadialGradient(cx:1, cy:0.5, radius:1.7, fx:.95, fy:0.6, stop:0 #6868ff, stop:1 #2323bb);
+}
+
+QPushButton:pressed, QPushButton:checked {
+	border-style: inset;
+	padding: 4px 2px 2px 4px;
+}
+
+QPushButton:!enabled {
+	background: QRadialGradient(cx:1, cy:0.5, radius:1.7, fx:.95, fy:0.6, stop:0 #8d8d9b, stop:1 #5e5e6c);
+	border-color: #778;
+	color: white;
+}
 
 QToolButton {
+	background: #454545;
+	font-size: 14px;
+	color: white;
+	padding: 2px;
 	min-width: 1.35em;
 }
 
-QPushButton:hover, QToolButton:hover {
-background: QRadialGradient(cx:1, cy:0.5, radius:1.7, fx:.95, fy:0.6, stop:0 #6868ff, stop:1 #2323bb);
+QToolButton:hover {
+	background: #5b5b5b;
+	border-color: #454545;
+	border-radius: 5px;
 }
 
-QPushButton:pressed, QToolButton:pressed {
-border-style: inset;
-padding: 4px 2px 2px 4px;
+QToolButton:checked {
+	background: #333;
+	border-style: inset;
+	border-color: #353535;
+	border-radius: 5px;
 }
 
-QPushButton:!enabled, QToolButton:!enabled {
-background: QRadialGradient(cx:1, cy:0.5, radius:1.7, fx:.95, fy:0.6, stop:0 #8d8d9b, stop:1 #5e5e6c);
-border-color: #778;
-color: white;
+QToolButton:pressed, QToolButton:checked {
+	padding: 3px 1px 1px 3px;
+}
+
+QToolButton:!enabled {
+	background: #454545;
+	border: none;
+	color: #888;
 }
 
 QLineEdit, QTextEdit {
-background: #3c3c3c;
-color: white;
+	background: #3c3c3c;
+	color: white;
 }
 
-QToolBar {
+QToolBar, QMenuBar {
 	background: #454545;
 	color: white;
 	border-bottom-color: #777;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
+}
+
+QToolTip {
+	opacity: 200;
 }
 
 /*QScrollBar {

@@ -31,8 +31,9 @@ BlueprintWindow::BlueprintWindow(Game* game, QWidget* parent):
 	mToolbar->addWidget(showNavmesh);
 
 	mStatusBar = new QStatusBar;
-	mZoomLbl = new QLabel(QString::number(mBlueprint->zoom(), 'f', 2) + "x");
+	mZoomLbl = new QLabel();
 	mStatusBar->addPermanentWidget(mZoomLbl);
+	zoomChanged(mBlueprint->zoom());
 
 	QVBoxLayout* layout = new QVBoxLayout;
 	layout->addWidget(mToolbar);

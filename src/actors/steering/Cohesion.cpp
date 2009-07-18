@@ -21,9 +21,9 @@ Math::Vector Cohesion::calculate()
 	Math::Vector center; //calculate the center of the mass of actors
 	int neighborCount = 0;
 
-	ConstEntityList<Actor> neighbors = parent()->neighbors();
+	EntityList<Actor> neighbors = parent()->neighbors();
 	for (unsigned int i = 0; i < neighbors.size(); ++i) {
-		if (neighbors[i].pointer() == parent().pointer()) continue;
+		if (!neighbors[i] || neighbors[i].pointer() == parent().pointer()) continue;
 
 		center += Math::Vector(neighbors[i]->pos());
 		++neighborCount;

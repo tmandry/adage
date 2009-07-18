@@ -12,8 +12,9 @@
 #include "View.h"
 
 class GhostTrap: public LimitedLifetimeTrigger {
+	ENTITY(GhostTrap)
 public:
-	GhostTrap(Pointer<Entity> parent, Math::Point pos, std::string name = "GhostTrap");
+	GhostTrap(Math::Point pos, Pointer<Entity> parent, std::string name = "GhostTrap");
 	virtual ~GhostTrap();
 
 	void act(Pointer<Entity> target);

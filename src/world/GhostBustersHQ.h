@@ -15,6 +15,7 @@
 class GhostBuster;
 
 class GhostBustersHQ : public Entity {
+	ENTITY(GhostBustersHQ)
 public:
 	GhostBustersHQ(Pointer<Entity> parent);
 	virtual ~GhostBustersHQ() {}

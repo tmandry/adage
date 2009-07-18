@@ -11,8 +11,9 @@
 #include "Trigger.h"
 
 class LimitedLifetimeTrigger : public Trigger {
+	ENTITY(LimitedLifetimeTrigger)
 public:
-	LimitedLifetimeTrigger(Pointer<Entity> parent, double lifetime, std::string name = "Trigger"): Trigger(parent, name), mLifetime(lifetime) { subclass("LimitedLifetimeTrigger"); }
+	LimitedLifetimeTrigger(Pointer<Entity> parent, double lifetime, std::string name = "Trigger"): Trigger(parent, name), mLifetime(lifetime) { subclass(); }
 	virtual ~LimitedLifetimeTrigger() {}
 
 	virtual void act(Pointer<Entity> target) = 0;

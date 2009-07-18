@@ -3,11 +3,12 @@
 #ifndef WORLD_H_
 #define WORLD_H_
 
-#include <map>
-#include <string>
 #include <vector>
 #include <cassert>
 #include <utility>
+#include <QMap>
+#include <QString>
+#include <QVector>
 #include "EntityList.h"
 #include "Pointer.h"
 #include "world/GameBase.h"
@@ -22,9 +23,10 @@ class NavSystem;
 
 class World : public Entity
 {
+	ENTITY(World)
 public:
-	typedef std::vector<Pointer<Entity> > EntityVector;
-	typedef std::map<std::string, EntityVector> EntityMap;
+	typedef QVector<Pointer<Entity> > EntityVector;
+	typedef QHash<QString, EntityVector> EntityMap;
 
 	World(GameBase* game, std::string name="World");
 	virtual ~World();
@@ -32,31 +34,40 @@ public:
 	void update(double secsElapsed) { Entity::update(secsElapsed); }
 	void paint(QPainter* p) { Entity::paint(p); }
 
-	void addEntity(std::string type, Pointer<Entity> e) { assert(e != 0); mEntities[type].push_back(e); }
-	void removeEntity(std::string type, Pointer<Entity> e);
+	void addEntity(QString type, Pointer<Entity> e) { assert(e != 0); mEntities[type].push_back(e); }
+	void removeEntity(QString type, Pointer<Entity> e);
 
 	template<class E>
-	ConstEntityList<E> findEntities(std::string type) const
+	EntityList<E> findEntities() const
 	{
-		EntityMap::const_iterator result = mEntities.find(type);
-		assert(result != mEntities.end());
-		for (unsigned int i = 0; i < result->second.size(); ++i) assert(result->second[i] /*Not returning a deleted entity*/);
-		return ConstEntityList<E>(result->second);
+		QString type = Entity::_className<E>();
+		assert(mEntities.contains(type));
+		//const EntityVector* result(&mEntities[type]);
+		//for (unsigned int i = 0; i < result.size(); ++i) assert(result[i] /*Not returning a deleted entity*/);
+		return EntityList<E>(mEntities[type]);
 	}
 
 	//Note: Result invalidated upon next search
 	template<class E>
-	ConstEntityList<E> findEntities(Math::Point p, double radius, std::string type)
+	EntityList<E> findEntities(Math::Point p, double radius)
 	{
-		mCellSpace.findNeighbors(p, radius, type);
-		for (unsigned int i = 0; i < mCellSpace.result().size(); ++i) assert(mCellSpace.result()[i] /*Not returning a deleted entity*/);
-		return ConstEntityList<E>(mCellSpace.result());
+		mCellSpace.findNeighbors(p, radius, Entity::_className<E>());
+		//for (unsigned int i = 0; i < mCellSpace.result().size(); ++i) assert(mCellSpace.result()[i] /*Not returning a deleted entity*/);
+		return EntityList<E>(mCellSpace.result());
 	}
 
 	template<class E>
-	Pointer<E> findNearestEntity(Math::Point p, std::string type, double maxDistance = Math::maxDouble)
+	Pointer<E> findNearestEntity(Math::Point p, double maxDistance = Math::maxDouble)
 	{
-		return (Pointer<E>)mCellSpace.findNearest(p, type, maxDistance);
+		return (Pointer<E>)mCellSpace.findNearest(p, Entity::_className<E>(), maxDistance);
+	}
+
+	//Should not be used by normal classes and functions
+	template<class E>
+	EntityList<E> _findEntities(Math::Point p, double radius, QString className)
+	{
+		mCellSpace.findNeighbors(p, radius, className);
+		return EntityList<E>(mCellSpace.result());
 	}
 
 	bool findPath(NavPath& path, Math::Point start, Math::Point dest);
@@ -76,6 +87,9 @@ public:
 private:
 	friend class MapHandler;
 	void setBounds(double left, double top, double right, double bottom);
+
+	friend class CellSpacePartition;
+	static bool inherits(Pointer<Entity> e, QString type) { return e->_inherits(type); }
 
 	virtual Pointer<World> theWorld() { return Pointer<World>(this); }
 

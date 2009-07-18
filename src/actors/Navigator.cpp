@@ -13,7 +13,7 @@
 Navigator::Navigator(Pointer<Entity> parent, std::string name)
 	:	Actor(parent, name)
 {
-	subclass("Navigator");
+	subclass();
 
 	mSeek = new Seek(pointer());
 	mSeek->off();

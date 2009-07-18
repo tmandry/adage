@@ -12,8 +12,9 @@
 #include "TriggerRegion.h"
 
 class Trigger: public Entity {
+	ENTITY(Trigger)
 public:
-	Trigger(Pointer<Entity> parent, std::string name = "Trigger"): Entity(parent, name), mActive(true), mRegion(0) { subclass("Trigger"); setMovable(false); }
+	Trigger(Pointer<Entity> parent, std::string name = "Trigger"): Entity(parent, name), mActive(true), mRegion(0) { subclass(); setMovable(false); }
 	virtual ~Trigger() { assert(mRegion); delete mRegion; }
 
 	bool active() const { return mActive; }
@@ -23,7 +24,7 @@ public:
 
 	virtual void updateEvent(double /*secsElapsed*/)
 	{
-		ConstEntityList<Entity> targets = triggerRegion()->search(world());
+		EntityList<Entity> targets = triggerRegion()->search(world());
 		for (unsigned int i = 0; i < targets.size(); ++i)
 			this->act(targets[i]);
 	}

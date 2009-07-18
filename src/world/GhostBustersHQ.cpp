@@ -10,7 +10,7 @@ GhostBustersHQ::GhostBustersHQ(Pointer<Entity> parent)
 		mNumAgents(0),
 		mNextName("A")
 {
-	subclass("GhostBustersHQ");
+	subclass();
 
 	mMaxAssignments = 2;
 
@@ -31,8 +31,8 @@ void GhostBustersHQ::reassign(Pointer<GhostBuster> agent)
 {
 	//Note: The GhostBusters HQ is kept up to date with the latest Ghost tracking information
 	//First update the max assignments to something reasonable based on the GB:G ratio
-	int numGBs = world()->findEntities<Entity>("GhostBuster").size();
-	int numGs = world()->findEntities<Entity>("Ghost").size();
+	int numGBs = world()->findEntities<GhostBuster>().size();
+	int numGs = world()->findEntities<Ghost>().size();
 	if (numGs > 0) mMaxAssignments = numGBs / numGs + 1;
 
 	Pointer<Ghost> target;
@@ -46,15 +46,15 @@ void GhostBustersHQ::reassign(Pointer<GhostBuster> agent)
 
 
 	//First try getting the nearest Ghost
-	target = world()->findNearestEntity<Ghost>(agent->pos(), "Ghost", 50);
+	target = world()->findNearestEntity<Ghost>(agent->pos(), 50);
 	if (target && mGhostAssignments[target] >= mMaxAssignments) target.release();
 
 	//Otherwise, pick one around the agent..
 	if (!target) {
-		const ConstEntityList<Ghost> result = world()->findEntities<Ghost>(agent->pos(), 65, "Ghost");
+		const EntityList<Ghost> result = world()->findEntities<Ghost>(agent->pos(), 65);
 
 		std::vector<Pointer<Ghost> > possibles;
-		for (ConstEntityList<Ghost>::const_iterator i = result.begin(); i < result.end(); ++i)
+		for (EntityList<Ghost>::const_iterator i = result.begin(); i < result.end(); ++i)
 			if (mGhostAssignments[(*i)] < mMaxAssignments) possibles.push_back(*i);
 
 		if (!possibles.empty()) {
@@ -65,10 +65,10 @@ void GhostBustersHQ::reassign(Pointer<GhostBuster> agent)
 
 	//Finally just pick a random ghost
 	if (!target) {
-		const ConstEntityList<Ghost> result = world()->findEntities<Ghost>("Ghost");
+		const EntityList<Ghost> result = world()->findEntities<Ghost>();
 
 		std::vector<Pointer<Ghost> > possibles;
-		for (ConstEntityList<Ghost>::const_iterator i = result.begin(); i < result.end(); ++i)
+		for (EntityList<Ghost>::const_iterator i = result.begin(); i < result.end(); ++i)
 			if (mGhostAssignments[(*i)] < mMaxAssignments) possibles.push_back(*i);
 
 		if (!possibles.empty()) {
@@ -87,10 +87,10 @@ void GhostBustersHQ::targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> tar
 	//remove from map
 	mGhostAssignments.erase(target);
 
-	int numGs = world()->findEntities<Entity>("Ghost").size();
+	int numGs = world()->findEntities<Entity>().size();
 	if (agent) printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name().c_str()).arg(numGs));
 	if (numGs == 0) {
-		int numCs = world()->findEntities<Entity>("Person").size();
+		int numCs = world()->findEntities<Entity>().size();
 		printComm(QString("Mission accomplished! <font color='#0066ff'>%1</font> civilians saved by the Ghost Busters.").arg(numCs));
 	}
 

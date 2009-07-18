@@ -5,7 +5,7 @@
 Building::Building(Pointer<Entity> parent, std::string name)
 	:	Entity(parent, name)
 {
-	subclass("Building");
+	subclass();
 	setVisible(true);
 }
 

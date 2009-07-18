@@ -2,13 +2,13 @@
 #include "actors/Ghost.h"
 #include "world/GhostBustersHQ.h"
 
-GhostTrap::GhostTrap(Pointer<Entity> parent, Math::Point pos, std::string name)
+GhostTrap::GhostTrap(Math::Point pos, Pointer<Entity> parent, std::string name)
 	:	LimitedLifetimeTrigger(parent, 20.0, name),
 		mDetonated(false),
 		mKillTimer(0),
 		mKillCount(0)
 {
-	subclass("GhostTrap");
+	subclass();
 
 	setPos(pos);
 	setTriggerRegion(new TriggerRegionCircle(pos, 7));
@@ -22,12 +22,7 @@ GhostTrap::~GhostTrap() {
 
 void GhostTrap::act(Pointer<Entity> target)
 {
-	if (target->inherits("Ghost")) {
-		/*printComm("Ghost has been caught by a trap and sent back into the Underworld!");
-
-		target->remove();
-		this->remove(); //traps only fire once...*/
-
+	if (target->inherits<Ghost>()) {
 		//BOOM
 		detonate();
 	}
@@ -53,12 +48,12 @@ void GhostTrap::updateEvent(double secsElapsed)
 
 		//perform executions if it's time
 		if (mKillTimer >= killInterval) {
-			ConstEntityList<Ghost> victims = world()->findEntities<Ghost>(pos(), mView->radius(), "Ghost");
+			EntityList<Ghost> victims = world()->findEntities<Ghost>(pos(), mView->radius());
 
 			for (unsigned int i = 0; i < victims.size(); ++i) {
 				victims[i]->remove();
 				++mKillCount;
-				ConstEntityList<GhostBustersHQ> hq = world()->findEntities<GhostBustersHQ>("GhostBustersHQ");
+				EntityList<GhostBustersHQ> hq = world()->findEntities<GhostBustersHQ>();
 				if (hq.size() != 0) hq[0]->targetCaught(Pointer<GhostBuster>(), victims[i]);
 			}
 		}

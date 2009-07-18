@@ -21,9 +21,10 @@ Math::Vector Alignment::calculate()
 	Math::Vector avgHeading(0,0);
 	int neighborCount;
 
-	ConstEntityList<Actor> neighbors = parent()->neighbors();
+	EntityList<Actor> neighbors = parent()->neighbors();
 	for (unsigned int i = 0; i < neighbors.size(); ++i) {
 		//if (neighbors[i].pointer() == parent().pointer()) continue;
+		if (!neighbors[i]) continue;
 
 		avgHeading += neighbors[i]->heading();
 		++neighborCount;

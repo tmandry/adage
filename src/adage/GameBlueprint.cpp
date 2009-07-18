@@ -33,13 +33,13 @@ void GameBlueprint::placeTool(Math::Point pos)
 {
 	switch (mTool) {
 	case dormantPortal:
-		new DormantGhostPortal(mGame->world(), pos);
+		new DormantGhostPortal(pos, mGame->world());
 		break;
 	case portal:
 		new GhostPortal(mGame->world(), pos);
 		break;
 	case trap:
-		new GhostTrap(mGame->world(), pos);
+		new GhostTrap(pos, mGame->world());
 		break;
 	case nav:
 		mGame->navigate(pos);

@@ -2,13 +2,14 @@
 #define TRIGGERREGION_H_
 
 #include "math/Point.h"
+#include "actors/Actor.h"
 
 class TriggerRegion {
 public:
 	TriggerRegion() {}
 	virtual ~TriggerRegion() {}
 
-	virtual ConstEntityList<Entity> search(Pointer<World> world) const = 0;
+	virtual EntityList<Entity> search(Pointer<World> world) const = 0;
 	virtual bool isTouching(Math::Point pos, double radius) const = 0;
 };
 
@@ -16,9 +17,9 @@ class TriggerRegionCircle : public TriggerRegion {
 public:
 	TriggerRegionCircle(Math::Point pos, double radius): mPos(pos), mRadius(radius) {}
 
-	ConstEntityList<Entity> search(Pointer<World> world) const
+	EntityList<Entity> search(Pointer<World> world) const
 	{
-		return world->findEntities<Entity>(mPos, mRadius, "Actor");
+		return world->findEntities<Actor>(mPos, mRadius);
 	}
 
 	bool isTouching(Math::Point pos, double radius) const

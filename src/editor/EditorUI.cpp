@@ -8,33 +8,35 @@
 #include "actors/GhostBuster.h"
 #include "math/rand.h"
 #include "ui/CommWindow.h"
+//#include "world/EntityFactory.h"
 
 EditorUI::EditorUI()
 	:	mFile(0)
 {
 	setupUi(this);
+	actNew->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
+	actOpen->setIcon(style()->standardIcon(QStyle::SP_DirOpenIcon));
+	actSave->setIcon(style()->standardIcon(QStyle::SP_DriveFDIcon));
 
 	CommWindow *comm = new CommWindow(CommDock);
 	CommDock->setWidget(comm);
+	CommDock->setVisible(false);
 
 	mGame = new EditorGame(comm);
 	mBp = new EditorBlueprint(mGame, this);
 	setCentralWidget(mBp);
+	connect(mBp, SIGNAL(zoomChanged(float)), this, SLOT(zoomChanged(float)));
+	connect(mGame, SIGNAL(worldUpdated()), mBp, SLOT(repaint()));
 
 	toolSelect = new QButtonGroup(this);
+	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actPanTool), EditorBlueprint::pan);
+	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actMoveTool), EditorBlueprint::move);
+	connect(actMoveTool, SIGNAL(triggered()), this, SLOT(updateTool()));
 
-	QPushButton* bPan = new QPushButton("Pan");
-	bPan->setCheckable(true);
-	bPan->setChecked(true);
-	toolBar->insertWidget(actShowNavmesh, bPan);
-	toolSelect->addButton(bPan, EditorBlueprint::pan);
+	zoomLabel = new QLabel;
+	statusbar->addPermanentWidget(zoomLabel);
+	zoomChanged(mBp->zoom());
 
-	QPushButton* bMove = new QPushButton("Move");
-	bMove->setCheckable(true);
-	toolBar->insertWidget(actShowNavmesh, bMove);
-	toolSelect->addButton(bMove, EditorBlueprint::move);
-
-	toolBar->insertSeparator(actShowNavmesh);
 
 	connect(actNew, SIGNAL(triggered()), this, SLOT(New()));
 	connect(actOpen, SIGNAL(triggered()), this, SLOT(open()));
@@ -44,8 +46,6 @@ EditorUI::EditorUI()
 	connect(actPopulate, SIGNAL(triggered()), this, SLOT(populate()));
 	connect(actReset, SIGNAL(triggered()), this, SLOT(reset()));
 	connect(actStartStop, SIGNAL(triggered()), this, SLOT(startStop()));
-	connect(toolSelect, SIGNAL(buttonClicked(int)), mBp, SLOT(setTool(int)));
-	connect(mGame, SIGNAL(worldUpdated()), mBp, SLOT(repaint()));
 }
 
 EditorUI::~EditorUI()
@@ -94,6 +94,7 @@ void EditorUI::startStop()
 	} else {
 		mGame->start();
 		actStartStop->setText("Stop");
+		CommDock->setVisible(true);
 	}
 
 	mBp->repaint();
@@ -132,6 +133,10 @@ void EditorUI::open()
 	mGame->resetWorld();
 	Map map(mGame->world());
 	map.load(mFile);
+
+
+	//EntityFactory* factory = Person::Factory("Person");
+
 }
 
 void EditorUI::save()
@@ -175,6 +180,16 @@ void EditorUI::saveAs()
 
 	Map map(mGame->world());
 	map.save(mFile);
+}
+
+void EditorUI::zoomChanged(float zoom)
+{
+	zoomLabel->setText( QString::number(zoom, 'f', 2) + "x" );
+}
+
+void EditorUI::updateTool()
+{
+	mBp->setTool(toolSelect->checkedId());
 }
 
 /*bool EditorUI::openFile(QString filename, QFlags<Qt::OpenModeFlag> flags)

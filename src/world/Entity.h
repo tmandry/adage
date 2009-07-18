@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QObject>
 #include <QString>
+#include <QSet>
 #include <cassert>
 #include "world/View.h"
 #include "math/Point.h"
@@ -16,29 +17,40 @@
 #define ENTITY(type) \
 	private: \
 	Pointer<type> _mThis; \
-	Pointer<type> pointer() const { assert(_mThis); return _mThis; } \
-	virtual void subclass(std::string t) \
+	virtual void subclass() \
 	{ \
 		_mThis = Pointer<type>(this); \
-		Entity::subclass( t ); \
-	}
+		Entity::subclass(); \
+	} \
+	virtual QString _className() const \
+	{ \
+		return #type; \
+	} \
+	public: \
+	struct _metaInfo { \
+		static const QString className() { return #type; } \
+	}; \
+	Pointer<type> pointer() const { assert(_mThis); return _mThis; }
 
 //forward declaration
 class World;
 
+//Any Entity subclass MUST have an ENTITY(Type) macro in its definition, define its own constructor, and call subclass() in every constructor
 class Entity
 {
 public:
 	typedef std::set<Pointer<Entity> > ChildList;
 
 protected:
-	//subclasses MUST redefine constructor, and call subclass()
+	//subclasses MUST redefine constructor and call subclass()
 	Entity(Pointer<Entity> parent, std::string name="Entity");
-	virtual void subclass(std::string type);
+	virtual void subclass();
 
 public:
-	bool inherits(std::string type) const;
-	void setName(std::string name) { mName = name; }
+	template<class E>
+	bool inherits() const { return _inherits(_className<E>()); }
+
+	void setName(const std::string name) { mName = name; }
 	std::string name() const { return mName; }
 
 	//replace with region? or abstract intersects function?
@@ -57,6 +69,16 @@ public:
 
 	bool visible() const { return mVisible; }
 
+	template<class E>
+	static const QString _className()
+	{
+		return E::_metaInfo::className();
+	}
+
+	struct _metaInfo {
+		static const QString className() { return "Entity"; }
+	};
+
 protected:
 	virtual ~Entity();
 	Pointer<Entity> pointer() { return mThis; }
@@ -74,6 +96,10 @@ protected:
 
 private:
 	virtual Pointer<World> theWorld() { return mWorld; }
+	virtual QString _className() const=0;
+
+	friend class World;
+	bool _inherits(const QString type) const;
 
 	void addChild(Pointer<Entity> child) { assert(!removed()); mChildren.insert(child); }
 	void delChild(Pointer<Entity> child) { mChildren.erase(child); }
@@ -82,7 +108,7 @@ private:
 
 	virtual QString formatComm(QString msg) const;
 
-	std::vector<std::string> mSubclasses;
+	QSet<QString> mSubclasses;
 
 	Pointer<Entity> mParent;
 	Pointer<World> mWorld;
@@ -114,7 +140,8 @@ inline Entity::Entity(Pointer<Entity> parent, std::string name)
 	if (parent) {
 		parent->addChild(mThis);
 		mWorld = parent->theWorld();
-		subclass("Entity");
+		mSubclasses.insert("Entity");
+		world()->addEntity("Entity", mThis);
 	} else {
 		mWorld = Pointer<World>::staticPointerCast(Pointer<Entity>(this));
 	}

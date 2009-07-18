@@ -39,11 +39,13 @@ public:
 
 	Type operator*()
 	{
+		//assert(mIt->inherits<Type>());
 		return static_cast<Type>(*mIt);
 	}
 
 	Type operator->()
 	{
+		//assert(mIt->inherits<Type>());
 		return static_cast<Type>(*mIt);
 	}
 

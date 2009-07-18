@@ -36,7 +36,7 @@ Math::Vector AvoidWalls::calculate()
 	double closestDist = 9999;
 	Pointer<const Wall> closestWall;
 
-	static ConstEntityList<Wall> walls = parent()->world()->findEntities<Wall>("Wall");
+	static EntityList<Wall> walls = parent()->world()->findEntities<Wall>();
 
 	for (unsigned int i = 0; i < walls.size(); ++i) {
 		Math::Point point;

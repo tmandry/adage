@@ -12,6 +12,8 @@
 #include "world/View.h"
 #include "math/Point.h"
 
+template<class E> class AutoEntityFactory;
+
 class Person : public Actor
 {
 	ENTITY(Person)
@@ -20,6 +22,7 @@ public:
 	virtual ~Person() {}
 
 private:
+	typedef AutoEntityFactory<Person> Factory;
 	friend class PersonView;
 	virtual void updateEvent(double secsElapsed);
 

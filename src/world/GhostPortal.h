@@ -13,14 +13,16 @@
 
 //DormantGhostPortals are gray and lie waiting for an unsuspecting human to activate it, or they will die out.
 class DormantGhostPortal: public LimitedLifetimeTrigger {
+	ENTITY(DormantGhostPortal)
 public:
-	DormantGhostPortal(Pointer<Entity> parent, Math::Point pos);
+	DormantGhostPortal(Math::Point pos, Pointer<Entity> parent);
 
 	void act(Pointer<Entity> target);
 };
 
 //GhostPortals (active) are thick red circles and spawn a bunch of ghosts from the underworld.
 class GhostPortal: public Entity {
+	ENTITY(GhostPortal)
 public:
 	GhostPortal(Pointer<Entity> parent, Math::Point pos);
 	virtual ~GhostPortal() {}

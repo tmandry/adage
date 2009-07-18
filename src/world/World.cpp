@@ -12,6 +12,7 @@ World::World(GameBase* game, std::string name)
 		mCellSpace(this),
 		mNav()
 {
+	subclass();
 }
 
 World::~World()
@@ -19,7 +20,7 @@ World::~World()
 	if (mNav) delete mNav;
 }
 
-void World::removeEntity(std::string type, Pointer<Entity> e)
+void World::removeEntity(QString type, Pointer<Entity> e)
 {
 	EntityVector& list(mEntities[type]);
 	assert(!list.empty());

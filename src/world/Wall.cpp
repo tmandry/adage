@@ -4,7 +4,7 @@
 
 void Wall::init()
 {
-	subclass("Wall");
+	subclass();
 
 	Math::Vector temp = mSegment.a-mSegment.b;
 	temp.normalize();

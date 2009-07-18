@@ -13,9 +13,9 @@ GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string na
 	:	Actor(parent, name),
 		mKillCount(0)
 {
-	subclass("GhostBuster");
+	subclass();
 
-	ConstEntityList<GhostBustersHQ> hq = world()->findEntities<GhostBustersHQ>("GhostBustersHQ");
+	EntityList<GhostBustersHQ> hq = world()->findEntities<GhostBustersHQ>();
 	if (hq.size() != 0) mHQ = hq[0];
 
 	setPos(pos);
@@ -58,7 +58,7 @@ void GhostBuster::updateEvent(double secsElapsed)
 		}
 
 		if ((mKillCount+1) % 3 == 0) { //new trap
-			new GhostTrap(world(), pos());
+			new GhostTrap(pos(), world());
 			printComm("Ghost trap deployed.");
 		}
 
@@ -80,7 +80,7 @@ void GhostBuster::setTarget(Pointer<Ghost> target)
 	if (target) {
 		mPursue->setTarget(target);
 		mPursue->on();
-		mView->showName(true);
+		//mView->showName(true);
 	} else {
 		mPursue->off();
 		//mView->showName(false);

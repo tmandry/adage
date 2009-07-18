@@ -40,7 +40,7 @@ bool MapGenerator::write(QIODevice* device)
 	out << "</navmesh>\n\n";
 
 	//generate buildings
-	ConstEntityList<Building> buildings = mWorld->findEntities<Building>("Building");
+	EntityList<Building> buildings = mWorld->findEntities<Building>();
 	for (unsigned int i = 0; i < buildings.size(); i++)
 		generateBuilding(buildings[i].pointer(), 0);
 

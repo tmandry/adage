@@ -1,9 +1,14 @@
 #include "Actor.h"
 #include "steering/SteeringBehavior.h"
 #include "math/Vector.h"
+#include "math/rand.h"
 
 Actor::Actor(Pointer<Entity> parent, std::string name)
 	:	MovingEntity(parent, name),
+		mUpdateStTimer(Math::randFloat(0, 0.1)),
+		mUpdateStInterval(0.1),
+		mUpdateNeighborsTimer(Math::randFloat(0, 0.5)),
+		mUpdateNeighborsInterval(0.5),
 		mNeighborRadius(20.0),
 		mNeighborType("Actor"),
 		mNeighborListValid(false),
@@ -11,15 +16,17 @@ Actor::Actor(Pointer<Entity> parent, std::string name)
 		mHeadingIt(0),
 		mHeadingListFull(false)
 {
-	subclass("Actor");
+	subclass();
 }
 
 //Returns the neighbor list, meant to optimize steering behaviors that use this by only performing a search once per update
-ConstEntityList<Actor> Actor::neighbors()
+EntityList<Actor> Actor::neighbors()
 {
-	if (mNeighborListValid) return mNeighbors;
+	if (mNeighborListValid || mUpdateNeighborsTimer < mUpdateNeighborsInterval) return mNeighbors;
+	mUpdateNeighborsTimer = 0;
 
-	mNeighbors = world()->findEntities<Actor>(pos(), mNeighborRadius, mNeighborType);
+	//Currently only allowed because Actor is considered a low-level base class
+	mNeighbors = world()->_findEntities<Actor>(pos(), mNeighborRadius, mNeighborType);
 	mNeighborListValid = true;
 	return mNeighbors;
 }
@@ -44,32 +51,40 @@ void Actor::updateEvent(double secsElapsed)
 {
 	mNeighborListValid = false;
 
-	//combine steering forces: weighted truncated running sum (with prioritization)
-	Math::Vector steeringForce;
+	//only update steering forces every mUpdateInterval seconds
+	mUpdateStTimer += secsElapsed;
+	mUpdateNeighborsTimer += secsElapsed;
+	if (mUpdateStTimer >= mUpdateStInterval) {
+		mUpdateStTimer = 0;
 
-	Math::Vector force;
-	//for each steering behavior
-	for (SBList::iterator i = mSteering.begin(); i < mSteering.end(); ++i) {
-		if (!(*i)->isOn()) continue;
+		//combine steering forces: weighted truncated running sum (with prioritization)
+		Math::Vector steeringForce;
 
-		//calculate how much steering force is being used, and how much is left over
-		double magSoFar = steeringForce.length();
-		double magRemaining = maxForce() - magSoFar;
+		Math::Vector force;
+		//for each steering behavior
+		for (SBList::iterator i = mSteering.begin(); i < mSteering.end(); ++i) {
+			if (!(*i)->isOn()) continue;
 
-		//if our vector has hit max, ignore any steering forces left
-		if (magRemaining <= 0.0) break;
+			//calculate how much steering force is being used, and how much is left over
+			double magSoFar = steeringForce.length();
+			double magRemaining = maxForce() - magSoFar;
 
-		//calculate force to add
-		force = (*i)->calculate() * (*i)->factor() * 15.0;
+			//if our vector has hit max, ignore any steering forces left
+			if (magRemaining <= 0.0) break;
 
-		//truncate vector we're about to add with the magnitude remaining
-		// NOTE: in reality the amount of magnitude about to be added depends (a lot) upon the direction, but this technique works anyway
-		force.truncate(magRemaining);
+			//calculate force to add
+			force = (*i)->calculate() * (*i)->factor() * 15.0;
 
-		steeringForce += force;
+			//truncate vector we're about to add with the magnitude remaining
+			// NOTE: in reality the amount of magnitude about to be added depends (a lot) upon the direction, but this technique works anyway
+			force.truncate(magRemaining);
+
+			steeringForce += force;
+		}
+
+		setForce(steeringForce);
 	}
 
-	setForce(steeringForce);
 	MovingEntity::updateEvent(secsElapsed);
 
 	//only update heading if traveling at a reasonable speed

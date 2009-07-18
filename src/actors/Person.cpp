@@ -23,7 +23,7 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	:	Actor(parent, name),
 		mUpdateTimer(Math::randFloat(0, 0.5)) //keep from having a billion people update at once by adding a random offset
 {
-	subclass("Person");
+	subclass();
 
 	setPos(pos);
 	setMaxSpeed(7.0);
@@ -41,7 +41,7 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 	addSteeringBehavior(mWander);
 
 	setNeighborRadius(25.0);
-	setNeighborType("Person");
+	setNeighborType<Person>();
 
 	setView(new PersonView(pointer(), Qt::white));
 	setVisible(true);
@@ -49,7 +49,7 @@ Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
 
 void Person::updateEvent(double secsElapsed)
 {
-	/*static ConstEntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
+	/*static EntityList<Ghost> ghosts = world()->findEntities<Ghost>("Ghost");
 
 	for (unsigned int i=0; i<mEvade.size(); ++i) {
 		remSteeringBehavior(mEvade[i]);
@@ -66,11 +66,11 @@ void Person::updateEvent(double secsElapsed)
 
 	mUpdateTimer += secsElapsed;
 	if (mUpdateTimer >= targetUpdateInterval) {
-		Pointer<Ghost> ghost = world()->findNearestEntity<Ghost>(pos(), "Ghost", 75);
+		Pointer<Ghost> ghost = world()->findNearestEntity<Ghost>(pos(), 75);
 		if (ghost) mEvade->setTarget(ghost);
 
 		//find a place of relative safety.. a ghost trap
-		Pointer<Entity> trap = world()->findNearestEntity<Entity>(pos(), "GhostTrap", 40);
+		Pointer<Entity> trap = world()->findNearestEntity<Entity>(pos(), 40);
 		//don't go if we're already close by enough
 		mFindSafety->off();
 		if (trap) {
@@ -126,7 +126,7 @@ void PersonView::setColor(QColor color)
 
 void PersonView::paint(QPainter* p)
 {
-	if (mParent->inherits("Navigator")) {
+	if (mParent->inherits<Navigator>()) {
 		//paint their path
 		Pointer<Navigator> parent = (Pointer<Navigator>)mParent;
 		NavPath& path = parent->mPath;
@@ -155,21 +155,21 @@ void PersonView::paint(QPainter* p)
 	p->scale(.13, .13);
 	p->rotate( -Math::toDegrees(mParent->heading().absAngle()) );
 
-	if (mParent->inherits("Navigator")) p->scale(2.0, 2.0);
+	if (mParent->inherits<Navigator>()) p->scale(2.0, 2.0);
 
 	p->drawPixmap(-14, -10, mPixmap);
 
 	p->restore();
 
 	//if (mParent->inherits("GhostBuster")) {
-		/*const ConstEntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
+		/*const EntityList<Ghost> targets = mParent->world()->findEntities<Ghost>(mParent->pos(), 50, "Ghost");
 
 		p->setBrush(Qt::NoBrush);
 		p->setPen(QPen(QBrush(Qt::yellow), 0.1));
 		p->drawEllipse(mParent->pos(), 50, 50);
 
 		p->setPen(QPen(QBrush(Qt::darkYellow), 0));
-		for (ConstEntityList<Ghost>::const_iterator t = targets.begin(); t != targets.end(); ++t) {
+		for (EntityList<Ghost>::const_iterator t = targets.begin(); t != targets.end(); ++t) {
 			if (!*t) continue;
 			p->drawEllipse((*t)->pos(), 2.4, 2.4);
 		}*/

@@ -1,8 +1,8 @@
 #ifndef CELLSPACEPARTITION_H_
 #define CELLSPACEPARTITION_H_
 
-#include <vector>
-#include <string>
+#include <QVector>
+#include <QString>
 #include "math/Point.h"
 //#include "world/Entity.h"
 #include "Pointer.h"
@@ -16,7 +16,7 @@ public:
 	struct Cell {
 		double left, top, right, bottom;
 
-		std::vector<Pointer<Entity> > members;
+		QVector<Pointer<Entity> > members;
 	};
 
 	CellSpacePartition(World* parent);
@@ -29,14 +29,15 @@ public:
 	void remove(Pointer<Entity> e, Math::Point oldPos);
 	void updatePos(Pointer<Entity> e, Math::Point oldPos, Math::Point newPos);
 
-	void findNeighbors(Math::Point p, double radius, std::string type);
+	void findNeighbors(Math::Point p, double radius, QString type);
 	//invalidated at next find operation
-	const std::vector<Pointer<Entity> >& result() const { return mResult; }
+	const QVector<Pointer<Entity> >& result() const { return mResult; }
 
-	Pointer<Entity> findNearest(Math::Point p, std::string type, double maxDistance=Math::maxDouble);
+	Pointer<Entity> findNearest(Math::Point p, QString type, double maxDistance=Math::maxDouble);
 
 private:
 	int posToIdx(Math::Point p) const;
+	inline void checkCell(Math::Point p, QString type, int cell, Pointer<Entity>& nearest, double& nearestDistSq);
 
 	World* mWorld;
 
@@ -44,9 +45,9 @@ private:
 	int mNumHCells;
 	int mNumVCells;
 
-	std::vector<Cell> mCells;
+	QVector<Cell> mCells;
 
-	std::vector<Pointer<Entity> > mResult;
+	QVector<Pointer<Entity> > mResult;
 };
 
 #endif /*CELLSPACEPARTITION_H_*/

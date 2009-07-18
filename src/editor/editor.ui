@@ -50,7 +50,11 @@
    <addaction name="menu_File"/>
    <addaction name="menu_View"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+  </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -61,7 +65,12 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actShowNavmesh"/>
+   <addaction name="actNew"/>
+   <addaction name="actOpen"/>
+   <addaction name="actSave"/>
+   <addaction name="separator"/>
+   <addaction name="actPanTool"/>
+   <addaction name="actMoveTool"/>
    <addaction name="separator"/>
    <addaction name="actPopulate"/>
    <addaction name="actReset"/>
@@ -127,6 +136,9 @@
    <property name="toolTip">
     <string>Randomly populate world with actors for testing</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actReset">
    <property name="text">
@@ -134,6 +146,9 @@
    </property>
    <property name="toolTip">
     <string>Reset world back to saved-file state</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actStartStop">
@@ -153,6 +168,37 @@
    </property>
    <property name="text">
     <string>Show Comm Window</string>
+   </property>
+  </action>
+  <action name="actPanTool">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Pan</string>
+   </property>
+   <property name="toolTip">
+    <string>Mouse pans the world</string>
+   </property>
+  </action>
+  <action name="actMoveTool">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Move</string>
+   </property>
+   <property name="toolTip">
+    <string>Mouse moves (movable) entities</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

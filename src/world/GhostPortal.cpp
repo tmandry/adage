@@ -1,10 +1,10 @@
 #include "GhostPortal.h"
 #include "actors/Ghost.h"
 
-DormantGhostPortal::DormantGhostPortal(Pointer<Entity> parent, Math::Point pos)
+DormantGhostPortal::DormantGhostPortal(Math::Point pos, Pointer<Entity> parent)
 	:	LimitedLifetimeTrigger(parent, 35.0)
 {
-	subclass("DormantGhostPortal");
+	subclass();
 
 	setPos(pos);
 	setTriggerRegion(new TriggerRegionCircle(pos, 3.5));
@@ -16,7 +16,7 @@ DormantGhostPortal::DormantGhostPortal(Pointer<Entity> parent, Math::Point pos)
 
 void DormantGhostPortal::act(Pointer<Entity> target)
 {
-	if (target->inherits("Person")) {
+	if (target->inherits<Person>()) {
 		//first of all, this person just opened a portal to the underworld. that's not the kind of thing you're going to survive.
 		target->remove();
 
@@ -33,7 +33,7 @@ GhostPortal::GhostPortal(Pointer<Entity> parent, Math::Point pos)
 		mTimer(0),
 		mGhostsToSpawn(10)
 {
-	subclass("Portal");
+	subclass();
 
 	setPos(pos);
 	setView(new CircleView(pointer(), 5.0, Qt::red, 1.5));
