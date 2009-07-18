@@ -87,10 +87,10 @@ void GhostBustersHQ::targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> tar
 	//remove from map
 	mGhostAssignments.erase(target);
 
-	int numGs = world()->findEntities<Entity>().size();
+	int numGs = world()->findEntities<Ghost>().size();
 	if (agent) printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name()).arg(numGs));
 	if (numGs == 0) {
-		int numCs = world()->findEntities<Entity>().size();
+		int numCs = world()->findEntities<Person>().size();
 		printComm(QString("Mission accomplished! <font color='#0066ff'>%1</font> civilians saved by the Ghost Busters.").arg(numCs));
 	}
 

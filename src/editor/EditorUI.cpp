@@ -9,6 +9,8 @@
 #include "math/rand.h"
 #include "ui/CommWindow.h"
 #include "world/EntityFactory.h"
+#include "world/Entities.h"
+#include "world/FactoryManager.h"
 
 EditorUI::EditorUI()
 	:	mFile(0)
@@ -26,12 +28,19 @@ EditorUI::EditorUI()
 	mBp = new EditorBlueprint(mGame, this);
 	setCentralWidget(mBp);
 	connect(mBp, SIGNAL(zoomChanged(float)), this, SLOT(zoomChanged(float)));
+	connect(mBp, SIGNAL(dropEntity(Math::Point)), this, SLOT(dropEntity(Math::Point)));
 	connect(mGame, SIGNAL(worldUpdated()), mBp, SLOT(repaint()));
 
 	toolSelect = new QButtonGroup(this);
 	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actPanTool), EditorBlueprint::pan);
 	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actMoveTool), EditorBlueprint::move);
 	connect(actMoveTool, SIGNAL(triggered()), this, SLOT(updateTool()));
+
+	entityBox = new QComboBox(this);
+	entityBox->addItem("");
+	entityBox->addItems(FactoryManager::instance()->types());
+	toolBar->addSeparator();
+	toolBar->addWidget(entityBox);
 
 	zoomLabel = new QLabel;
 	statusbar->addPermanentWidget(zoomLabel);
@@ -194,6 +203,18 @@ void EditorUI::zoomChanged(float zoom)
 void EditorUI::updateTool()
 {
 	mBp->setTool(toolSelect->checkedId());
+}
+
+void EditorUI::dropEntity(Math::Point pos)
+{
+	if (entityBox->currentText().isEmpty()) return;
+
+	EntityFactory* f = FactoryManager::instance()->getFactory(entityBox->currentText());
+	EntityFactory::Properties params;
+	params["pos"] = QVariant::fromValue<Math::Point>(pos);
+	f->buildEntity(params, mGame->world());
+
+	mBp->update();
 }
 
 /*bool EditorUI::openFile(QString filename, QFlags<Qt::OpenModeFlag> flags)

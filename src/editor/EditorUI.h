@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QFile>
 #include <QButtonGroup>
+#include <QComboBox>
 #include "EditorGame.h"
 #include "ui_editor.h"
 #include "EditorBlueprint.h"
@@ -32,12 +33,14 @@ private slots:
 
 	void zoomChanged(float zoom);
 	void updateTool();
+	void dropEntity(Math::Point pos);
 
 private:
 	//bool openFile(QString filename, QFlags<Qt::OpenModeFlag> flags);
 
 	QButtonGroup* toolSelect;
 	QLabel* zoomLabel;
+	QComboBox* entityBox;
 
 	EditorGame* mGame;
 	EditorBlueprint* mBp;

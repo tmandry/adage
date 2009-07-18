@@ -91,6 +91,8 @@ Pointer<Entity> SimpleEntityFactory<E>::buildEntity(Properties properties, Point
 		i.next();
 		setProperty(entity, i.key(), i.value());
 	}
+
+	return entity;
 }
 
 template<class E>

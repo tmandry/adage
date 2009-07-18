@@ -41,7 +41,6 @@ public:
 	EntityList<E> findEntities() const
 	{
 		QString type = Entity::_className<E>();
-		assert(mEntities.contains(type));
 		//const EntityVector* result(&mEntities[type]);
 		//for (unsigned int i = 0; i < result.size(); ++i) assert(result[i] /*Not returning a deleted entity*/);
 		return EntityList<E>(mEntities[type]);

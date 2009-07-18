@@ -25,6 +25,7 @@ set(adage_shared_SRCS
    world/Building.cpp
    world/CellSpacePartition.cpp
    world/Entity.cpp
+   world/FactoryManager.cpp
    world/GameBase.cpp
    world/GhostBustersHQ.cpp
    world/GhostPortal.cpp

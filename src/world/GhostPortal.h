@@ -24,8 +24,9 @@ public:
 //GhostPortals (active) are thick red circles and spawn a bunch of ghosts from the underworld.
 class GhostPortal: public Entity {
 	ENTITY(GhostPortal)
+	AUTO_FACTORY
 public:
-	GhostPortal(Pointer<Entity> parent, Math::Point pos);
+	GhostPortal(Math::Point pos, Pointer<Entity> parent);
 	virtual ~GhostPortal() {}
 
 	void updateEvent(double secsElapsed);

@@ -9,7 +9,7 @@ class Seek;
 class Navigator: public Actor
 {
 	ENTITY(Navigator)
-	AUTO_FACTORY
+	MINIMAL_FACTORY
 public:
 	Navigator(Pointer<Entity> parent, QString name = "Navigator");
 	virtual ~Navigator();

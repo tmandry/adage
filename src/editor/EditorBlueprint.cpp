@@ -16,27 +16,31 @@ EditorBlueprint::~EditorBlueprint()
 
 void EditorBlueprint::mousePressEvent(QMouseEvent* event)
 {
-	switch(mTool) {
-	case pan:
-		mPanning = true;
-		Blueprint::mousePressEvent(event);
-		break;
-	case move:
-		Math::Point pos = screenToWorld(event->pos());
+	if (event->button() == Qt::LeftButton) {
+		switch(mTool) {
+		case pan:
+			mPanning = true;
+			Blueprint::mousePressEvent(event);
+			break;
+		case move:
+			Math::Point pos = screenToWorld(event->pos());
 
-		Pointer<Entity> target;
-		EntityList<Entity> entities = game()->world()->findEntities<Entity>();
-		for (unsigned int i = 0; i < entities.size(); ++i) {
-			if (entities[i]->view() && entities[i]->movable() && entities[i]->view()->clickHit(pos)) {
-				target = entities[i];
-				break;
+			Pointer<Entity> target;
+			EntityList<Entity> entities = game()->world()->findEntities<Entity>();
+			for (unsigned int i = 0; i < entities.size(); ++i) {
+				if (entities[i]->view() && entities[i]->movable() && entities[i]->view()->clickHit(pos)) {
+					target = entities[i];
+					break;
+				}
+			}
+
+			if (target) {
+				mMoving = true;
+				mMoveEnt = target;
 			}
 		}
-
-		if (target) {
-			mMoving = true;
-			mMoveEnt = target;
-		}
+	} else if (event->button() == Qt::RightButton) {
+		emit dropEntity(screenToWorld(event->pos()));
 	}
 }
 

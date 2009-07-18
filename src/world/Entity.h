@@ -15,10 +15,10 @@
 
 #define ENTITY(type) \
 	private: \
-	Pointer<type> _mThis; \
+	/*Pointer<type> _mThis;*/ \
 	virtual void subclass() \
 	{ \
-		_mThis = Pointer<type>(this); \
+		/*_mThis = Pointer<type>(this);*/ \
 		Entity::subclass(); \
 	} \
 	virtual QString _className() const \
@@ -30,7 +30,7 @@
 		static const QString className() { return #type; } \
 		typedef type Type; \
 	}; \
-	Pointer<type> pointer() const { assert(_mThis); return _mThis; }
+	Pointer<type> pointer() const { return Pointer<type>(Entity::pointer()); }
 
 
 template <class E> class SimpleEntityFactory;
@@ -94,7 +94,7 @@ public:
 
 protected:
 	virtual ~Entity();
-	Pointer<Entity> pointer() { return mThis; }
+	Pointer<Entity> pointer() const { return mThis; }
 
 	friend void Pointer<Entity>::free() const;
 

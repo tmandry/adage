@@ -2,6 +2,7 @@
 #include <QFile>
 #include "GameUI.h"
 #include "math/rand.h"
+#include "world/Entities.h"
 
 int main(int argc, char **argv)
 {
@@ -13,6 +14,8 @@ int main(int argc, char **argv)
 	style.close();
 
 	Math::initRand();
+
+	registerEntities();
 
 	GameUI* ui = new GameUI();
 	ui->show();

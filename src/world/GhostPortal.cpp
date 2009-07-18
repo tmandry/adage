@@ -23,12 +23,12 @@ void DormantGhostPortal::act(Pointer<Entity> target)
 		printComm("<font color='#ff0000'>Ghost portal</font> has been opened to the underworld! +<font color='lightgreen'>10</font> ghosts.");
 
 		//Cosmic tear!
-		new GhostPortal(world(), pos());
+		new GhostPortal(pos(), world());
 		this->remove();
 	}
 }
 
-GhostPortal::GhostPortal(Pointer<Entity> parent, Math::Point pos)
+GhostPortal::GhostPortal(Math::Point pos, Pointer<Entity> parent)
 	:	Entity(parent, "GhostPortal"),
 		mTimer(0),
 		mGhostsToSpawn(10)

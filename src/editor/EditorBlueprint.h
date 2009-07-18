@@ -27,6 +27,9 @@ protected:
 public slots:
 	void setTool(int tool);
 
+signals:
+	void dropEntity(Math::Point pos);
+
 private:
 	ToolType mTool;
 	bool mPanning;

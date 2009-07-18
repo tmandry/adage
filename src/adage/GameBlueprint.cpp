@@ -36,7 +36,7 @@ void GameBlueprint::placeTool(Math::Point pos)
 		new DormantGhostPortal(pos, mGame->world());
 		break;
 	case portal:
-		new GhostPortal(mGame->world(), pos);
+		new GhostPortal(pos, mGame->world());
 		break;
 	case trap:
 		new GhostTrap(pos, mGame->world());
