@@ -28,7 +28,7 @@ public:
 	typedef QVector<Pointer<Entity> > EntityVector;
 	typedef QHash<QString, EntityVector> EntityMap;
 
-	World(GameBase* game, std::string name="World");
+	World(GameBase* game, QString name="World");
 	virtual ~World();
 
 	void update(double secsElapsed) { Entity::update(secsElapsed); }

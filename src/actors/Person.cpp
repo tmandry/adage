@@ -19,7 +19,7 @@
 #include "math/rand.h"
 #include <cassert>
 
-Person::Person(Math::Point pos, Pointer<Entity> parent, std::string name)
+Person::Person(Math::Point pos, Pointer<Entity> parent, QString name)
 	:	Actor(parent, name),
 		mUpdateTimer(Math::randFloat(0, 0.5)) //keep from having a billion people update at once by adding a random offset
 {
@@ -149,7 +149,7 @@ void PersonView::paint(QPainter* p)
 	p->translate(mParent->pos().x, mParent->pos().y);
 	if (mShowName) {
 		p->setPen(mNameColor);
-		p->drawText(QPointF(-1.3, -3), QString(mParent->name().c_str()));
+		p->drawText(QPointF(-1.3, -3), mParent->name());
 	}
 
 	p->scale(.13, .13);

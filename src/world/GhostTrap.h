@@ -13,8 +13,9 @@
 
 class GhostTrap: public LimitedLifetimeTrigger {
 	ENTITY(GhostTrap)
+	AUTO_FACTORY
 public:
-	GhostTrap(Math::Point pos, Pointer<Entity> parent, std::string name = "GhostTrap");
+	GhostTrap(Math::Point pos, Pointer<Entity> parent, QString name = "GhostTrap");
 	virtual ~GhostTrap();
 
 	void act(Pointer<Entity> target);

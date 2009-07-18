@@ -1,10 +1,3 @@
-/*
- * GhostBustersHQ.h
- *
- *  Created on: Jun 23, 2009
- *      Author: tyler
- */
-
 #ifndef GHOSTBUSTERSHQ_H_
 #define GHOSTBUSTERSHQ_H_
 
@@ -16,6 +9,7 @@ class GhostBuster;
 
 class GhostBustersHQ : public Entity {
 	ENTITY(GhostBustersHQ)
+	MINIMAL_FACTORY
 public:
 	GhostBustersHQ(Pointer<Entity> parent);
 	virtual ~GhostBustersHQ() {}
@@ -23,8 +17,6 @@ public:
 	void newAgent(Pointer<GhostBuster> agent);
 	void reassign(Pointer<GhostBuster> agent);
 	void targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> target);
-
-	//void updateEvent(double /*secsElapsed*/) {}
 
 private:
 	QString formatComm(QString msg) const;

@@ -1,10 +1,3 @@
-/*
- * GhostBuster.h
- *
- *  Created on: Dec 27, 2008
- *      Author: tyler
- */
-
 #ifndef GHOSTBUSTER_H_
 #define GHOSTBUSTER_H_
 
@@ -20,8 +13,9 @@ class GhostBustersHQ;
 
 class GhostBuster : public Actor {
 	ENTITY(GhostBuster)
+	AUTO_FACTORY
 public:
-	GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string name = "GhostBuster");
+	GhostBuster(Math::Point pos, Pointer<Entity> parent, QString name = "GhostBuster");
 	virtual ~GhostBuster();
 
 	void setTarget(Pointer<Ghost> target);

@@ -8,15 +8,18 @@
 #include <QMetaType>
 #include "Pointer.h"
 #include "math/Point.h"
+#include "math/Segment.h"
 #include "world/Entity.h"
 
 Q_DECLARE_METATYPE(Math::Point)
+Q_DECLARE_METATYPE(Math::Segment)
 
 //The base class for all Entity factories.
 class EntityFactory
 {
 public:
 	typedef QMap<QString, QVariant> Properties;
+	typedef QMapIterator<QString, QVariant> PropertyIterator;
 
 	EntityFactory() {}
 	virtual ~EntityFactory() {}
@@ -27,7 +30,7 @@ public:
 	//Creates the entity with the given properties and returns a Pointer to it.
 	virtual Pointer<Entity> buildEntity(Properties properties, Pointer<Entity> parent) const=0;
 	//Takes any action necessary to handle a child widget.
-	virtual void addChild(QString type, Pointer<Entity> child) const=0;
+	virtual void addChild(Pointer<Entity> e, Pointer<Entity> child) const=0;
 
 	//Returns a set of every property name the factory accepts.
 	virtual QSet<QString> getPropertyNames() const=0;
@@ -43,18 +46,24 @@ template<class E>
 class SimpleEntityFactory : public EntityFactory
 {
 public:
-	SimpleEntityFactory(): mClassName(typeid(E())) {}
+	typedef EntityFactory::Properties Properties;
+	typedef EntityFactory::PropertyIterator PropertyIterator;
+
+	SimpleEntityFactory() {}
 	virtual ~SimpleEntityFactory() {}
 
-	QString className() const { return mClassName; }
+	QString className() const { return E::MetaInfo::className(); }
 
 	virtual Pointer<Entity> buildEntity(Properties properties, Pointer<Entity> parent) const;
-	virtual void addChild(QString type, Pointer<Entity> child) const {}
+
+	void addChild(Pointer<Entity> e, Pointer<Entity> child) const;
+	//Overloaded version with the template parameter passed to it instead.
+	virtual void addChild(Pointer<E> e, Pointer<Entity> child) const {}
 
 	virtual QSet<QString> getPropertyNames() const;
 
 	void setProperty(Pointer<Entity> e, QString name, QVariant value) const;
-	//Overloaded version with the template parameter passed to it instead.
+	//Overloaded version
 	virtual void setProperty(Pointer<E> e, QString name, QVariant value) const {}
 
 	QVariant getProperty(Pointer<Entity> e, QString name) const;
@@ -77,11 +86,18 @@ Pointer<Entity> SimpleEntityFactory<E>::buildEntity(Properties properties, Point
 {
 	Pointer<Entity> entity = this->construct(properties, parent);
 
-	QMapIterator i(properties);
+	PropertyIterator i(properties);
 	while (i.hasNext()) {
 		i.next();
 		setProperty(entity, i.key(), i.value());
 	}
+}
+
+template<class E>
+void SimpleEntityFactory<E>::addChild(Pointer<Entity> e, Pointer<Entity> child) const
+{
+	assert(e->inherits<E>());
+	this->addChild((Pointer<E>)e, child);
 }
 
 template<class E>
@@ -103,31 +119,31 @@ QSet<QString> SimpleEntityFactory<E>::getPropertyNames() const
 template<class E>
 void SimpleEntityFactory<E>::setProperty(Pointer<Entity> e, QString name, QVariant value) const
 {
+	assert(e->inherits<E>());
+	Pointer<E> ent = (Pointer<E>)e;
+
 	if (name == "name")
-		e->setName(value.toString());
+		ent->setName(value.toString());
 	else if (name == "pos")
-		this->setPos(e, value.value<Math::Point>());
-	else if (name == "visible")
-		e->setVisible(value.toBool());
-	else if (name == "movable")
-		e->setMovable(value.toBool());
-	else {
-		assert(e->inherits(mClassName));
-		this->setProperty((Pointer<E>)e, name, value);
-	}
+		this->setPos(ent, value.value<Math::Point>());
+//	else if (name == "visible")
+//		ent->setVisible(value.toBool());
+//	else if (name == "movable")
+//		ent->setMovable(value.toBool());
+	else this->setProperty(ent, name, value);
 }
 
 template<class E>
 QVariant SimpleEntityFactory<E>::getProperty(Pointer<Entity> e, QString name) const
 {
-	if (name == "name") return QVariant(e->name());
-	else if (name == "pos") return QVariant::fromValue<Math::Point>(e->pos());
-	else if (name == "visible") return QVariant(e->visible());
-	else if (name == "movable") return QVariant(e->movable());
-	else {
-		assert(e->inherits(mClassName));
-		this->getProperty((Pointer<E>)e, name, value);
-	}
+	assert(e->inherits<E>());
+	Pointer<E> ent = (Pointer<E>)e;
+
+	if (name == "name") return QVariant(ent->name());
+	else if (name == "pos") return QVariant::fromValue<Math::Point>(ent->pos());
+	else if (name == "visible") return QVariant(ent->visible());
+	else if (name == "movable") return QVariant(ent->movable());
+	else return this->getProperty(ent, name);
 }
 
 template<class E>
@@ -140,7 +156,9 @@ void SimpleEntityFactory<E>::setPos(Pointer<E> e, Math::Point pos) const
 template<class E>
 class AutoEntityFactory : public SimpleEntityFactory<E> {
 public:
-	AutoEntityFactory(QString classname): SimpleEntityFactory<E>(classname) {}
+	typedef EntityFactory::Properties Properties;
+
+	AutoEntityFactory() {}
 	virtual ~AutoEntityFactory() {}
 
 protected:
@@ -151,6 +169,26 @@ template<class E>
 Pointer<Entity> AutoEntityFactory<E>::construct(Properties properties, Pointer<Entity> parent) const
 {
 	E* ent = new E(properties["pos"].value<Math::Point>(), parent);
+	return ent->pointer();
+}
+
+//Same as AutoEntityFactory, but uses a minimal constructor taking only a parent argument
+template<class E>
+class MinimalEntityFactory : public SimpleEntityFactory<E> {
+public:
+	typedef EntityFactory::Properties Properties;
+
+	MinimalEntityFactory() {}
+	virtual ~MinimalEntityFactory() {}
+
+protected:
+	virtual Pointer<Entity> construct(Properties properties, Pointer<Entity> parent) const;
+};
+
+template<class E>
+Pointer<Entity> MinimalEntityFactory<E>::construct(Properties properties, Pointer<Entity> parent) const
+{
+	E* ent = new E(parent);
 	return ent->pointer();
 }
 

@@ -2,7 +2,7 @@
 #include "Building.h"
 #include "world/Wall.h"
 
-Building::Building(Pointer<Entity> parent, std::string name)
+Building::Building(Pointer<Entity> parent, QString name)
 	:	Entity(parent, name)
 {
 	subclass();
@@ -19,7 +19,7 @@ void Building::createWalls(const Math::Point* begin, const Math::Point* end)
 
 	//just because
 	if ((end-begin) == 2) {
-		mWalls.push_back( new Wall(pointer(), begin[0], begin[1]));
+		mWalls.push_back( (new Wall(pointer(), begin[0], begin[1]))->pointer() );
 		return;
 	}
 
@@ -29,6 +29,20 @@ void Building::createWalls(const Math::Point* begin, const Math::Point* end)
 		a = *i;
 		b = *(i+1);
 
-		mWalls.push_back( new Wall(pointer(), a, b) );
+		mWalls.push_back( (new Wall(pointer(), a, b))->pointer() );
 	}
+}
+
+
+Pointer<Entity> BuildingFactory::construct(Properties properties, Pointer<Entity> parent) const
+{
+	return (new Building(parent))->pointer();
+}
+
+void BuildingFactory::addChild(Pointer<Building> e, Pointer<Entity> child) const
+{
+	if (child->inherits<Wall>()) {
+		e->addWall((Pointer<Wall>)child);
+	}
+	//TODO: error
 }

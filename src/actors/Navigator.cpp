@@ -10,7 +10,7 @@
 #include "Person.h"
 #include "nav/NavSystem.h"
 
-Navigator::Navigator(Pointer<Entity> parent, std::string name)
+Navigator::Navigator(Pointer<Entity> parent, QString name)
 	:	Actor(parent, name)
 {
 	subclass();

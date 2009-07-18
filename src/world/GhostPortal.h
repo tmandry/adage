@@ -14,6 +14,7 @@
 //DormantGhostPortals are gray and lie waiting for an unsuspecting human to activate it, or they will die out.
 class DormantGhostPortal: public LimitedLifetimeTrigger {
 	ENTITY(DormantGhostPortal)
+	AUTO_FACTORY
 public:
 	DormantGhostPortal(Math::Point pos, Pointer<Entity> parent);
 

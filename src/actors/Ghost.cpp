@@ -4,7 +4,7 @@
 #include "math/rand.h"
 #include "world/GhostPortal.h"
 
-Ghost::Ghost(Math::Point pos, Pointer<Entity> parent, std::string name)
+Ghost::Ghost(Math::Point pos, Pointer<Entity> parent, QString name)
 	:	Actor(parent, name),
 		mKillCount(0)
 {

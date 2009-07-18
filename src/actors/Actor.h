@@ -13,7 +13,7 @@ class Actor : public MovingEntity
 {
 	ENTITY(Actor)
 public:
-	Actor(Pointer<Entity> parent, std::string name="Actor");
+	Actor(Pointer<Entity> parent, QString name="Actor");
 	virtual ~Actor() {}
 
 	int health() const { return mHealth; }

@@ -8,7 +8,7 @@
 #include "actors/GhostBuster.h"
 #include "math/rand.h"
 #include "ui/CommWindow.h"
-//#include "world/EntityFactory.h"
+#include "world/EntityFactory.h"
 
 EditorUI::EditorUI()
 	:	mFile(0)
@@ -135,8 +135,12 @@ void EditorUI::open()
 	map.load(mFile);
 
 
-	//EntityFactory* factory = Person::Factory("Person");
+	EntityFactory::Properties props;
+	props["pos"] = QVariant::fromValue(Math::Point(50,50));
 
+	EntityFactory* factory = new Person::Factory();
+	factory->buildEntity(props, mGame->world());
+	delete factory;
 }
 
 void EditorUI::save()

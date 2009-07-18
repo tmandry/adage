@@ -10,8 +10,9 @@
 class Ghost : public Actor
 {
 	ENTITY(Ghost)
+	AUTO_FACTORY
 public:
-	Ghost(Math::Point pos, Pointer<Entity> parent, std::string name="Ghost");
+	Ghost(Math::Point pos, Pointer<Entity> parent, QString name="Ghost");
 	virtual ~Ghost() {}
 
 private:

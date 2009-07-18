@@ -9,8 +9,9 @@ class Seek;
 class Navigator: public Actor
 {
 	ENTITY(Navigator)
+	AUTO_FACTORY
 public:
-	Navigator(Pointer<Entity> parent, std::string name = "Navigator");
+	Navigator(Pointer<Entity> parent, QString name = "Navigator");
 	virtual ~Navigator();
 
 	bool goTo(Math::Point dest);

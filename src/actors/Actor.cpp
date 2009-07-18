@@ -3,7 +3,7 @@
 #include "math/Vector.h"
 #include "math/rand.h"
 
-Actor::Actor(Pointer<Entity> parent, std::string name)
+Actor::Actor(Pointer<Entity> parent, QString name)
 	:	MovingEntity(parent, name),
 		mUpdateStTimer(Math::randFloat(0, 0.1)),
 		mUpdateStInterval(0.1),

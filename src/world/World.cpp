@@ -6,7 +6,7 @@
 #include "world/Wall.h"
 #include "nav/NavSystem.h"
 
-World::World(GameBase* game, std::string name)
+World::World(GameBase* game, QString name)
 	:	Entity(Pointer<Entity>(), name),
 		mGame(game),
 		mCellSpace(this),

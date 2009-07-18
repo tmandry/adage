@@ -9,7 +9,7 @@
 #include "steering/AvoidWalls.h"
 #include "steering/Separation.h"
 
-GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, std::string name)
+GhostBuster::GhostBuster(Math::Point pos, Pointer<Entity> parent, QString name)
 	:	Actor(parent, name),
 		mKillCount(0)
 {

@@ -2,7 +2,7 @@
 #include "actors/Ghost.h"
 #include "world/GhostBustersHQ.h"
 
-GhostTrap::GhostTrap(Math::Point pos, Pointer<Entity> parent, std::string name)
+GhostTrap::GhostTrap(Math::Point pos, Pointer<Entity> parent, QString name)
 	:	LimitedLifetimeTrigger(parent, 20.0, name),
 		mDetonated(false),
 		mKillTimer(0),

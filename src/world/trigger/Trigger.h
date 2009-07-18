@@ -14,7 +14,7 @@
 class Trigger: public Entity {
 	ENTITY(Trigger)
 public:
-	Trigger(Pointer<Entity> parent, std::string name = "Trigger"): Entity(parent, name), mActive(true), mRegion(0) { subclass(); setMovable(false); }
+	Trigger(Pointer<Entity> parent, QString name = "Trigger"): Entity(parent, name), mActive(true), mRegion(0) { subclass(); setMovable(false); }
 	virtual ~Trigger() { assert(mRegion); delete mRegion; }
 
 	bool active() const { return mActive; }

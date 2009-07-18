@@ -12,17 +12,15 @@
 #include "world/View.h"
 #include "math/Point.h"
 
-template<class E> class AutoEntityFactory;
-
 class Person : public Actor
 {
 	ENTITY(Person)
+	AUTO_FACTORY
 public:
-	Person(Math::Point pos, Pointer<Entity> parent, std::string name="Person");
+	Person(Math::Point pos, Pointer<Entity> parent, QString name="Person");
 	virtual ~Person() {}
 
 private:
-	typedef AutoEntityFactory<Person> Factory;
 	friend class PersonView;
 	virtual void updateEvent(double secsElapsed);
 

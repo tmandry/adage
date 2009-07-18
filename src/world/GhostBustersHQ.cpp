@@ -22,7 +22,7 @@ void GhostBustersHQ::newAgent(Pointer<GhostBuster> agent)
 {
 	++mNumAgents;
 	printComm(QString("Agent <font color='yellow'>%1</font> registered. Now <font color='#eebb00'>%2</font> agents.").arg(mNextName.c_str()).arg(mNumAgents));
-	agent->setName(mNextName);
+	agent->setName(mNextName.c_str());
 	++mNextName[0];
 }
 
@@ -88,7 +88,7 @@ void GhostBustersHQ::targetCaught(Pointer<GhostBuster> agent, Pointer<Ghost> tar
 	mGhostAssignments.erase(target);
 
 	int numGs = world()->findEntities<Entity>().size();
-	if (agent) printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name().c_str()).arg(numGs));
+	if (agent) printComm(QString("Threat eliminated by Agent <font color='yellow'>%1</font>. <font color='lightgreen'>%2</font> remain.").arg(agent->name()).arg(numGs));
 	if (numGs == 0) {
 		int numCs = world()->findEntities<Entity>().size();
 		printComm(QString("Mission accomplished! <font color='#0066ff'>%1</font> civilians saved by the Ghost Busters.").arg(numCs));

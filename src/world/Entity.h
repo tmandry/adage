@@ -1,7 +1,6 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-#include <string>
 #include <vector>
 #include <set>
 #include <QPainter>
@@ -27,10 +26,23 @@
 		return #type; \
 	} \
 	public: \
-	struct _metaInfo { \
+	struct MetaInfo { \
 		static const QString className() { return #type; } \
+		typedef type Type; \
 	}; \
 	Pointer<type> pointer() const { assert(_mThis); return _mThis; }
+
+
+template <class E> class SimpleEntityFactory;
+#define FACTORY(factory) \
+	public: \
+	typedef factory Factory;
+
+template<class E> class AutoEntityFactory;
+#define AUTO_FACTORY FACTORY(AutoEntityFactory<MetaInfo::Type>)
+
+template<class E> class MinimalEntityFactory;
+#define MINIMAL_FACTORY FACTORY(MinimalEntityFactory<MetaInfo::Type>)
 
 //forward declaration
 class World;
@@ -43,15 +55,15 @@ public:
 
 protected:
 	//subclasses MUST redefine constructor and call subclass()
-	Entity(Pointer<Entity> parent, std::string name="Entity");
+	Entity(Pointer<Entity> parent, QString name="Entity");
 	virtual void subclass();
 
 public:
 	template<class E>
 	bool inherits() const { return _inherits(_className<E>()); }
 
-	void setName(const std::string name) { mName = name; }
-	std::string name() const { return mName; }
+	void setName(const QString name) { mName = name; }
+	QString name() const { return mName; }
 
 	//replace with region? or abstract intersects function?
 	inline void setPos(const Math::Point loc); //definition in World.h
@@ -72,10 +84,11 @@ public:
 	template<class E>
 	static const QString _className()
 	{
-		return E::_metaInfo::className();
+		return E::MetaInfo::className();
+		typedef Entity Type;
 	}
 
-	struct _metaInfo {
+	struct MetaInfo {
 		static const QString className() { return "Entity"; }
 	};
 
@@ -115,7 +128,7 @@ private:
 	ChildList mChildren;
 	Pointer<Entity> mThis;
 
-	std::string mName;
+	QString mName;
 	Math::Point mLoc;
 
 	View* mView;
@@ -127,7 +140,7 @@ private:
 
 #include "World.h"
 
-inline Entity::Entity(Pointer<Entity> parent, std::string name)
+inline Entity::Entity(Pointer<Entity> parent, QString name)
 	:	mParent(parent),
 		mThis(this),
 		mName(name),

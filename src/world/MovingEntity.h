@@ -9,7 +9,7 @@ class MovingEntity : public Entity
 {
 	ENTITY(MovingEntity)
 protected:
-	MovingEntity(Pointer<Entity> parent, std::string name="Entity");
+	MovingEntity(Pointer<Entity> parent, QString name="Entity");
 	virtual ~MovingEntity() {}
 
 public:

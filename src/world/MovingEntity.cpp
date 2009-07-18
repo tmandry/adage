@@ -2,7 +2,7 @@
 #include "MovingEntity.h"
 #include "math/convert.h"
 
-MovingEntity::MovingEntity(Pointer<Entity> parent, std::string name)
+MovingEntity::MovingEntity(Pointer<Entity> parent, QString name)
 	:	Entity(parent,name), mMass(1), mHeading(1,0), mMaxSpeed(9.0), mMaxForce(27.0)
 { subclass(); }
 
