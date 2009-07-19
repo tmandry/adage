@@ -3,7 +3,6 @@
 #ifndef WORLD_H_
 #define WORLD_H_
 
-#include <vector>
 #include <cassert>
 #include <utility>
 #include <QMap>
@@ -36,6 +35,8 @@ public:
 
 	void addEntity(QString type, Pointer<Entity> e) { assert(e != 0); mEntities[type].push_back(e); }
 	void removeEntity(QString type, Pointer<Entity> e);
+	//returns all immediate children
+	Entity::ChildList _childEntities() const;
 
 	template<class E>
 	EntityList<E> findEntities() const
@@ -94,7 +95,7 @@ private:
 
 	EntityMap mEntities;
 	GameBase* mGame;
-	std::vector<Wall*> mBoundaries;
+	QVector<Pointer<Wall> > mBoundaries;
 	double mLeftBound, mTopBound, mRightBound, mBottomBound;
 
 	CellSpacePartition mCellSpace;

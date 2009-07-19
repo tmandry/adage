@@ -16,6 +16,7 @@ void Wall::init()
 
 	setView(new WallView(pointer()));
 	setVisible(true);
+	setMovable(false); //pos property has no meaning for this entity
 }
 
 void Wall::setSegment(Math::Segment segment)
@@ -57,6 +58,8 @@ QSet<QString> WallFactory::getPropertyNames() const
 	static QSet<QString> names;
 	if (names.isEmpty()) {
 		names = SimpleEntityFactory<Wall>::getPropertyNames();
+		names.remove("pos");
+		names.remove("movable");
 		names << "segment";
 	}
 	return names;

@@ -1,7 +1,6 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-#include <vector>
 #include <set>
 #include <QPainter>
 #include <QObject>
@@ -15,10 +14,8 @@
 
 #define ENTITY(type) \
 	private: \
-	/*Pointer<type> _mThis;*/ \
 	virtual void subclass() \
 	{ \
-		/*_mThis = Pointer<type>(this);*/ \
 		Entity::subclass(); \
 	} \
 	virtual QString _className() const \
@@ -51,7 +48,7 @@ class World;
 class Entity
 {
 public:
-	typedef std::set<Pointer<Entity> > ChildList;
+	typedef QSet<Pointer<Entity> > ChildList;
 
 protected:
 	//subclasses MUST redefine constructor and call subclass()
@@ -62,9 +59,9 @@ public:
 	template<class E>
 	bool inherits() const { return _inherits(_className<E>()); }
 
+	//properties
 	void setName(const QString name) { mName = name; }
 	QString name() const { return mName; }
-
 	//replace with region? or abstract intersects function?
 	inline void setPos(const Math::Point loc); //definition in World.h
 	Math::Point pos() const { return mLoc; }
@@ -75,22 +72,22 @@ public:
 
 	Pointer<Entity> parent() const { return mParent; }
 	Pointer<World> world() const { return mWorld; }
+	ChildList children() const { return mChildren; }
 	View* view() const { return mView; }
-	/*template<class T>
-	Pointer<T> pointer() { return Pointer<T>::staticPointerCast(mThis); }*/
 
 	bool visible() const { return mVisible; }
 
+	struct MetaInfo {
+		static const QString className() { return "Entity"; }
+	};
+
+	virtual QString _className() const=0;
 	template<class E>
 	static const QString _className()
 	{
 		return E::MetaInfo::className();
 		typedef Entity Type;
 	}
-
-	struct MetaInfo {
-		static const QString className() { return "Entity"; }
-	};
 
 protected:
 	virtual ~Entity();
@@ -109,13 +106,12 @@ protected:
 
 private:
 	virtual Pointer<World> theWorld() { return mWorld; }
-	virtual QString _className() const=0;
 
 	friend class World;
 	bool _inherits(const QString type) const;
 
 	void addChild(Pointer<Entity> child) { assert(!removed()); mChildren.insert(child); }
-	void delChild(Pointer<Entity> child) { mChildren.erase(child); }
+	void delChild(Pointer<Entity> child) { mChildren.remove(child); }
 
 	virtual void updateEvent(double /*secsElapsed*/) {}
 

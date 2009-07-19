@@ -142,14 +142,6 @@ void EditorUI::open()
 	mGame->resetWorld();
 	Map map(mGame->world());
 	map.load(mFile);
-
-
-	EntityFactory::Properties props;
-	props["pos"] = QVariant::fromValue(Math::Point(50,50));
-
-	EntityFactory* factory = new Person::Factory();
-	factory->buildEntity(props, mGame->world());
-	delete factory;
 }
 
 void EditorUI::save()

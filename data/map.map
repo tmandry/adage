@@ -1,244 +1,340 @@
-<?xml version="1.1" encoding="UTF-8"?>
-
-<map version="0.1">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map>
+<map version="0.2">
 <boundaries left="-400" top="-400" right="400" bottom="400" />
-
 <navmesh>
-  <node id="1"> <!-- inside top-left -->
-    <point x="-125" y="-90" />
-	<point x="-41" y="-90" />
-	<point x="-35" y="140" />
-	<point x="-75" y="90" />
-  </node>
-  <node id="2"> <!-- inside top-middle -->
-	<point x="-41" y="-90" />
-	<point x="41" y="-90" />
-	<point x="35" y="140" />
-	<point x="-35" y="140" />
-  </node>
-  <node id="3"> <!-- inside top-right -->
-	<point x="41" y="-90" />
-	<point x="125" y="-90" />
-	<point x="75" y="90" />
-	<point x="35" y="140" />
-  </node>
-  <node id="4"> <!-- inside bottom -->
-	<point x="-35" y="140" />
-	<point x="35" y="140" />
-	<point x="75" y="190" />
-	<point x="125" y="370" />
-	<point x="-125" y="370" />
-	<point x="-75" y="190" />
-  </node>
-  <node id="5"> <!-- outside above-left -->
-	<point x="-125" y="-400" />
-	<point x="-41" y="-400" />
-	<point x="-41" y="-90" />
-	<point x="-125" y="-90" />
-  </node>
-  <node id="6"> <!-- outside above-middle -->
-	<point x="-41" y="-400" />
-	<point x="41" y="-400" />
-	<point x="41" y="-90" />
-	<point x="-41" y="-90" />
-  </node>
-  <node id="7"> <!-- outside above-right -->
-	<point x="41" y="-400" />
-	<point x="125" y="-400" />
-	<point x="125" y="-90" />
-	<point x="41" y="-90" />
-  </node>
-  <node id="8"> <!-- outside left squeeze -->
-	<point x="-125" y="-90" />
-	<point x="-75" y="90" />
-	<point x="-75" y="190" />
-	<point x="-125" y="370" />
-  </node>
-  <node id="9"> <!-- outside left tight squeeze -->
-	<point x="-75" y="90" />
-	<point x="-35" y="140" />
-	<point x="-75" y="190" />
-  </node>
-  <node id="10"> <!-- outside right tight squeeze -->
-	<point x="75" y="90" />
-	<point x="75" y="190" />
-	<point x="35" y="140" />
-  </node>
-  <node id="11"> <!-- outside right squeeze -->
-	<point x="125" y="-90" />
-	<point x="125" y="370" />
-	<point x="75" y="190" />
-	<point x="75" y="90" />
-  </node>
-  <node id="12"> <!-- outside top-left -->
-	<point x="-400" y="-400" />
-	<point x="-125" y="-400" />
-	<point x="-125" y="-90" />
-	<point x="-400" y="-90" />
-  </node>
-  <node id="13"> <!-- outside top-right -->
-	<point x="125" y="-400" />
-	<point x="400" y="-400" />
-	<point x="400" y="-90" />
-	<point x="125" y="-90" />
-  </node>
-  <node id="14"> <!-- outside left -->
-	<point x="-400" y="-90" />
-	<point x="-125" y="-90" />
-	<point x="-125" y="370" />
-	<point x="-400" y="370" />
-  </node>
-  <node id="15"> <!-- outside right -->
-	<point x="125" y="-90" />
-	<point x="400" y="-90" />
-	<point x="400" y="370" />
-	<point x="125" y="370" />
-  </node>
-  <node id="16"> <!-- outside bottom-left -->
-	<point x="-400" y="370" />
-	<point x="-125" y="370" />
-	<point x="-125" y="400" />
-	<point x="-400" y="400" />
-  </node>
-  <node id="17"> <!-- outside bottom -->
-	<point x="-125" y="370" />
-	<point x="125" y="370" />
-	<point x="125" y="400" />
-	<point x="-125" y="400" />
-  </node>
-  <node id="18"> <!-- outside bottom-right -->
-	<point x="125" y="370" />
-	<point x="400" y="370" />
-	<point x="400" y="400" />
-	<point x="125" y="400" />
-  </node>
-  
-  <linklist id="1">
-	<nolink/>
-	<link id="2" />
-	<nolink/>
-	<nolink/>
-  </linklist>
-  <linklist id="2">
-	<link id="6" />
-	<link id="3" />
-	<link id="4" />
-	<link id="1" />
-  </linklist>
-  <linklist id="3">
-	<nolink/>
-	<nolink/>
-	<nolink/>
-	<link id="2" />
-  </linklist>
-  <linklist id="4">
-	<link id="2" />
-	<nolink/>
-	<nolink/>
-	<nolink/>
-	<nolink/>
-	<nolink/>
-  </linklist>
-  <linklist id="5">
-	<nolink/>
-	<link id="6" />
-	<nolink/>
-	<link id="12" />
-  </linklist>
-  <linklist id="6">
-	<nolink/>
-	<link id="7" />
-	<link id="2" />
-	<link id="5" />
-  </linklist>
-  <linklist id="7">
-	<nolink/>
-	<link id="13" />
-	<nolink/>
-	<link id="6" />
-  </linklist>
-  <linklist id="8">
-	<nolink/>
-	<link id="9" />
-	<nolink/>
-	<link id="14" />
-  </linklist>
-  <linklist id="9">
-	<nolink/>
-	<nolink/>
-	<link id="8" />
-  </linklist>
-  <linklist id="10">
-	<link id="11" />
-	<nolink/>
-	<nolink/>
-  </linklist>
-  <linklist id="11">
-	<link id="15" />
-	<nolink/>
-	<link id="10" />
-	<nolink/>
-  </linklist>
-  <linklist id="12">
-	<nolink/>
-	<link id="5" />
-	<link id="14" />
-	<nolink/>
-  </linklist>
-  <linklist id="13">
-	<nolink/>
-	<nolink/>
-	<link id="15" />
-	<link id="7" />
-  </linklist>
-  <linklist id="14">
-	<link id="12" />
-	<link id="8" />
-	<link id="16" />
-	<nolink/>
-  </linklist>
-  <linklist id="15">
-	<link id="13" />
-	<nolink/>
-	<link id="18" />
-	<link id="11" />
-  </linklist>
-  <linklist id="16">
-	<link id="14" />
-	<link id="17" />
-	<nolink/>
-	<nolink/>
-  </linklist>
-  <linklist id="17">
-	<nolink/>
-	<link id="18" />
-	<nolink/>
-	<link id="16" />
-  </linklist>
-  <linklist id="18">
-	<link id="15" />
-	<nolink/>
-	<nolink/>
-	<link id="17" />
-  </linklist>
+    <node id="1">
+        <Point x="-125" y="-90" />
+        <Point x="-41" y="-90" />
+        <Point x="-35" y="140" />
+        <Point x="-75" y="90" />
+    </node>
+    <node id="2">
+        <Point x="-41" y="-90" />
+        <Point x="41" y="-90" />
+        <Point x="35" y="140" />
+        <Point x="-35" y="140" />
+    </node>
+    <node id="3">
+        <Point x="41" y="-90" />
+        <Point x="125" y="-90" />
+        <Point x="75" y="90" />
+        <Point x="35" y="140" />
+    </node>
+    <node id="4">
+        <Point x="-35" y="140" />
+        <Point x="35" y="140" />
+        <Point x="75" y="190" />
+        <Point x="125" y="370" />
+        <Point x="-125" y="370" />
+        <Point x="-75" y="190" />
+    </node>
+    <node id="5">
+        <Point x="-125" y="-400" />
+        <Point x="-41" y="-400" />
+        <Point x="-41" y="-90" />
+        <Point x="-125" y="-90" />
+    </node>
+    <node id="6">
+        <Point x="-41" y="-400" />
+        <Point x="41" y="-400" />
+        <Point x="41" y="-90" />
+        <Point x="-41" y="-90" />
+    </node>
+    <node id="7">
+        <Point x="41" y="-400" />
+        <Point x="125" y="-400" />
+        <Point x="125" y="-90" />
+        <Point x="41" y="-90" />
+    </node>
+    <node id="8">
+        <Point x="-125" y="-90" />
+        <Point x="-75" y="90" />
+        <Point x="-75" y="190" />
+        <Point x="-125" y="370" />
+    </node>
+    <node id="9">
+        <Point x="-75" y="90" />
+        <Point x="-35" y="140" />
+        <Point x="-75" y="190" />
+    </node>
+    <node id="10">
+        <Point x="75" y="90" />
+        <Point x="75" y="190" />
+        <Point x="35" y="140" />
+    </node>
+    <node id="11">
+        <Point x="125" y="-90" />
+        <Point x="125" y="370" />
+        <Point x="75" y="190" />
+        <Point x="75" y="90" />
+    </node>
+    <node id="12">
+        <Point x="-400" y="-400" />
+        <Point x="-125" y="-400" />
+        <Point x="-125" y="-90" />
+        <Point x="-400" y="-90" />
+    </node>
+    <node id="13">
+        <Point x="125" y="-400" />
+        <Point x="400" y="-400" />
+        <Point x="400" y="-90" />
+        <Point x="125" y="-90" />
+    </node>
+    <node id="14">
+        <Point x="-400" y="-90" />
+        <Point x="-125" y="-90" />
+        <Point x="-125" y="370" />
+        <Point x="-400" y="370" />
+    </node>
+    <node id="15">
+        <Point x="125" y="-90" />
+        <Point x="400" y="-90" />
+        <Point x="400" y="370" />
+        <Point x="125" y="370" />
+    </node>
+    <node id="16">
+        <Point x="-400" y="370" />
+        <Point x="-125" y="370" />
+        <Point x="-125" y="400" />
+        <Point x="-400" y="400" />
+    </node>
+    <node id="17">
+        <Point x="-125" y="370" />
+        <Point x="125" y="370" />
+        <Point x="125" y="400" />
+        <Point x="-125" y="400" />
+    </node>
+    <node id="18">
+        <Point x="125" y="370" />
+        <Point x="400" y="370" />
+        <Point x="400" y="400" />
+        <Point x="125" y="400" />
+    </node>
+
+    <linklist id="1">
+        <nolink/>
+        <link id="2" />
+        <nolink/>
+        <nolink/>
+    </linklist>
+    <linklist id="2">
+        <link id="6" />
+        <link id="3" />
+        <link id="4" />
+        <link id="1" />
+    </linklist>
+    <linklist id="3">
+        <nolink/>
+        <nolink/>
+        <nolink/>
+        <link id="2" />
+    </linklist>
+    <linklist id="4">
+        <link id="2" />
+        <nolink/>
+        <nolink/>
+        <nolink/>
+        <nolink/>
+        <nolink/>
+    </linklist>
+    <linklist id="5">
+        <nolink/>
+        <link id="6" />
+        <nolink/>
+        <link id="12" />
+    </linklist>
+    <linklist id="6">
+        <nolink/>
+        <link id="7" />
+        <link id="2" />
+        <link id="5" />
+    </linklist>
+    <linklist id="7">
+        <nolink/>
+        <link id="13" />
+        <nolink/>
+        <link id="6" />
+    </linklist>
+    <linklist id="8">
+        <nolink/>
+        <link id="9" />
+        <nolink/>
+        <link id="14" />
+    </linklist>
+    <linklist id="9">
+        <nolink/>
+        <nolink/>
+        <link id="8" />
+    </linklist>
+    <linklist id="10">
+        <link id="11" />
+        <nolink/>
+        <nolink/>
+    </linklist>
+    <linklist id="11">
+        <link id="15" />
+        <nolink/>
+        <link id="10" />
+        <nolink/>
+    </linklist>
+    <linklist id="12">
+        <nolink/>
+        <link id="5" />
+        <link id="14" />
+        <nolink/>
+    </linklist>
+    <linklist id="13">
+        <nolink/>
+        <nolink/>
+        <link id="15" />
+        <link id="7" />
+    </linklist>
+    <linklist id="14">
+        <link id="12" />
+        <link id="8" />
+        <link id="16" />
+        <nolink/>
+    </linklist>
+    <linklist id="15">
+        <link id="13" />
+        <nolink/>
+        <link id="18" />
+        <link id="11" />
+    </linklist>
+    <linklist id="16">
+        <link id="14" />
+        <link id="17" />
+        <nolink/>
+        <nolink/>
+    </linklist>
+    <linklist id="17">
+        <nolink/>
+        <link id="18" />
+        <nolink/>
+        <link id="16" />
+    </linklist>
+    <linklist id="18">
+        <link id="15" />
+        <nolink/>
+        <nolink/>
+        <link id="17" />
+    </linklist>
 </navmesh>
 
-<building>
-  <wall> <!-- hourglass -->
-	<point x="-41" y="-90" />
-	<point x="-125" y="-90" /> <!-- tl -->
-	<point x="-75" y="90" />
-	<point x="-35" y="140" />
-	<point x="-75" y="190" />
-	<point x="-125" y="370" /> <!-- bl -->
-	<point x="125" y="370" /> <!-- br -->
-	<point x="75" y="190" />
-	<point x="35" y="140" />
-	<point x="75" y="90" />
-	<point x="125" y="-90" /> <!-- tr -->
-	<point x="41" y="-90" />
-  </wall>
-</building>
-
+<Building>
+    <visible>true</visible>
+    <name>Building</name>
+    <pos><Point x="0" y="0" /></pos>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="-41" y="-90" />
+                <Point x="-125" y="-90" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="-125" y="-90" />
+                <Point x="-75" y="90" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="-75" y="90" />
+                <Point x="-35" y="140" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="-35" y="140" />
+                <Point x="-75" y="190" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="-75" y="190" />
+                <Point x="-125" y="370" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="-125" y="370" />
+                <Point x="125" y="370" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="125" y="370" />
+                <Point x="75" y="190" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="75" y="190" />
+                <Point x="35" y="140" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="35" y="140" />
+                <Point x="75" y="90" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="75" y="90" />
+                <Point x="125" y="-90" />
+            </Segment>
+        </segment>
+    </Wall>
+    <Wall>
+        <visible>true</visible>
+        <name>Wall</name>
+        <segment>
+            <Segment>
+                <Point x="125" y="-90" />
+                <Point x="41" y="-90" />
+            </Segment>
+        </segment>
+    </Wall>
+</Building>
 </map>

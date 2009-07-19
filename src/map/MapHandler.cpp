@@ -1,23 +1,32 @@
 #include "MapHandler.h"
 #include "nav/NavSystem.h"
-#include "world/Building.h"
 #include "world/World.h"
+#include "world/Entities.h"
+#include "world/EntityFactory.h"
+#include "world/FactoryManager.h"
 
 MapHandler::MapHandler(Pointer<World> world)
 	:	mWorld(world),
 		mNav(0),
-		mBuilding(0)
+		mEntity(0),
+		mParentFactory(0)
 {
-	mInMap = mInNavmesh = mInNode = mInLinkList = mInBuilding = mInWall = false;
+	mInMap = mInNavmesh = mInNode = mInLinkList = mInEntity = mInProperty = false;
 	mPoints = new Math::Point[100];
+	mParentEntity = world;
 }
 
 MapHandler::~MapHandler() {
 	delete[] mPoints;
 }
 
+#include <iostream>
+using namespace std;
+
 bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*localName*/, const QString& name, const QXmlAttributes& attributes)
 {
+	QList<QString> entityTypes = FactoryManager::instance()->types();
+
 	if (!mInMap && name != "map") {
 		mErrorStr = QObject::tr("The file is not a map file.");
 		return false;
@@ -26,8 +35,8 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 	//top- and major-level tags
 	if (name == "map") {
 		QString version = attributes.value("version");
-		if (!version.isEmpty() && version != "0.1") {
-			mErrorStr = QObject::tr("Version mismatch: Expected Version 0.1.");
+		if (!version.isEmpty() && version != "0.2") {
+			mErrorStr = QObject::tr("Version mismatch: Expected Version 0.2.");
 			return false;
 		}
 
@@ -53,20 +62,27 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 		mInNavmesh = true;
 		mNav = new NavSystem;
 		return true;
-	} else if (name == "building") {
-		if (mBuilding) {
-			mErrorStr = QObject::tr("Cannot nest buildings.");
-			return false;
+	} else if (entityTypes.contains(name)) { //tag is an Entity
+		if (mInEntity) {
+			//check if we have created this entity yet or not - reaching a child means it's time to build it
+			if (!mEntity) {
+				mEntity = mFactory->buildEntity(mProperties, mParentEntity);
+				if (mParentFactory) mParentFactory->addChild(mParentEntity, mEntity);
+			}
+			mProperties.clear();
+			mParentEntity = mEntity;
 		}
 
-		mInBuilding = true;
-		mBuilding = new Building(mWorld);
+		mFactory = FactoryManager::instance()->getFactory(name);
+
+		mInEntity = true;
+		mEntity.release();
 		return true;
 	}
 
 
-	//handle common point subtag in node and wall tags
-	if (name == "point" && ((mInNavmesh && mInNode) || (mInBuilding && mInWall))) {
+	//handle common point subtag
+	if (name == "Point" && ((mInNavmesh && mInNode) || (mInEntity && mInProperty) || mInSegment)) {
 		bool ok;
 
 		if (attributes.value("x").isEmpty() || attributes.value("y").isEmpty()) {
@@ -86,8 +102,21 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 			return false;
 		}
 
-		mPoints[mNumPoints] = Math::Point(x, y);
-		++mNumPoints;
+		if (mInNavmesh) {
+			mPoints[mNumPoints] = Math::Point(x, y);
+			++mNumPoints;
+		} else if (mInSegment) {
+			if (mInSegment == 1) mSegment.a = Math::Point(x, y);
+			else if (mInSegment == 2) mSegment.b = Math::Point(x, y);
+			else {
+				mErrorStr = QObject::tr("Extraneous Point inside Segment.");
+				return false;
+			}
+			++mInSegment;
+		} else {
+			mProperty = QVariant::fromValue<Math::Point>(Math::Point(x, y));
+			mPropertyCompleted = true;
+		}
 		return true;
 	}
 
@@ -168,22 +197,41 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 		return false;
 	}
 
-	//building subtags
-	if (mInBuilding) {
-		if (name == "wall") {
-			mNumPoints = 0;
-			mInWall = true;
-			return true;
-		}
+	//entity subtags (must be a property at this point)
+	if (mInEntity) {
+		if (mInProperty) {
+			if (name == "Segment") {
+				if (mInSegment) {
+					mErrorStr = QObject::tr("Segment tag nested inside another Segment.");
+					return false;
+				}
 
-		//wall subtag (point)
-		if (mInWall) {
-			//point would already be handled!
-			mErrorStr = QObject::tr("Invalid tag %1 encountered inside wall.").arg(name);
+				mInSegment = 1;
+				mSegment = Math::Segment();
+				return true;
+			}
+
+			//Point would already be handled!
+			mErrorStr = QObject::tr("Invalid tag %1 encountered inside property %2.").arg(name).arg(mPropertyName);
 			return false;
 		}
 
-		mErrorStr = QObject::tr("Invalid tag %1 encountered inside building.").arg(name);
+		QSet<QString> properties = mFactory->getPropertyNames();
+		if (properties.contains(name)) {
+			if (mProperties.contains(name)) {
+				mErrorStr = QObject::tr("Property %1 redefined.").arg(name);
+				return false;
+			}
+
+			mInProperty = true;
+			mPropertyCompleted = false;
+			mPropertyName = name;
+			mProperty.clear();
+			return true;
+		}
+
+		mErrorStr = QObject::tr("Invalid tag %1 encountered inside entity.").arg(name);
+		return false;
 	}
 
 	mErrorStr = QObject::tr("Invalid tag '%1' encountered.").arg(name);
@@ -192,6 +240,8 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 
 bool MapHandler::endElement(const QString& /*namespaceURI*/, const QString& /*localName*/, const QString& name)
 {
+	QList<QString> entityTypes = FactoryManager::instance()->types();
+
 	if (name == "node") {
 		if (mNodes.find(mNodeId) != mNodes.end()) {
 			mErrorStr = QObject::tr("Node id %1 already exists.").arg(mNodeId);
@@ -211,21 +261,61 @@ bool MapHandler::endElement(const QString& /*namespaceURI*/, const QString& /*lo
 		mWorld->setNavSystem(mNav);
 		mInNavmesh = false;
 		return true;
-	} else if (name == "wall") {
-		if (mNumPoints < 2) {
-			mErrorStr = QObject::tr("Must have at least 2 points to define a wall.");
+	} else if (name == "Segment") {
+		if (mInSegment != 3) { //too many segments has already been handled.
+			mErrorStr = QObject::tr("Not enough Points in Segment.");
 			return false;
 		}
 
-		mBuilding->createWalls(mPoints, mPoints+mNumPoints);
+		mProperty = QVariant::fromValue<Math::Segment>(mSegment);
+		mPropertyCompleted = true;
+		mInSegment = 0;
+	} else if (name == mPropertyName) {
+		//make sure we haven't built the entity yet
+		if (mEntity) {
+			mErrorStr = QObject::tr("Entity properties must go before children.");
+			return false;
+		}
 
-		mInWall = false;
-		return true;
-	} else if (name == "building") {
-		mInBuilding = false;
-		return true;
+		//the property will be taken care of whenever the entity is built
+		mProperties[name] = mProperty;
+		mInProperty = false;
+	} else if (entityTypes.contains(name)) {
+		assert(mInEntity);
+		//check if we created the entity yet
+		if (!mEntity) {
+			mEntity = mFactory->buildEntity(mProperties, mParentEntity);
+			if (mParentFactory) mParentFactory->addChild(mParentEntity, mEntity);
+		}
+		mProperties.clear();
+		assert(mEntity->_className() == name);
+
+		//move back up a level
+		mEntity = mParentEntity;
+		if (mEntity.pointer() == mWorld.pointer()) {
+			mInEntity = false;
+			mParentFactory = 0;
+		} else { //otherwise leave true
+			mParentEntity = mParentEntity->parent();
+			mParentFactory = FactoryManager::instance()->getFactory(mParentEntity->_className());
+		}
 	}
 
+	return true;
+}
+
+bool MapHandler::characters(const QString& ch)
+{
+	QString data = ch.trimmed();
+	if (data.isEmpty()) return true;
+
+	if (!mInProperty || mPropertyCompleted) {
+		mErrorStr = QObject::tr("Unexpected data found: %1").arg(data);
+		return false;
+	}
+
+	assert(mProperty.isNull() || mProperty.canConvert(QVariant::String));
+	mProperty = mProperty.toString() + data;
 	return true;
 }
 

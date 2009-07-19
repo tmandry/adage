@@ -7,6 +7,7 @@ Building::Building(Pointer<Entity> parent, QString name)
 {
 	subclass();
 	setVisible(true);
+	setMovable(false);
 }
 
 Building::~Building()
@@ -33,6 +34,18 @@ void Building::createWalls(const Math::Point* begin, const Math::Point* end)
 	}
 }
 
+
+QSet<QString> BuildingFactory::getPropertyNames() const
+{
+	static QSet<QString> names;
+	if (names.isEmpty()) {
+		names = SimpleEntityFactory<Building>::getPropertyNames();
+		names.remove("movable");
+		//pos?
+	}
+
+	return names;
+}
 
 Pointer<Entity> BuildingFactory::construct(Properties properties, Pointer<Entity> parent) const
 {

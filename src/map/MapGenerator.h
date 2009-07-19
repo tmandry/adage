@@ -4,11 +4,13 @@
 #include <map>
 #include <QTextStream>
 #include "math/Point.h"
+#include "math/Segment.h"
 #include "Pointer.h"
 
 class World;
 class NavNode;
 class Building;
+class Entity;
 
 //Generates map files.
 class MapGenerator
@@ -26,8 +28,10 @@ private:
 
 	void generateNode(NavNode* node, int depth);
 	void generateLinkList(NavNode* node, int depth);
-	void generateBuilding(Building* building, int depth);
+	//void generateBuilding(Building* building, int depth);
+	void generateEntity(Pointer<Entity> ent, int depth);
 	void generatePoint(Math::Point point, int depth);
+	void generateSegment(Math::Segment segment, int depth);
 
 	typedef std::map<NavNode*, QString> IdMap;
 	IdMap mIdMap;

@@ -32,6 +32,7 @@ public:
 	typedef EntityFactory::Properties Properties;
 
 	void addChild(Pointer<Building> e, Pointer<Entity> child) const;
+	QSet<QString> getPropertyNames() const;
 
 protected:
 	Pointer<Entity> construct(Properties properties, Pointer<Entity> parent) const;
