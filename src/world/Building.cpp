@@ -14,17 +14,16 @@ Building::~Building()
 {
 }
 
-void Building::createWalls(const Math::Point* begin, const Math::Point* end)
+void Building::createWalls(QList<Math::Point> points)
 {
-	assert((end-begin) > 1);
+	assert((points.size()) > 1);
 
-	//just because
-	if ((end-begin) == 2) {
-		mWalls.push_back( (new Wall(pointer(), begin[0], begin[1]))->pointer() );
+	if (points.size() == 2) {
+		mWalls.push_back( (new Wall(pointer(), points[0], points[1]))->pointer() );
 		return;
 	}
 
-	for (const Math::Point* i = begin; i < end-1; ++i) {
+	for (QList<Math::Point>::iterator i = points.begin(); i < points.end()-1; ++i) {
 		Math::Point a, b;
 
 		a = *i;

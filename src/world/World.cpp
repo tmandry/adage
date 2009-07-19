@@ -10,7 +10,7 @@ World::World(GameBase* game, QString name)
 	:	Entity(Pointer<Entity>(), name),
 		mGame(game),
 		mCellSpace(this),
-		mNav()
+		mNav(0)
 {
 	subclass();
 }

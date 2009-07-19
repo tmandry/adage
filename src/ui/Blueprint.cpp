@@ -59,26 +59,20 @@ void Blueprint::setShowNavmesh(bool show)
 void Blueprint::paintEvent(QPaintEvent* /*event*/)
 {
 	QPainter p(this);
-	p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform/* | QPainter::HighQualityAntialiasing*/);
 	p.eraseRect(0,0, width(), height());
 
 	//Calculate the area of the world being viewed, in meters
-	QRectF viewArea(
-		-mPanning - (QPointF(width(),height()) / 2.0) / scale(),
-		-mPanning + (QPointF(width(),height()) / 2.0) / scale()
-	);
-
-	//transform the drawing space based on zoom and panning
-	p.scale(scale(), scale());
-	p.translate(-viewArea.topLeft());
+	mViewArea.setTopLeft(-mPanning - (QPointF(width(),height()) / 2.0) / scale());
+	mViewArea.setBottomRight(-mPanning + (QPointF(width(),height()) / 2.0) / scale());
+	transformPainter(&p);
 
 	p.setPen(QColor(25, 65, 89));
 
 	//draw gridlines (start with left bound rounded down to nearest line interval)
-	for (int x=(int)Math::floorTo(viewArea.left(), mGridRes); x <=(int)viewArea.right(); x += mGridRes)
-		p.drawLine(QPointF(x, viewArea.top()), QPointF(x, viewArea.bottom()));
-	for (int y=(int)Math::floorTo(viewArea.top(), mGridRes); y<=(int)viewArea.bottom(); y += mGridRes)
-		p.drawLine(QPointF(viewArea.left(), y), QPointF(viewArea.right(), y));
+	for (int x=(int)Math::floorTo(mViewArea.left(), mGridRes); x <=(int)mViewArea.right(); x += mGridRes)
+		p.drawLine(QPointF(x, mViewArea.top()), QPointF(x, mViewArea.bottom()));
+	for (int y=(int)Math::floorTo(mViewArea.top(), mGridRes); y<=(int)mViewArea.bottom(); y += mGridRes)
+		p.drawLine(QPointF(mViewArea.left(), y), QPointF(mViewArea.right(), y));
 
 	if (!mGame) return;
 
@@ -112,6 +106,22 @@ void Blueprint::mousePressEvent(QMouseEvent* event)
 	default:
 		break;
 	}
+}
+
+QPainter* Blueprint::createPainter()
+{
+	QPainter* p = new QPainter(this);
+	transformPainter(p);
+	return p;
+}
+
+void Blueprint::transformPainter(QPainter* p) const
+{
+	p->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform/* | QPainter::HighQualityAntialiasing*/);
+
+	//transform the drawing space based on zoom and panning
+	p->scale(scale(), scale());
+	p->translate(-mViewArea.topLeft());
 }
 
 void Blueprint::mouseMoveEvent(QMouseEvent* event)

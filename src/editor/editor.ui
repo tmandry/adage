@@ -71,6 +71,7 @@
    <addaction name="separator"/>
    <addaction name="actPanTool"/>
    <addaction name="actMoveTool"/>
+   <addaction name="actBuildTool"/>
    <addaction name="separator"/>
    <addaction name="actPopulate"/>
    <addaction name="actReset"/>
@@ -199,6 +200,17 @@
    </property>
    <property name="visible">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actBuildTool">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Build</string>
+   </property>
+   <property name="toolTip">
+    <string>Create buildings.</string>
    </property>
   </action>
  </widget>

@@ -7,8 +7,11 @@
 #include <QWheelEvent>
 #include <QPoint>
 #include <QFont>
+#include <QRect>
 #include "world/GameBase.h"
 #include "math/Point.h"
+
+class QPainter;
 
 class Blueprint : public QGLWidget
 {
@@ -32,7 +35,7 @@ signals:
 	void zoomChanged(float zoom);
 
 protected:
-	void paintEvent(QPaintEvent* event);
+	virtual void paintEvent(QPaintEvent* event);
 
 	virtual void mousePressEvent(QMouseEvent* event);
 	virtual void mouseMoveEvent(QMouseEvent* event);
@@ -46,14 +49,19 @@ protected:
 	QPointF panning() const { return mPanning; }
 	void setPanning(QPointF panning) { mPanning = panning; }
 	GameBase* game() const { return mGame; }
+	QPainter* createPainter();
 
 	Math::Point screenToWorld(QPointF point) const;
 
 private:
+	void transformPainter(QPainter* p) const;
+
 	enum { basePxPerMeter = 2 };
 
 	GameBase* mGame;
 
+	QPainter* mPainter;
+	QRectF mViewArea;
 	QPointF mPanning;
 	float mZoom;
 	int mGridRes;

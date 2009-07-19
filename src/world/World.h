@@ -74,6 +74,7 @@ public:
 
 	GameBase* game() const { return mGame; }
 
+	void setBounds(double left, double top, double right, double bottom);
 	double leftBound() const { return mLeftBound; }
 	double topBound() const { return mTopBound; }
 	double rightBound() const { return mRightBound; }
@@ -86,7 +87,6 @@ public:
 
 private:
 	friend class MapHandler;
-	void setBounds(double left, double top, double right, double bottom);
 
 	friend class CellSpacePartition;
 	static bool inherits(Pointer<Entity> e, QString type) { return e->_inherits(type); }

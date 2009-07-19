@@ -31,21 +31,18 @@ bool MapGenerator::write(QIODevice* device)
 	out << "<boundaries left=\"" << mWorld->leftBound() << "\" top=\"" << mWorld->topBound() << "\" right=\"" << mWorld->rightBound() << "\" bottom=\"" << mWorld->bottomBound() << "\" />\n";
 
 	//generate navmesh
-	out << "<navmesh>\n";
-
 	NavSystem* nav = mWorld->navSystem();
-	for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i)
-		generateNode(*i, 1);
-	out << "\n";
-	for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i)
-		generateLinkList(*i, 1);
+	if (nav) {
+		out << "<navmesh>\n";
 
-	out << "</navmesh>\n\n";
+		for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i)
+			generateNode(*i, 1);
+		out << "\n";
+		for (NavSystem::NodeIterator i = nav->nodesBegin(); i != nav->nodesEnd(); ++i)
+			generateLinkList(*i, 1);
 
-	/*//generate buildings
-	EntityList<Building> buildings = mWorld->findEntities<Building>();
-	for (unsigned int i = 0; i < buildings.size(); i++)
-		generateBuilding(buildings[i].pointer(), 0);*/
+		out << "</navmesh>\n\n";
+	}
 
 	//generate Entities
 	Entity::ChildList entities = mWorld->_childEntities();
@@ -90,20 +87,6 @@ void MapGenerator::generateLinkList(NavNode* node, int depth)
 
 	out << indent(depth) << "</linklist>\n";
 }
-
-/*void MapGenerator::generateBuilding(Building* building, int depth)
-{
-	out << indent(depth) << "<building>\n";
-
-	for (unsigned int w = 0; w < building->walls().size(); ++w) {
-		out << indent(depth+1) << "<wall>\n";
-		generatePoint(building->walls()[w]->segment().a, depth+2);
-		generatePoint(building->walls()[w]->segment().b, depth+2);
-		out << indent(depth+1) << "</wall>\n";
-	}
-
-	out << indent(depth) << "</building>\n";
-}*/
 
 void MapGenerator::generateEntity(Pointer<Entity> ent, int depth)
 {

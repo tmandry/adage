@@ -6,7 +6,7 @@
 Actor::Actor(Pointer<Entity> parent, QString name)
 	:	MovingEntity(parent, name),
 		mUpdateStTimer(Math::randFloat(0, 0.1)),
-		mUpdateStInterval(0.1),
+		mUpdateStInterval(0.05),
 		mUpdateNeighborsTimer(Math::randFloat(0, 0.5)),
 		mUpdateNeighborsInterval(0.5),
 		mNeighborRadius(20.0),

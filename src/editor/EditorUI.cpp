@@ -34,7 +34,10 @@ EditorUI::EditorUI()
 	toolSelect = new QButtonGroup(this);
 	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actPanTool), EditorBlueprint::pan);
 	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actMoveTool), EditorBlueprint::move);
+	toolSelect->addButton((QAbstractButton*)toolBar->widgetForAction(actBuildTool), EditorBlueprint::build);
 	connect(actMoveTool, SIGNAL(triggered()), this, SLOT(updateTool()));
+	connect(actPanTool, SIGNAL(triggered()), this, SLOT(updateTool()));
+	connect(actBuildTool, SIGNAL(triggered()), this, SLOT(updateTool()));
 
 	entityBox = new QComboBox(this);
 	entityBox->addItem("");
@@ -55,6 +58,8 @@ EditorUI::EditorUI()
 	connect(actPopulate, SIGNAL(triggered()), this, SLOT(populate()));
 	connect(actReset, SIGNAL(triggered()), this, SLOT(reset()));
 	connect(actStartStop, SIGNAL(triggered()), this, SLOT(startStop()));
+
+	New();
 }
 
 EditorUI::~EditorUI()
@@ -90,7 +95,7 @@ void EditorUI::reset()
 		mFile->reset();
 		Map map(mGame->world());
 		map.load(mFile);
-	}
+	} else New();
 
 	mBp->repaint();
 }
@@ -117,6 +122,7 @@ void EditorUI::New()
 	}
 
 	mGame->resetWorld();
+	mGame->world()->setBounds(-400, -400, 400, 400);
 }
 
 void EditorUI::open()
@@ -170,7 +176,7 @@ void EditorUI::saveAs()
 	if (filename.isEmpty()) return;
 
 	QFile* file = new QFile(filename);
-	if (!file->open(QFile::WriteOnly | QFile::Truncate | QFile::Text)) {
+	if (!file->open(QFile::ReadWrite | QFile::Truncate | QFile::Text)) {
 		QMessageBox::warning(this, tr("Adage Map Editor"),
 				tr("Cannot open file %1: %2").arg(filename).arg(file->errorString())
 		);

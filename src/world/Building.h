@@ -2,6 +2,7 @@
 #define BUILDING_H_
 
 #include <QVector>
+#include <QList>
 #include "Entity.h"
 #include "math/Point.h"
 #include "EntityFactory.h"
@@ -17,7 +18,7 @@ public:
 	Building(Pointer<Entity> parent, QString name="Building");
 	virtual ~Building();
 
-	void createWalls(const Math::Point* begin, const Math::Point* end);
+	void createWalls(QList<Math::Point> points);
 	void addWall(Pointer<Wall> wall) { mWalls.push_back(wall); }
 	const QVector<Pointer<Wall> > walls() const { return mWalls; }
 

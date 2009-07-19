@@ -28,7 +28,6 @@ private:
 
 	void generateNode(NavNode* node, int depth);
 	void generateLinkList(NavNode* node, int depth);
-	//void generateBuilding(Building* building, int depth);
 	void generateEntity(Pointer<Entity> ent, int depth);
 	void generatePoint(Math::Point point, int depth);
 	void generateSegment(Math::Segment segment, int depth);
