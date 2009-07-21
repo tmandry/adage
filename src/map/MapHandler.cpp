@@ -12,12 +12,12 @@ MapHandler::MapHandler(Pointer<World> world)
 		mParentFactory(0)
 {
 	mInMap = mInNavmesh = mInNode = mInLinkList = mInEntity = mInProperty = false;
-	mPoints = new Math::Point[100];
+	//mPoints = new Math::Point[100];
 	mParentEntity = world;
 }
 
 MapHandler::~MapHandler() {
-	delete[] mPoints;
+	//delete[] mPoints;
 }
 
 #include <iostream>
@@ -103,8 +103,7 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 		}
 
 		if (mInNavmesh) {
-			mPoints[mNumPoints] = Math::Point(x, y);
-			++mNumPoints;
+			mPoints.append(Math::Point(x,y));
 		} else if (mInSegment) {
 			if (mInSegment == 1) mSegment.a = Math::Point(x, y);
 			else if (mInSegment == 2) mSegment.b = Math::Point(x, y);
@@ -134,7 +133,7 @@ bool MapHandler::startElement(const QString& /*namespaceURI*/, const QString& /*
 				return false;
 			}
 
-			mNumPoints = 0;
+			mPoints.clear();
 			mInNode = true;
 			return true;
 		}
@@ -248,7 +247,7 @@ bool MapHandler::endElement(const QString& /*namespaceURI*/, const QString& /*lo
 			return false;
 		}
 
-		NavNode* node = mNav->addNode(mPoints, mPoints+mNumPoints);
+		NavNode* node = mNav->addNode(mPoints);
 		mNodes[mNodeId] = node;
 
 		mInNode = false;

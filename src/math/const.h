@@ -15,7 +15,7 @@ const float maxFloat	= std::numeric_limits<float>::max();
 const double epsilon	= 1E-12;
 
 const double E = 2.718281828459045;
-const double PI = 3.14159265358979323846; 
+const double PI = 3.14159265358979323846;
 
 } // namespace Math
 

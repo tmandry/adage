@@ -20,6 +20,7 @@ set(adage_shared_SRCS
    map/MapGenerator.cpp
    map/MapHandler.cpp
    nav/AStar.cpp
+   nav/NavGen.cpp
    nav/NavNode.cpp
    nav/NavSystem.cpp
    world/Building.cpp

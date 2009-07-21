@@ -6,6 +6,7 @@
 #include <cassert>
 #include "math/Point.h"
 #include "math/Segment.h"
+#include <QList>
 
 namespace Math
 {
@@ -14,7 +15,7 @@ class Polygon
 {
 public:
 	Polygon() {}
-	Polygon(const Point* start, const Point* end);
+	Polygon(QList<Point> points);
 	virtual ~Polygon() {}
 
 	const std::vector<Point>& points() const { return mPoints; }
@@ -36,12 +37,14 @@ class ConvexPolygon : public Polygon
 {
 public:
 	ConvexPolygon() {}
-	ConvexPolygon(const Point* start, const Point* end);
+	ConvexPolygon(QList<Point> points);
 	virtual ~ConvexPolygon() {}
 
 	bool contains(Point p) const;
 
 private:
+	bool simpleContains(Point p) const;
+
 	class EdgeSort
 	{
 	public:
@@ -53,6 +56,7 @@ private:
 	};
 
 	typedef std::multiset<Segment, EdgeSort> EdgeSet;
+	bool mSimple;
 	EdgeSet mPointsUpper;
 	EdgeSet mPointsLower;
 

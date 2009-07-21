@@ -20,7 +20,7 @@ bool segmentIntersection(Segment s1, Segment s2, Point& intersection, double& aL
 
 	if ((ua >= 0 && ua <= 1.0) && (ub >= 0 && ub <= 1.0)) {
 		intersection.x = s1.a.x + ua*(s1.b.x-s1.a.x);
-		intersection.y = s1.a.y * ua*(s1.b.y-s1.a.y);
+		intersection.y = s1.a.y + ua*(s1.b.y-s1.a.y);
 		aLocal = ua;
 		return true;
 	} else

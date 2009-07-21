@@ -1,8 +1,8 @@
 #include "NavNode.h"
 #include "AStar.h"
 
-NavNode::NavNode(Math::Point* begin, Math::Point* end)
-	:	Math::ConvexPolygon(begin, end),
+NavNode::NavNode(Math::ConvexPolygon polygon)
+	:	Math::ConvexPolygon(polygon),
 		mLinks(points().size(), 0),
 		mSessionId(-1)
 {

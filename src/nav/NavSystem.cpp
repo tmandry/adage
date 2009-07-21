@@ -1,8 +1,8 @@
 #include "NavSystem.h"
 
-NavNode* NavSystem::addNode(Math::Point* begin, Math::Point* end)
+NavNode* NavSystem::addNode(Math::ConvexPolygon polygon)
 {
-	NavNode* node = new NavNode(begin, end);
+	NavNode* node = new NavNode(polygon);
 	mNodes.push_back(node);
 	return node;
 }
@@ -48,6 +48,7 @@ bool NavSystem::isLineOfSight(Math::Point start, const NavNode* startNode, Math:
 			//if node is an actual node, continue; if it is 0, we have hit a solid wall and this is not a LoS
 			if (!node) return false;
 		} else if (result == NavNode::none) {
+			return false;
 			assert(!"NavNode::classifyLine returned no relation");
 		}
 	} while (node != destNode && result != NavNode::endsInside);

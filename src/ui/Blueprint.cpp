@@ -89,6 +89,8 @@ void Blueprint::paintEvent(QPaintEvent* /*event*/)
 				else p.setPen(QPen(Qt::darkRed, 0.2));
 
 				p.drawLine((*i)->edge(e));
+				Math::Vector perp = ((*i)->edge(e).b-(*i)->edge(e).a).normal().iperpCW();
+				p.drawLine((*i)->edge(e).midpoint(), (*i)->edge(e).midpoint()+perp);
 			}
 		}
 	}

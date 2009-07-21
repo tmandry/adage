@@ -2,37 +2,48 @@
 #include <iostream>
 #include "Polygon.h"
 
-#include <iostream>
-using namespace std;
-
 namespace Math
 {
 
-Polygon::Polygon(const Point* start, const Point* end)
-	:	mPoints(start, end)
+Polygon::Polygon(QList<Point> points)
+	:	mPoints(points.begin(), points.end())
 {
-	for (const Point* i = start; i != end; ++i) {
-		mCenter.x += i->x;
-		mCenter.y += i->y;
+	foreach (Math::Point point, points) {
+		mCenter.x += point.x;
+		mCenter.y += point.y;
 	}
 
 	mCenter.x /= mPoints.size();
 	mCenter.y /= mPoints.size();
 }
 
-ConvexPolygon::ConvexPolygon(const Point* start, const Point* end)
-	:	Polygon(start,end)
+ConvexPolygon::ConvexPolygon(QList<Point> points)
+	:	Polygon(points)
 {
-	assert(end-start > 2);
+	assert(points.size() > 2);
+
+	if (points.size() == 3) {
+		//triangles are a simple (and dangerous) enough special case that we don't need all the extra data structure and processing baggage.
+		mSimple = true;
+		return;
+	}
 
 	//first get the leftmost and rightmost points
-	Point left = *start, right = *start;
+	Point left = points.first(), right = points.first();
 
-	for (const Point* i = start; i < end; ++i) {
+	for (QList<Point>::const_iterator i = points.begin(); i < points.end(); ++i) {
 		if (i->x < left.x) left = *i;
 		else if (i->x == left.x) left.y = (left.y + i->y) / 2;
 		else if (i->x > right.x) right = *i;
 		else if (i->x == right.x) right.y = (right.y + i->y) / 2;
+	}
+
+	//if the line between these points is already an edge, we can't do the fast point checking.
+	for (unsigned int i = 0; i < points.size(); ++i) {
+		if (edge(i) == Segment(left, right)) {
+			mSimple = true;
+			return;
+		}
 	}
 
 	//draw a line between these points
@@ -40,7 +51,7 @@ ConvexPolygon::ConvexPolygon(const Point* start, const Point* end)
 	double c = left.y - m*left.x;
 
 	//add each edge to the upper or lower set based on whether its points are above or below this line; both if either is on the line
-	for (int i = 0; i < (end-start); ++i) {
+	for (int i = 0; i < points.size(); ++i) {
 		Segment e = edge(i);
 		//swap points so they're in order, if needed
 		if (e.a.x > e.b.x || (e.a.x == e.b.x && e.a.y > e.b.y)) std::swap(e.a, e.b);
@@ -54,18 +65,10 @@ ConvexPolygon::ConvexPolygon(const Point* start, const Point* end)
 			mPointsUpper.insert(e);
 	}
 
+	assert (mPointsUpper.size() + mPointsLower.size() > 2);
 	removeCommonPoints<std::less<double> >(mPointsUpper);
 	removeCommonPoints<std::greater<double> >(mPointsLower);
-
-	/*cout << "Upper: ";
-	for (EdgeSet::iterator i = mPointsUpper.begin(); i != mPointsUpper.end(); ++i)
-		cout << "(" << i->a.x <<","<< i->a.y <<")-("<< i->b.x <<","<< i->b.y <<")  ";
-	cout << endl;
-
-	cout << "Lower: ";
-	for (EdgeSet::iterator i = mPointsLower.begin(); i != mPointsLower.end(); ++i)
-		cout << "(" << i->a.x <<","<< i->a.y <<")-("<< i->b.x <<","<< i->b.y <<")  ";
-	cout << endl;*/
+	assert (mPointsUpper.size() + mPointsLower.size() > 2);
 }
 
 //makes sure there aren't edges that have identical left or identical right points by picking one to remove (according to Op).
@@ -153,6 +156,8 @@ inline ConvexPolygon::Result ConvexPolygon::rayTest(Point p, const EdgeSet& poin
 //Returns whether the point p is inside the polygon (including the perimeter)
 bool ConvexPolygon::contains(Point p) const
 {
+	if (mSimple) return simpleContains(p);
+
 	//Since it is a convex polygon, a ray dropped from the point will cross at most 2 times with the perimeter -
 	//once each on the upper portion and lower portion. If this ray crosses once, the point is inside the polygon;
 	//if it crosses twice or not at all then it is outside (Jordan curve theorem).
@@ -171,6 +176,18 @@ bool ConvexPolygon::contains(Point p) const
 
 	//upper and lower both are either cross or noCross; need exactly 1 cross for it to be inside
 	return upper != lower;
+}
+
+bool ConvexPolygon::simpleContains(Point p) const
+{
+	//just check if it's on the right side of each point
+	for (unsigned int i = 0; i < points().size(); ++i) {
+		Segment::PointRelation result = edge(i).classifyPoint(p);
+		if (result == Segment::on) return true;
+		if (result != Segment::right) return false;
+	}
+
+	return true;
 }
 
 }

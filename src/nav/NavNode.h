@@ -9,7 +9,7 @@ class AStar;
 class NavNode : public Math::ConvexPolygon
 {
 public:
-	NavNode(Math::Point* begin, Math::Point* end);
+	NavNode(Math::ConvexPolygon polygon);
 	~NavNode() {}
 
 	void setLink(int edge, NavNode* node) { mLinks[edge] = node; }

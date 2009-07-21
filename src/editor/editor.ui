@@ -47,8 +47,15 @@
     <addaction name="separator"/>
     <addaction name="actShowComm"/>
    </widget>
+   <widget class="QMenu" name="menuMap">
+    <property name="title">
+     <string>&amp;Map</string>
+    </property>
+    <addaction name="actGenNavmesh"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_View"/>
+   <addaction name="menuMap"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="mouseTracking">
@@ -211,6 +218,11 @@
    </property>
    <property name="toolTip">
     <string>Create buildings.</string>
+   </property>
+  </action>
+  <action name="actGenNavmesh">
+   <property name="text">
+    <string>Generate Nav&amp;mesh</string>
    </property>
   </action>
  </widget>

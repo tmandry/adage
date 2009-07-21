@@ -5,6 +5,7 @@
 #include "NavNode.h"
 #include "NavPath.h"
 #include "AStar.h"
+#include "math/Polygon.h"
 
 class NavSystem
 {
@@ -14,7 +15,7 @@ public:
 	NavSystem() {}
 	virtual ~NavSystem() {}
 
-	NavNode* addNode(Math::Point* begin, Math::Point* end);
+	NavNode* addNode(Math::ConvexPolygon polygon);
 	void setLink(int from, int edge, int to);
 	NavNode* pointToNode(Math::Point point);
 

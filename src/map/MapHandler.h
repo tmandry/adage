@@ -49,8 +49,7 @@ private:
 	QVariant mProperty;
 	QString mPropertyName;
 	EntityFactory::Properties mProperties;
-	Math::Point* mPoints;
-	int mNumPoints;
+	QList<Math::Point> mPoints;
 	Math::Segment mSegment;
 	QString mNodeId;
 	int mLinkIdx;

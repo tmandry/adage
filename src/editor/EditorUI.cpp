@@ -11,6 +11,8 @@
 #include "world/EntityFactory.h"
 #include "world/Entities.h"
 #include "world/FactoryManager.h"
+#include "nav/NavGen.h"
+#include "nav/NavSystem.h"
 
 EditorUI::EditorUI()
 	:	mFile(0)
@@ -58,6 +60,7 @@ EditorUI::EditorUI()
 	connect(actPopulate, SIGNAL(triggered()), this, SLOT(populate()));
 	connect(actReset, SIGNAL(triggered()), this, SLOT(reset()));
 	connect(actStartStop, SIGNAL(triggered()), this, SLOT(startStop()));
+	connect(actGenNavmesh, SIGNAL(triggered()), this, SLOT(generateNavmesh()));
 
 	New();
 }
@@ -213,6 +216,15 @@ void EditorUI::dropEntity(Math::Point pos)
 	f->buildEntity(params, mGame->world());
 
 	mBp->update();
+}
+
+void EditorUI::generateNavmesh()
+{
+	mGame->world()->setNavSystem(new NavSystem());
+	NavGen* gen = new NavGen(mGame->world().pointer());
+	gen->generateNavmesh();
+	/*Building* b = new Building(mGame->world());
+	foreach(Math::Segment segment, gen->segments()) b->addWall((new Wall(segment, b->pointer()))->pointer());*/
 }
 
 /*bool EditorUI::openFile(QString filename, QFlags<Qt::OpenModeFlag> flags)

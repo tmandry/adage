@@ -1,6 +1,7 @@
 #include <QPen>
 #include <QPainter>
 #include "Wall.h"
+#include "math/Vector.h"
 
 void Wall::init()
 {
@@ -15,6 +16,7 @@ void Wall::init()
 	}
 
 	setView(new WallView(pointer()));
+	mVisible = true;
 	setVisible(true);
 	setMovable(false); //pos property has no meaning for this entity
 }
@@ -38,6 +40,15 @@ void WallView::paint(QPainter* p)
 	p->setPen(wallPen);
 
 	p->drawLine(mParent->segment());
+
+	/*p->drawEllipse(mParent->segment().a, 1, 1);
+	p->drawEllipse(mParent->segment().b, 1, 1);
+
+	Math::Segment seg = mParent->segment();
+	Math::Vector v (seg.b-seg.a);
+	v.normalize();
+	v = v.iperpCW();
+	p->drawLine(seg.midpoint()-v, seg.midpoint()+v);*/
 }
 
 bool WallView::clickHit(Math::Point point) const

@@ -74,6 +74,6 @@ bool World::findPath(NavPath& path, Math::Point start, Math::Point dest)
 
 void World::setNavSystem(NavSystem* nav)
 {
-	assert(mNav == 0);
+	if (mNav) delete mNav;
 	mNav = nav;
 }

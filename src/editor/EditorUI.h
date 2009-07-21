@@ -34,6 +34,7 @@ private slots:
 	void zoomChanged(float zoom);
 	void updateTool();
 	void dropEntity(Math::Point pos);
+	void generateNavmesh();
 
 private:
 	//bool openFile(QString filename, QFlags<Qt::OpenModeFlag> flags);
