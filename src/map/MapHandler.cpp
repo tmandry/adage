@@ -12,6 +12,7 @@ MapHandler::MapHandler(Pointer<World> world)
 		mParentFactory(0)
 {
 	mInMap = mInNavmesh = mInNode = mInLinkList = mInEntity = mInProperty = false;
+	mInSegment = 0;
 	//mPoints = new Math::Point[100];
 	mParentEntity = world;
 }
